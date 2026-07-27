@@ -109,6 +109,85 @@
             display: none;
         }
 
+        /* --- MODAL VERIFIKASI PIN KHUSUS AKSI EDIT / HAPUS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 9px 12px;
+            background: #121316;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .section-box {
+            background: #16181d;
+            border: 1px solid var(--card-border);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .section-box h4 {
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 4px;
+        }
+
         /* --- STYLES UTAMA APP --- */
         header {
             background: #181a20;
@@ -366,6 +445,7 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
 
+        /* --- ACTIVE DISPLAY & SIZE TOGGLE --- */
         .active-display {
             background: #1e2029;
             border: 2px solid var(--accent-gold);
@@ -407,6 +487,35 @@
             color: var(--text-muted);
             font-size: 0.9rem;
             margin-top: 4px;
+        }
+
+        .size-selector {
+            display: flex;
+            background: #121316;
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+
+        .size-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .size-btn.active {
+            background: var(--accent-gold);
+            color: #121316;
+            box-shadow: 0 2px 10px rgba(217,160,91,0.3);
         }
 
         .active-actions {
@@ -516,7 +625,7 @@
         }
 
         .focus-title-group h1 {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             color: var(--accent-gold);
             font-weight: 800;
             letter-spacing: 0.5px;
@@ -587,74 +696,7 @@
             font-weight: 500;
         }
 
-        /* --- MODAL --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
-
-        .modal-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            width: 100%;
-            max-width: 480px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-
-        .modal-title {
-            font-size: 1.2rem;
-            color: #fff;
-            margin-bottom: 16px;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            background: #121316;
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 0.9rem;
-            outline: none;
-        }
-
-        .form-control:focus {
-            border-color: var(--accent-gold);
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
+        /* --- BUTTONS & MISC --- */
         .btn {
             padding: 9px 16px;
             border-radius: 8px;
@@ -741,7 +783,7 @@
             <h3 class="modal-title" id="actionPinTitle">🔒 Autorisasi Diperlukan</h3>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Masukkan PIN Barista untuk melanjutkan</p>
             <input type="password" id="actionPinInput" class="form-control" placeholder="••••" maxlength="10" style="text-align: center; letter-spacing: 4px; margin-bottom: 15px;" onkeyup="if(event.key==='Enter') window.verifyActionPin()">
-            <div class="modal-actions" style="justify-content: center; gap: 10px;">
+            <div style="display: flex; justify-content: center; gap: 10px;">
                 <button class="btn btn-secondary" onclick="window.closeActionPinModal()">Batal</button>
                 <button class="btn btn-primary" onclick="window.verifyActionPin()">Konfirmasi</button>
             </div>
@@ -758,6 +800,13 @@
             <div class="focus-actions">
                 <button id="focusSpeakBtn" class="btn btn-secondary" onclick="window.speakActiveRecipe()" style="font-size:1.05rem; padding: 12px 20px;">🔊 Baca Suara</button>
                 <button class="btn btn-danger" onclick="window.closeFocusMode()" style="font-size:1.05rem; padding: 12px 20px;">✕ Keluar Fokus</button>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:center; margin-bottom: 15px;">
+            <div class="size-selector">
+                <button id="focusSizeMed" class="size-btn active" onclick="window.changeFocusSize('medium')">Medium (M)</button>
+                <button id="focusSizeLarge" class="size-btn" onclick="window.changeFocusSize('large')">Large (L)</button>
             </div>
         </div>
 
@@ -797,7 +846,7 @@
             <div class="active-header">
                 <div class="active-title-group">
                     <h2 id="activeTitle">Kopi Susu Aren</h2>
-                    <p id="activeKeywords">Kata kunci suara: "aren", "kopi susu aren", "kopsu"</p>
+                    <p id="activeKeywords">Kata kunci suara: "aren", "kopi susu aren"</p>
                 </div>
                 <div class="active-actions">
                     <button class="btn btn-primary" onclick="window.openFocusMode()">📺 Mode Fokus</button>
@@ -808,12 +857,18 @@
                 </div>
             </div>
 
+            <!-- TOGGLE UKURAN GELAS -->
+            <div class="size-selector">
+                <button id="btnSizeMedium" class="size-btn active" onclick="window.switchSize('medium')">Medium (M)</button>
+                <button id="btnSizeLarge" class="size-btn" onclick="window.switchSize('large')">Large (L)</button>
+            </div>
+
             <div class="recipe-grid" id="recipeGrid"></div>
 
             <div class="steps-container">
                 <div class="steps-title">
                     <svg style="width:18px;height:18px;fill:var(--accent-gold);" viewBox="0 0 24 24"><path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M10,17L5,12L6.41,10.59L10,14.17L17.59,6.58L19,8L10,17Z"/></svg>
-                    Urutan Pembuatan (Workflow Barista)
+                    Urutan Pembuatan (<span id="sizeLabelIndicator">Medium</span>)
                 </div>
                 <ol class="steps-list" id="stepsList"></ol>
             </div>
@@ -827,18 +882,34 @@
         <div class="menu-grid" id="menuGrid"></div>
     </div>
 
-    <!-- MODAL FORM (TAMBAH & EDIT) -->
+    <!-- MODAL FORM (TAMBAH & EDIT DENGAN 2 UKURAN) -->
     <div class="modal-overlay" id="recipeModal">
         <div class="modal-card">
             <h3 class="modal-title" id="modalTitle">Tambah Menu Baru</h3>
             <div class="form-group"><label>Nama Menu</label><input type="text" id="newTitle" class="form-control" placeholder="Contoh: Pandan Latte"></div>
             <div class="form-group"><label>Kata Kunci Suara (Pisahkan koma)</label><input type="text" id="newKeywords" class="form-control" placeholder="Contoh: pandan, kopi pandan"></div>
-            <div class="form-group"><label>Sirup / Pemanis</label><input type="text" id="newSyrup" class="form-control" placeholder="Contoh: 20 ml Pandan"></div>
-            <div class="form-group"><label>Base / Kopi</label><input type="text" id="newEspresso" class="form-control" placeholder="Contoh: 1 Shot (30 ml)"></div>
-            <div class="form-group"><label>Susu / Liquid</label><input type="text" id="newMilk" class="form-control" placeholder="Contoh: 120 ml Fresh Milk"></div>
-            <div class="form-group"><label>Es Batu / Toping</label><input type="text" id="newIce" class="form-control" placeholder="Contoh: Segelas Penuh"></div>
-            <div class="form-group"><label>Langkah-Langkah (Pisahkan koma)</label><input type="text" id="newSteps" class="form-control" placeholder="Contoh: Tuang sirup, Tuang susu, Masukkan es, Pour espresso"></div>
-            <div class="modal-actions">
+            
+            <!-- UKURAN MEDIUM -->
+            <div class="section-box">
+                <h4>Takaran Ukuran Medium (M)</h4>
+                <div class="form-group"><label>Sirup / Pemanis (M)</label><input type="text" id="medSyrup" class="form-control" placeholder="Contoh: 15 ml Pandan"></div>
+                <div class="form-group"><label>Base / Kopi (M)</label><input type="text" id="medEspresso" class="form-control" placeholder="Contoh: 1 Shot (30 ml)"></div>
+                <div class="form-group"><label>Susu / Liquid (M)</label><input type="text" id="medMilk" class="form-control" placeholder="Contoh: 100 ml Fresh Milk"></div>
+                <div class="form-group"><label>Es Batu / Toping (M)</label><input type="text" id="medIce" class="form-control" placeholder="Contoh: Secukupnya"></div>
+                <div class="form-group"><label>Langkah-Langkah Medium (Pisahkan koma)</label><input type="text" id="medSteps" class="form-control" placeholder="Tuang sirup, Tuang susu, Masukkan es, Pour espresso"></div>
+            </div>
+
+            <!-- UKURAN LARGE -->
+            <div class="section-box">
+                <h4>Takaran Ukuran Large (L)</h4>
+                <div class="form-group"><label>Sirup / Pemanis (L)</label><input type="text" id="largeSyrup" class="form-control" placeholder="Contoh: 25 ml Pandan"></div>
+                <div class="form-group"><label>Base / Kopi (L)</label><input type="text" id="largeEspresso" class="form-control" placeholder="Contoh: 2 Shot (60 ml)"></div>
+                <div class="form-group"><label>Susu / Liquid (L)</label><input type="text" id="largeMilk" class="form-control" placeholder="Contoh: 150 ml Fresh Milk"></div>
+                <div class="form-group"><label>Es Batu / Toping (L)</label><input type="text" id="largeIce" class="form-control" placeholder="Contoh: Penuh"></div>
+                <div class="form-group"><label>Langkah-Langkah Large (Pisahkan koma)</label><input type="text" id="largeSteps" class="form-control" placeholder="Tuang sirup, Tuang susu, Masukkan es, Pour espresso"></div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
                 <button class="btn btn-secondary" onclick="window.closeModal()">Batal</button>
                 <button class="btn btn-primary" onclick="window.saveMenu()">Simpan Menu</button>
             </div>
@@ -865,9 +936,8 @@
         const db = getDatabase(app);
         const recipesRef = ref(db, 'recipes');
 
-        // --- PENGATURAN AUTH PIN ---
         const MASTER_PIN = "brekele";
-        let pendingActionType = null; // 'edit' atau 'delete'
+        let pendingActionType = null; 
         let pendingDeleteId = null;
 
         window.checkPin = function() {
@@ -891,7 +961,6 @@
             document.getElementById('loginOverlay').style.display = 'none';
         }
 
-        // --- SISTEM PIN UNTUK AKSI (EDIT / HAPUS) ---
         window.requestEditAction = function() {
             if (!currentActiveRecipe) return;
             pendingActionType = 'edit';
@@ -936,40 +1005,72 @@
             }
         };
 
-        // --- MANAJEMEN RESEP DENGAN FIREBASE ---
+        // --- DATA DEFAULT DENGAN STRUKTUR SIZES (MEDIUM & LARGE) ---
         const defaultMenuData = [
             {
                 title: "Kopi Susu Aren", icon: "☕", category: "Espresso Based",
                 keywords: ["aren", "kopi susu aren", "kopsu", "gula aren"],
-                syrup: "20 ml Gula Aren", espresso: "1 Shot (30 ml)", milk: "120 ml Fresh Milk", ice: "Segelas Penuh",
-                steps: ["Tuang 20 ml Gula Aren ke dasar cup", "Tuang 120 ml Fresh Milk perlahan", "Isi es batu penuh", "Pour 1 shot Espresso"]
+                sizes: {
+                    medium: {
+                        syrup: "15 ml Gula Aren", espresso: "1 Shot (30 ml)", milk: "100 ml Fresh Milk", ice: "Secukupnya",
+                        steps: ["Tuang 15 ml Gula Aren ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya", "Pour 1 shot Espresso"]
+                    },
+                    large: {
+                        syrup: "25 ml Gula Aren", espresso: "2 Shot (60 ml)", milk: "150 ml Fresh Milk", ice: "Penuh",
+                        steps: ["Tuang 25 ml Gula Aren ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh", "Pour 2 shot Espresso"]
+                    }
+                }
             },
             {
                 title: "Hazelnut Latte", icon: "🥜", category: "Flavored Latte",
                 keywords: ["hazelnut", "kopi hazelnut", "hazelnut latte"],
-                syrup: "20 ml Sirup Hazelnut (2 Pump)", espresso: "1 Shot (30 ml)", milk: "120 ml Fresh Milk", ice: "Segelas Penuh",
-                steps: ["Pump 2x Hazelnut ke cup", "Tuang 120 ml Fresh Milk & aduk", "Isi es batu penuh", "Pour 1 shot Espresso"]
+                sizes: {
+                    medium: {
+                        syrup: "15 ml Sirup (1 Pump)", espresso: "1 Shot (30 ml)", milk: "100 ml Fresh Milk", ice: "Secukupnya",
+                        steps: ["Pump 1x Hazelnut ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya", "Pour 1 shot Espresso"]
+                    },
+                    large: {
+                        syrup: "25 ml Sirup (2 Pump)", espresso: "2 Shot (60 ml)", milk: "150 ml Fresh Milk", ice: "Penuh",
+                        steps: ["Pump 2x Hazelnut ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh", "Pour 2 shot Espresso"]
+                    }
+                }
             },
             {
                 title: "Iced Americano", icon: "🧊", category: "Black Coffee",
                 keywords: ["americano", "kopi hitam", "ice americano"],
-                syrup: "Tanpa Pemanis", espresso: "2 Shot (60 ml)", milk: "150 ml Air Mineral", ice: "Segelas Penuh",
-                steps: ["Isi cup dengan 150 ml Air Mineral", "Isi es batu penuh", "Pour 2 shot Espresso di paling atas"]
+                sizes: {
+                    medium: {
+                        syrup: "Tanpa Pemanis", espresso: "1 Shot (30 ml)", milk: "100 ml Air Mineral", ice: "Secukupnya",
+                        steps: ["Isi cup dengan 100 ml Air", "Isi es secukupnya", "Pour 1 shot Espresso di atasnya"]
+                    },
+                    large: {
+                        syrup: "Tanpa Pemanis", espresso: "2 Shot (60 ml)", milk: "150 ml Air Mineral", ice: "Penuh",
+                        steps: ["Isi cup dengan 150 ml Air", "Isi es penuh", "Pour 2 shot Espresso di atasnya"]
+                    }
+                }
             }
         ];
 
         let menuData = [];
         let currentActiveId = null;
         let currentActiveRecipe = null;
+        let currentSize = 'medium'; // Default ukuran medium
         let editingId = null; 
 
         onValue(recipesRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                menuData = Object.keys(data).map(key => ({
-                    id: key,
-                    ...data[key]
-                }));
+                menuData = Object.keys(data).map(key => {
+                    let item = { id: key, ...data[key] };
+                    // Fallback jika resep lama belum punya struktur sizes
+                    if (!item.sizes) {
+                        item.sizes = {
+                            medium: { syrup: item.syrup || '-', espresso: item.espresso || '-', milk: item.milk || '-', ice: item.ice || '-', steps: item.steps || [] },
+                            large: { syrup: item.syrup || '-', espresso: item.espresso || '-', milk: item.milk || '-', ice: item.ice || '-', steps: item.steps || [] }
+                        };
+                    }
+                    return item;
+                });
             } else {
                 defaultMenuData.forEach(item => {
                     const newRef = push(recipesRef);
@@ -981,7 +1082,7 @@
             if (currentActiveId) {
                 const updatedActive = menuData.find(i => i.id === currentActiveId);
                 if (updatedActive) {
-                    showActiveRecipe(updatedActive);
+                    showActiveRecipe(updatedActive, currentSize);
                     if (document.getElementById('focusOverlay').classList.contains('active')) {
                         window.openFocusMode();
                     }
@@ -1001,7 +1102,8 @@
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'menu-card';
-                card.onclick = () => showActiveRecipe(item);
+                card.onclick = () => showActiveRecipe(item, 'medium');
+                const medData = item.sizes?.medium || {};
                 card.innerHTML = `
                     <div class="card-header">
                         <div class="card-info">
@@ -1014,15 +1116,23 @@
                         <button class="delete-card-btn" title="Hapus Menu" onclick="event.stopPropagation(); window.requestDeleteAction('${item.id}')">🗑️</button>
                     </div>
                     <div class="quick-ingredients">
-                        <span class="ing-tag">${item.syrup}</span>
-                        <span class="ing-tag">${item.espresso}</span>
-                        <span class="ing-tag">${item.milk}</span>
+                        <span class="ing-tag">M: ${medData.syrup || '-'}</span>
+                        <span class="ing-tag">${medData.espresso || '-'}</span>
                     </div>`;
                 grid.appendChild(card);
             });
         }
 
-        function showActiveRecipe(item) {
+        window.switchSize = function(size) {
+            currentSize = size;
+            document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
+            document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
+            if (currentActiveRecipe) {
+                updateActiveRecipeView(currentActiveRecipe, size);
+            }
+        };
+
+        function showActiveRecipe(item, size = 'medium') {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 updateSpeakButtons(false);
@@ -1030,24 +1140,36 @@
 
             currentActiveId = item.id;
             currentActiveRecipe = item;
+            currentSize = size;
+
+            document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
+            document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
 
             document.getElementById('activeTitle').innerText = item.title;
             const kwList = Array.isArray(item.keywords) ? item.keywords.join('", "') : item.keywords;
             document.getElementById('activeKeywords').innerText = `Kata kunci suara: "${kwList}"`;
             document.getElementById('activeDeleteBtn').onclick = () => window.requestDeleteAction(item.id);
             
-            document.getElementById('recipeGrid').innerHTML = `
-                <div class="recipe-box"><div class="label">Sirup</div><div class="value">${item.syrup}</div></div>
-                <div class="recipe-box"><div class="label">Kopi</div><div class="value">${item.espresso}</div></div>
-                <div class="recipe-box"><div class="label">Susu/Liquid</div><div class="value">${item.milk}</div></div>
-                <div class="recipe-box"><div class="label">Es/Toping</div><div class="value">${item.ice}</div></div>`;
-            
-            const steps = Array.isArray(item.steps) ? item.steps : [item.steps];
-            document.getElementById('stepsList').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
+            updateActiveRecipeView(item, size);
             
             const activeDisplay = document.getElementById('activeDisplay');
             activeDisplay.classList.add('visible');
             activeDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function updateActiveRecipeView(item, size) {
+            const data = item.sizes?.[size] || item.sizes?.medium || {};
+            
+            document.getElementById('sizeLabelIndicator').innerText = size === 'medium' ? 'Medium (M)' : 'Large (L)';
+            
+            document.getElementById('recipeGrid').innerHTML = `
+                <div class="recipe-box"><div class="label">Sirup (${size.toUpperCase()})</div><div class="value">${data.syrup || '-'}</div></div>
+                <div class="recipe-box"><div class="label">Kopi (${size.toUpperCase()})</div><div class="value">${data.espresso || '-'}</div></div>
+                <div class="recipe-box"><div class="label">Susu/Liquid (${size.toUpperCase()})</div><div class="value">${data.milk || '-'}</div></div>
+                <div class="recipe-box"><div class="label">Es/Toping (${size.toUpperCase()})</div><div class="value">${data.ice || '-'}</div></div>`;
+            
+            const steps = Array.isArray(data.steps) ? data.steps : [data.steps || ''];
+            document.getElementById('stepsList').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
         }
 
         window.closeActiveDisplay = function() { 
@@ -1062,21 +1184,36 @@
 
         window.openFocusMode = function() {
             if (!currentActiveRecipe) return;
+            document.getElementById('focusOverlay').classList.add('active');
+            updateFocusView(currentActiveRecipe, currentSize);
+        };
 
-            const item = currentActiveRecipe;
-            document.getElementById('focusTitle').innerText = item.title;
+        window.changeFocusSize = function(size) {
+            currentSize = size;
+            document.getElementById('focusSizeMed').classList.toggle('active', size === 'medium');
+            document.getElementById('focusSizeLarge').classList.toggle('active', size === 'large');
+            if (currentActiveRecipe) {
+                updateFocusView(currentActiveRecipe, size);
+                // Sinkronkan juga tampilan utama
+                updateActiveRecipeView(currentActiveRecipe, size);
+                document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
+                document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
+            }
+        };
+
+        function updateFocusView(item, size) {
+            const data = item.sizes?.[size] || item.sizes?.medium || {};
+            document.getElementById('focusTitle').innerText = `${item.title} (${size.toUpperCase()})`;
 
             document.getElementById('focusRecipeGrid').innerHTML = `
-                <div class="focus-card"><div class="focus-label">Sirup / Pemanis</div><div class="focus-value">${item.syrup}</div></div>
-                <div class="focus-card"><div class="focus-label">Espresso / Base</div><div class="focus-value">${item.espresso}</div></div>
-                <div class="focus-card"><div class="focus-label">Susu / Liquid</div><div class="focus-value">${item.milk}</div></div>
-                <div class="focus-card"><div class="focus-label">Es Batu / Toping</div><div class="focus-value">${item.ice}</div></div>`;
+                <div class="focus-card"><div class="focus-label">Sirup (${size.toUpperCase()})</div><div class="focus-value">${data.syrup || '-'}</div></div>
+                <div class="focus-card"><div class="focus-label">Espresso (${size.toUpperCase()})</div><div class="focus-value">${data.espresso || '-'}</div></div>
+                <div class="focus-card"><div class="focus-label">Susu (${size.toUpperCase()})</div><div class="focus-value">${data.milk || '-'}</div></div>
+                <div class="focus-card"><div class="focus-label">Es (${size.toUpperCase()})</div><div class="focus-value">${data.ice || '-'}</div></div>`;
 
-            const steps = Array.isArray(item.steps) ? item.steps : [item.steps];
+            const steps = Array.isArray(data.steps) ? data.steps : [data.steps || ''];
             document.getElementById('focusStepsList').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
-
-            document.getElementById('focusOverlay').classList.add('active');
-        };
+        }
 
         window.closeFocusMode = function() {
             document.getElementById('focusOverlay').classList.remove('active');
@@ -1089,7 +1226,6 @@
             }
         });
 
-        // Dieksekusi setelah PIN benar untuk hapus
         window.executeDeleteMenu = function(id) {
             const item = menuData.find(i => i.id === id);
             if (!item) return;
@@ -1127,11 +1263,11 @@
 
         window.speakActiveRecipe = function() {
             if (currentActiveRecipe) {
-                window.speakRecipe(currentActiveRecipe);
+                window.speakRecipe(currentActiveRecipe, currentSize);
             }
         };
 
-        window.speakRecipe = function(item) {
+        window.speakRecipe = function(item, size = 'medium') {
             if (!('speechSynthesis' in window)) {
                 alert("Browser kamu belum mendukung fitur pemutar suara.");
                 return;
@@ -1144,12 +1280,13 @@
             }
 
             window.speechSynthesis.cancel();
+            const data = item.sizes?.[size] || item.sizes?.medium || {};
 
-            const textToSpeak = `Resep ${item.title}. ` +
-                `Sirup: ${item.syrup}. ` +
-                `Kopi: ${item.espresso}. ` +
-                `Susu: ${item.milk}. ` +
-                `Es: ${item.ice}.`;
+            const textToSpeak = `Resep ${item.title} ukuran ${size}. ` +
+                `Sirup: ${data.syrup}. ` +
+                `Kopi: ${data.espresso}. ` +
+                `Susu: ${data.milk}. ` +
+                `Es: ${data.ice}.`;
 
             const utterance = new SpeechSynthesisUtterance(textToSpeak);
             utterance.lang = 'id-ID';
@@ -1179,9 +1316,9 @@
                     i.title.toLowerCase().includes(text)
                 );
                 if (match) { 
-                    showActiveRecipe(match); 
-                    window.speakRecipe(match);
-                    document.getElementById('voiceStatus').innerText = `✅ Ditemukan: ${match.title}`; 
+                    showActiveRecipe(match, 'medium'); 
+                    window.speakRecipe(match, 'medium');
+                    document.getElementById('voiceStatus').innerText = `✅ Ditemukan: ${match.title} (Medium)`; 
                 } else { 
                     document.getElementById('voiceStatus').innerText = `❌ Tidak ditemukan: "${text}"`; 
                 }
@@ -1210,15 +1347,22 @@
             document.getElementById('modalTitle').innerText = "Tambah Menu Baru";
             document.getElementById('newTitle').value = '';
             document.getElementById('newKeywords').value = '';
-            document.getElementById('newSyrup').value = '';
-            document.getElementById('newEspresso').value = '';
-            document.getElementById('newMilk').value = '';
-            document.getElementById('newIce').value = '';
-            document.getElementById('newSteps').value = '';
+            
+            document.getElementById('medSyrup').value = '';
+            document.getElementById('medEspresso').value = '';
+            document.getElementById('medMilk').value = '';
+            document.getElementById('medIce').value = '';
+            document.getElementById('medSteps').value = '';
+
+            document.getElementById('largeSyrup').value = '';
+            document.getElementById('largeEspresso').value = '';
+            document.getElementById('largeMilk').value = '';
+            document.getElementById('largeIce').value = '';
+            document.getElementById('largeSteps').value = '';
+
             document.getElementById('recipeModal').classList.add('open'); 
         };
 
-        // Dieksekusi setelah PIN benar untuk edit
         window.executeEditRecipe = function() {
             if (!currentActiveRecipe) return;
             const item = currentActiveRecipe;
@@ -1227,11 +1371,20 @@
             document.getElementById('modalTitle').innerText = `Edit Resep: ${item.title}`;
             document.getElementById('newTitle').value = item.title || '';
             document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(', ') : (item.keywords || '');
-            document.getElementById('newSyrup').value = item.syrup || '';
-            document.getElementById('newEspresso').value = item.espresso || '';
-            document.getElementById('newMilk').value = item.milk || '';
-            document.getElementById('newIce').value = item.ice || '';
-            document.getElementById('newSteps').value = Array.isArray(item.steps) ? item.steps.join(', ') : (item.steps || '');
+            
+            const med = item.sizes?.medium || {};
+            document.getElementById('medSyrup').value = med.syrup || '';
+            document.getElementById('medEspresso').value = med.espresso || '';
+            document.getElementById('medMilk').value = med.milk || '';
+            document.getElementById('medIce').value = med.ice || '';
+            document.getElementById('medSteps').value = Array.isArray(med.steps) ? med.steps.join(', ') : (med.steps || '');
+
+            const large = item.sizes?.large || {};
+            document.getElementById('largeSyrup').value = large.syrup || '';
+            document.getElementById('largeEspresso').value = large.espresso || '';
+            document.getElementById('largeMilk').value = large.milk || '';
+            document.getElementById('largeIce').value = large.ice || '';
+            document.getElementById('largeSteps').value = Array.isArray(large.steps) ? large.steps.join(', ') : (large.steps || '');
             
             document.getElementById('recipeModal').classList.add('open');
         };
@@ -1249,11 +1402,22 @@
                 icon: currentActiveRecipe && editingId ? (currentActiveRecipe.icon || "☕") : "☕", 
                 category: currentActiveRecipe && editingId ? (currentActiveRecipe.category || "Custom Menu") : "Custom Menu",
                 keywords: document.getElementById('newKeywords').value.split(',').map(k => k.trim()).filter(k => k),
-                syrup: document.getElementById('newSyrup').value.trim() || '-',
-                espresso: document.getElementById('newEspresso').value.trim() || '-',
-                milk: document.getElementById('newMilk').value.trim() || '-',
-                ice: document.getElementById('newIce').value.trim() || '-',
-                steps: document.getElementById('newSteps').value.split(',').map(s => s.trim())
+                sizes: {
+                    medium: {
+                        syrup: document.getElementById('medSyrup').value.trim() || '-',
+                        espresso: document.getElementById('medEspresso').value.trim() || '-',
+                        milk: document.getElementById('medMilk').value.trim() || '-',
+                        ice: document.getElementById('medIce').value.trim() || '-',
+                        steps: document.getElementById('medSteps').value.split(',').map(s => s.trim()).filter(s => s)
+                    },
+                    large: {
+                        syrup: document.getElementById('largeSyrup').value.trim() || '-',
+                        espresso: document.getElementById('largeEspresso').value.trim() || '-',
+                        milk: document.getElementById('largeMilk').value.trim() || '-',
+                        ice: document.getElementById('largeIce').value.trim() || '-',
+                        steps: document.getElementById('largeSteps').value.split(',').map(s => s.trim()).filter(s => s)
+                    }
+                }
             };
 
             if (editingId) {
