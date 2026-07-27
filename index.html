@@ -724,14 +724,28 @@
 </head>
 <body>
 
-    <!-- SCREEN LOGIN PIN -->
+    <!-- SCREEN LOGIN PIN AWAL -->
     <div id="loginOverlay">
         <div class="login-card">
             <h2>🔐 Akses Barista</h2>
-            <p>Masukkan PIN untuk membuka resep</p>
+            <p>Masukkan PIN untuk membuka aplikasi</p>
             <input type="password" id="pinInput" placeholder="••••" maxlength="10" onkeyup="if(event.key==='Enter') window.checkPin()">
             <button onclick="window.checkPin()">Masuk</button>
             <div id="loginError" class="login-error">PIN Salah! Coba lagi.</div>
+        </div>
+    </div>
+
+    <!-- MODAL VERIFIKASI PIN KHUSUS AKSI EDIT / HAPUS -->
+    <div class="modal-overlay" id="actionPinModal">
+        <div class="modal-card" style="max-width: 340px; text-align: center;">
+            <h3 class="modal-title" id="actionPinTitle">🔒 Autorisasi Diperlukan</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Masukkan PIN Barista untuk melanjutkan</p>
+            <input type="password" id="actionPinInput" class="form-control" placeholder="••••" maxlength="10" style="text-align: center; letter-spacing: 4px; margin-bottom: 15px;" onkeyup="if(event.key==='Enter') window.verifyActionPin()">
+            <div class="modal-actions" style="justify-content: center; gap: 10px;">
+                <button class="btn btn-secondary" onclick="window.closeActionPinModal()">Batal</button>
+                <button class="btn btn-primary" onclick="window.verifyActionPin()">Konfirmasi</button>
+            </div>
+            <div id="actionPinError" class="login-error" style="margin-top: 10px;">PIN Salah!</div>
         </div>
     </div>
 
@@ -788,7 +802,7 @@
                 <div class="active-actions">
                     <button class="btn btn-primary" onclick="window.openFocusMode()">📺 Mode Fokus</button>
                     <button id="speakBtn" class="btn btn-secondary" onclick="window.speakActiveRecipe()">🔊 Baca Resep</button>
-                    <button class="btn btn-secondary" onclick="window.editActiveRecipe()">✏️ Edit Menu</button>
+                    <button class="btn btn-secondary" onclick="window.requestEditAction()">✏️ Edit Menu</button>
                     <button id="activeDeleteBtn" class="btn btn-danger" onclick="">🗑️ Hapus Menu</button>
                     <button class="close-display-btn" onclick="window.closeActiveDisplay()">✕</button>
                 </div>
@@ -853,6 +867,8 @@
 
         // --- PENGATURAN AUTH PIN ---
         const MASTER_PIN = "brekele";
+        let pendingActionType = null; // 'edit' atau 'delete'
+        let pendingDeleteId = null;
 
         window.checkPin = function() {
             const input = document.getElementById('pinInput').value;
@@ -874,6 +890,51 @@
         if (sessionStorage.getItem('barista_auth') === 'true') {
             document.getElementById('loginOverlay').style.display = 'none';
         }
+
+        // --- SISTEM PIN UNTUK AKSI (EDIT / HAPUS) ---
+        window.requestEditAction = function() {
+            if (!currentActiveRecipe) return;
+            pendingActionType = 'edit';
+            pendingDeleteId = null;
+            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Edit Menu";
+            document.getElementById('actionPinInput').value = '';
+            document.getElementById('actionPinError').style.display = 'none';
+            document.getElementById('actionPinModal').classList.add('open');
+            document.getElementById('actionPinInput').focus();
+        };
+
+        window.requestDeleteAction = function(id) {
+            pendingActionType = 'delete';
+            pendingDeleteId = id;
+            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Hapus Menu";
+            document.getElementById('actionPinInput').value = '';
+            document.getElementById('actionPinError').style.display = 'none';
+            document.getElementById('actionPinModal').classList.add('open');
+            document.getElementById('actionPinInput').focus();
+        };
+
+        window.closeActionPinModal = function() {
+            document.getElementById('actionPinModal').classList.remove('open');
+            pendingActionType = null;
+            pendingDeleteId = null;
+        };
+
+        window.verifyActionPin = function() {
+            const inputPin = document.getElementById('actionPinInput').value;
+            if (inputPin === MASTER_PIN) {
+                const action = pendingActionType;
+                const delId = pendingDeleteId;
+                window.closeActionPinModal();
+
+                if (action === 'edit') {
+                    window.executeEditRecipe();
+                } else if (action === 'delete') {
+                    window.executeDeleteMenu(delId);
+                }
+            } else {
+                document.getElementById('actionPinError').style.display = 'block';
+            }
+        };
 
         // --- MANAJEMEN RESEP DENGAN FIREBASE ---
         const defaultMenuData = [
@@ -902,7 +963,6 @@
         let currentActiveRecipe = null;
         let editingId = null; 
 
-        // Mendengarkan perubahan data Realtime dari Firebase DB
         onValue(recipesRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -951,7 +1011,7 @@
                                 <div class="card-category">${item.category || 'Custom Menu'}</div>
                             </div>
                         </div>
-                        <button class="delete-card-btn" title="Hapus Menu" onclick="event.stopPropagation(); window.deleteMenu('${item.id}')">🗑️</button>
+                        <button class="delete-card-btn" title="Hapus Menu" onclick="event.stopPropagation(); window.requestDeleteAction('${item.id}')">🗑️</button>
                     </div>
                     <div class="quick-ingredients">
                         <span class="ing-tag">${item.syrup}</span>
@@ -974,7 +1034,7 @@
             document.getElementById('activeTitle').innerText = item.title;
             const kwList = Array.isArray(item.keywords) ? item.keywords.join('", "') : item.keywords;
             document.getElementById('activeKeywords').innerText = `Kata kunci suara: "${kwList}"`;
-            document.getElementById('activeDeleteBtn').onclick = () => window.deleteMenu(item.id);
+            document.getElementById('activeDeleteBtn').onclick = () => window.requestDeleteAction(item.id);
             
             document.getElementById('recipeGrid').innerHTML = `
                 <div class="recipe-box"><div class="label">Sirup</div><div class="value">${item.syrup}</div></div>
@@ -1000,7 +1060,6 @@
             currentActiveRecipe = null;
         };
 
-        // --- MANAJEMEN MODE FOKUS (LAYAR PENUH) ---
         window.openFocusMode = function() {
             if (!currentActiveRecipe) return;
 
@@ -1026,14 +1085,16 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 window.closeFocusMode();
+                window.closeActionPinModal();
             }
         });
 
-        window.deleteMenu = function(id) {
+        // Dieksekusi setelah PIN benar untuk hapus
+        window.executeDeleteMenu = function(id) {
             const item = menuData.find(i => i.id === id);
             if (!item) return;
 
-            if (confirm(`Apakah Anda yakin ingin menghapus menu "${item.title}" dari Firebase DB?`)) {
+            if (confirm(`PIN Dikonfirmasi. Apakah Anda yakin ingin menghapus menu "${item.title}" dari Firebase DB?`)) {
                 const itemRef = ref(db, `recipes/${id}`);
                 remove(itemRef)
                     .then(() => {
@@ -1056,7 +1117,6 @@
             ));
         };
 
-        // --- HELPER UNTUK UPDATE TAMPILAN TOMBOL SUARA ---
         function updateSpeakButtons(isSpeaking) {
             const speakBtn = document.getElementById('speakBtn');
             const focusSpeakBtn = document.getElementById('focusSpeakBtn');
@@ -1065,7 +1125,6 @@
             if (focusSpeakBtn) focusSpeakBtn.innerHTML = isSpeaking ? '⏹️ Stop Suara' : '🔊 Baca Suara';
         }
 
-        // --- FITUR SUARA (SPEECH SYNTHESIS / TEXT-TO-SPEECH) ---
         window.speakActiveRecipe = function() {
             if (currentActiveRecipe) {
                 window.speakRecipe(currentActiveRecipe);
@@ -1078,7 +1137,6 @@
                 return;
             }
 
-            // TOGGLE: Jika suara sedang diputar, matikan saat tombol diklik
             if (window.speechSynthesis.speaking) {
                 window.speechSynthesis.cancel();
                 updateSpeakButtons(false);
@@ -1097,22 +1155,13 @@
             utterance.lang = 'id-ID';
             utterance.rate = 0.95;
 
-            utterance.onstart = function() {
-                updateSpeakButtons(true);
-            };
-
-            utterance.onend = function() {
-                updateSpeakButtons(false);
-            };
-
-            utterance.onerror = function() {
-                updateSpeakButtons(false);
-            };
+            utterance.onstart = () => updateSpeakButtons(true);
+            utterance.onend = () => updateSpeakButtons(false);
+            utterance.onerror = () => updateSpeakButtons(false);
 
             window.speechSynthesis.speak(utterance);
         };
 
-        // --- FITUR SUARA (SPEECH RECOGNITION) ---
         let recognition = null, isListening = false;
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1156,7 +1205,6 @@
             document.getElementById('micBtnText').innerText = 'Tekan & Sebut Menu';
         }
 
-        // --- MODAL, TAMBAH & EDIT MENU ---
         window.openAddModal = function() { 
             editingId = null;
             document.getElementById('modalTitle').innerText = "Tambah Menu Baru";
@@ -1170,7 +1218,8 @@
             document.getElementById('recipeModal').classList.add('open'); 
         };
 
-        window.editActiveRecipe = function() {
+        // Dieksekusi setelah PIN benar untuk edit
+        window.executeEditRecipe = function() {
             if (!currentActiveRecipe) return;
             const item = currentActiveRecipe;
 
