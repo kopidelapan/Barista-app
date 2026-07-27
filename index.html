@@ -215,7 +215,6 @@
             gap: 12px;
         }
 
-        /* STYLE LOGO KIRI ATAS */
         .brand-logo {
             width: 36px;
             height: 36px;
@@ -255,6 +254,7 @@
             transition: all 0.2s ease;
             box-shadow: 0 0 12px rgba(217, 160, 91, 0.3);
             white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .mic-btn:hover {
@@ -458,7 +458,7 @@
             box-shadow: 0 10px 30px rgba(217, 160, 91, 0.15);
             animation: fadeIn 0.3s ease-in-out;
             display: none;
-            scroll-margin-top: 160px; /* Menyediakan offset scroll agar tidak tertutup header */
+            scroll-margin-top: 160px;
         }
 
         .active-display.visible {
@@ -825,7 +825,6 @@
     <header>
         <div class="header-container">
             <div class="brand">
-                <!-- LOGO DARI GAMBAR -->
                 <img src="logo.png" alt="Logo" class="brand-logo">
                 <h1>Barista Voice Recipe</h1>
                 <button class="logout-btn" onclick="window.logout()">🔒 Lock</button>
@@ -1299,50 +1298,105 @@
             utterance.onend = () => updateSpeakButtons(false);
             utterance.onerror = () => updateSpeakButtons(false);
 
+            if (window.speechSynthesis.paused) {
+                window.speechSynthesis.resume();
+            }
+
             window.speechSynthesis.speak(utterance);
         };
 
-        let recognition = null, isListening = false;
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SR();
-            recognition.lang = 'id-ID';
-            recognition.onstart = () => {
-                isListening = true;
-                document.getElementById('micBtn').classList.add('listening');
-                document.getElementById('micBtnText').innerText = 'Mendengarkan...';
-            };
-            recognition.onresult = (e) => {
-                const text = e.results[0][0].transcript.toLowerCase().trim();
-                const match = menuData.find(i => 
-                    (Array.isArray(i.keywords) && i.keywords.some(k => text.includes(k.toLowerCase()))) || 
-                    i.title.toLowerCase().includes(text)
-                );
-                if (match) { 
-                    showActiveRecipe(match, 'medium'); 
-                    window.speakRecipe(match, 'medium');
-                    document.getElementById('voiceStatus').innerText = `✅ Ditemukan: ${match.title} (Medium)`; 
-                } else { 
-                    document.getElementById('voiceStatus').innerText = `❌ Tidak ditemukan: "${text}"`; 
-                }
-            };
-            recognition.onend = stopListening;
-            recognition.onerror = stopListening;
+        /* ==========================================================
+           LOGIKA VOICE RECOGNITION (CROSS-PLATFORM: iOS & ANDROID)
+           ========================================================== */
+        let recognition = null;
+        let isListening = false;
+
+        function getSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) return null;
+
+            if (!recognition) {
+                recognition = new SpeechRecognition();
+                recognition.lang = 'id-ID';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.onstart = () => {
+                    isListening = true;
+                    document.getElementById('micBtn').classList.add('listening');
+                    document.getElementById('micBtnText').innerText = 'Mendengarkan...';
+                    document.getElementById('voiceStatus').innerText = 'Status: Bicara sekarang...';
+                };
+
+                recognition.onresult = (e) => {
+                    if (!e.results || !e.results[0] || !e.results[0][0]) return;
+                    const text = e.results[0][0].transcript.toLowerCase().trim();
+
+                    const match = menuData.find(i => 
+                        (Array.isArray(i.keywords) && i.keywords.some(k => text.includes(k.toLowerCase()))) || 
+                        i.title.toLowerCase().includes(text)
+                    );
+
+                    if (match) { 
+                        showActiveRecipe(match, 'medium'); 
+                        window.speakRecipe(match, 'medium');
+                        document.getElementById('voiceStatus').innerText = `✅ Ditemukan: ${match.title} (Medium)`; 
+                    } else { 
+                        document.getElementById('voiceStatus').innerText = `❌ Tidak ditemukan: "${text}"`; 
+                    }
+                };
+
+                recognition.onerror = (e) => {
+                    console.error("Speech Rec Error:", e.error);
+                    let errorMsg = `Error: ${e.error}`;
+                    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                        errorMsg = '❌ Akses mikrofon ditolak. Periksa izin Safari/Chrome!';
+                    } else if (e.error === 'no-speech') {
+                        errorMsg = '⚠️ Suara tidak terdeteksi. Coba lagi.';
+                    }
+                    document.getElementById('voiceStatus').innerText = errorMsg;
+                    stopListening();
+                };
+
+                recognition.onend = () => {
+                    stopListening();
+                };
+            }
+            return recognition;
         }
 
         window.toggleVoiceRecognition = function() {
-            if (!recognition) {
-                alert("Browser Anda belum mendukung Speech Recognition.");
+            const SR = getSpeechRecognition();
+            if (!SR) {
+                alert("Browser Anda/In-App Browser ini tidak mendukung Speech Recognition. Silakan buka langsung di Safari (iOS) atau Chrome (Android).");
                 return;
             }
-            if (isListening) recognition.stop();
-            else recognition.start();
+
+            if (isListening) {
+                try {
+                    SR.stop();
+                } catch (e) {
+                    stopListening();
+                }
+            } else {
+                try {
+                    SR.start();
+                } catch (e) {
+                    console.warn("Re-instantiating recognition for iOS:", e);
+                    recognition = null;
+                    const freshSR = getSpeechRecognition();
+                    if (freshSR) freshSR.start();
+                }
+            }
         };
 
         function stopListening() {
             isListening = false;
-            document.getElementById('micBtn').classList.remove('listening');
-            document.getElementById('micBtnText').innerText = 'Tekan & Sebut Menu';
+            const micBtn = document.getElementById('micBtn');
+            const micBtnText = document.getElementById('micBtnText');
+            if (micBtn) micBtn.classList.remove('listening');
+            if (micBtnText) micBtnText.innerText = 'Tekan & Sebut Menu';
         }
 
         window.openAddModal = function() { 
