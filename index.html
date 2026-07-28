@@ -546,7 +546,7 @@
 
         .recipe-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -568,7 +568,7 @@
         }
 
         .recipe-box .value {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: #fff;
         }
@@ -643,8 +643,8 @@
 
         .focus-recipe-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
             margin-bottom: 25px;
         }
 
@@ -658,7 +658,7 @@
         }
 
         .focus-card .focus-label {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1.5px;
@@ -667,7 +667,7 @@
         }
 
         .focus-card .focus-value {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             color: #ffffff;
             line-height: 1.2;
@@ -763,7 +763,7 @@
             .voice-section { max-width: 100%; }
             .recipe-grid { grid-template-columns: 1fr 1fr; }
             .focus-title-group h1 { font-size: 2rem; }
-            .focus-card .focus-value { font-size: 1.6rem; }
+            .focus-card .focus-value { font-size: 1.4rem; }
             .focus-steps-list { font-size: 1.1rem; }
         }
     </style>
@@ -898,9 +898,10 @@
                 <h4>Takaran Ukuran Medium (M)</h4>
                 <div class="form-group"><label>Sirup / Pemanis (M)</label><input type="text" id="medSyrup" class="form-control" placeholder="Contoh: 15 ml Pandan"></div>
                 <div class="form-group"><label>Base / Kopi (M)</label><input type="text" id="medEspresso" class="form-control" placeholder="Contoh: 1 Shot (30 ml)"></div>
+                <div class="form-group"><label>Krimer (M)</label><input type="text" id="medCreamer" class="form-control" placeholder="Contoh: 15 gr Powder / 20 ml Creamer"></div>
                 <div class="form-group"><label>Susu / Liquid (M)</label><input type="text" id="medMilk" class="form-control" placeholder="Contoh: 100 ml Fresh Milk"></div>
                 <div class="form-group"><label>Es Batu / Toping (M)</label><input type="text" id="medIce" class="form-control" placeholder="Contoh: Secukupnya"></div>
-                <div class="form-group"><label>Langkah-Langkah Medium (Pisahkan koma)</label><input type="text" id="medSteps" class="form-control" placeholder="Tuang sirup, Tuang susu, Masukkan es, Pour espresso"></div>
+                <div class="form-group"><label>Langkah-Langkah Medium (Pisahkan koma)</label><input type="text" id="medSteps" class="form-control" placeholder="Tuang sirup, Mix krimer dengan base, Tuang susu, Masukkan es"></div>
             </div>
 
             <!-- UKURAN LARGE -->
@@ -908,9 +909,10 @@
                 <h4>Takaran Ukuran Large (L)</h4>
                 <div class="form-group"><label>Sirup / Pemanis (L)</label><input type="text" id="largeSyrup" class="form-control" placeholder="Contoh: 25 ml Pandan"></div>
                 <div class="form-group"><label>Base / Kopi (L)</label><input type="text" id="largeEspresso" class="form-control" placeholder="Contoh: 2 Shot (60 ml)"></div>
+                <div class="form-group"><label>Krimer (L)</label><input type="text" id="largeCreamer" class="form-control" placeholder="Contoh: 25 gr Powder / 30 ml Creamer"></div>
                 <div class="form-group"><label>Susu / Liquid (L)</label><input type="text" id="largeMilk" class="form-control" placeholder="Contoh: 150 ml Fresh Milk"></div>
                 <div class="form-group"><label>Es Batu / Toping (L)</label><input type="text" id="largeIce" class="form-control" placeholder="Contoh: Penuh"></div>
-                <div class="form-group"><label>Langkah-Langkah Large (Pisahkan koma)</label><input type="text" id="largeSteps" class="form-control" placeholder="Tuang sirup, Tuang susu, Masukkan es, Pour espresso"></div>
+                <div class="form-group"><label>Langkah-Langkah Large (Pisahkan koma)</label><input type="text" id="largeSteps" class="form-control" placeholder="Tuang sirup, Mix krimer dengan base, Tuang susu, Masukkan es"></div>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
@@ -1016,11 +1018,11 @@
                 keywords: ["aren", "kopi susu aren", "kopsu", "gula aren"],
                 sizes: {
                     medium: {
-                        syrup: "15 ml Gula Aren", espresso: "1 Shot (30 ml)", milk: "100 ml Fresh Milk", ice: "Secukupnya",
+                        syrup: "15 ml Gula Aren", espresso: "1 Shot (30 ml)", creamer: "Tanpa Krimer", milk: "100 ml Fresh Milk", ice: "Secukupnya",
                         steps: ["Tuang 15 ml Gula Aren ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya", "Pour 1 shot Espresso"]
                     },
                     large: {
-                        syrup: "25 ml Gula Aren", espresso: "2 Shot (60 ml)", milk: "150 ml Fresh Milk", ice: "Penuh",
+                        syrup: "25 ml Gula Aren", espresso: "2 Shot (60 ml)", creamer: "Tanpa Krimer", milk: "150 ml Fresh Milk", ice: "Penuh",
                         steps: ["Tuang 25 ml Gula Aren ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh", "Pour 2 shot Espresso"]
                     }
                 }
@@ -1030,11 +1032,11 @@
                 keywords: ["hazelnut", "kopi hazelnut", "hazelnut latte"],
                 sizes: {
                     medium: {
-                        syrup: "15 ml Sirup (1 Pump)", espresso: "1 Shot (30 ml)", milk: "100 ml Fresh Milk", ice: "Secukupnya",
+                        syrup: "15 ml Sirup (1 Pump)", espresso: "1 Shot (30 ml)", creamer: "Tanpa Krimer", milk: "100 ml Fresh Milk", ice: "Secukupnya",
                         steps: ["Pump 1x Hazelnut ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya", "Pour 1 shot Espresso"]
                     },
                     large: {
-                        syrup: "25 ml Sirup (2 Pump)", espresso: "2 Shot (60 ml)", milk: "150 ml Fresh Milk", ice: "Penuh",
+                        syrup: "25 ml Sirup (2 Pump)", espresso: "2 Shot (60 ml)", creamer: "Tanpa Krimer", milk: "150 ml Fresh Milk", ice: "Penuh",
                         steps: ["Pump 2x Hazelnut ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh", "Pour 2 shot Espresso"]
                     }
                 }
@@ -1044,11 +1046,11 @@
                 keywords: ["americano", "kopi hitam", "ice americano"],
                 sizes: {
                     medium: {
-                        syrup: "Tanpa Pemanis", espresso: "1 Shot (30 ml)", milk: "100 ml Air Mineral", ice: "Secukupnya",
+                        syrup: "Tanpa Pemanis", espresso: "1 Shot (30 ml)", creamer: "Tanpa Krimer", milk: "100 ml Air Mineral", ice: "Secukupnya",
                         steps: ["Isi cup dengan 100 ml Air", "Isi es secukupnya", "Pour 1 shot Espresso di atasnya"]
                     },
                     large: {
-                        syrup: "Tanpa Pemanis", espresso: "2 Shot (60 ml)", milk: "150 ml Air Mineral", ice: "Penuh",
+                        syrup: "Tanpa Pemanis", espresso: "2 Shot (60 ml)", creamer: "Tanpa Krimer", milk: "150 ml Air Mineral", ice: "Penuh",
                         steps: ["Isi cup dengan 150 ml Air", "Isi es penuh", "Pour 2 shot Espresso di atasnya"]
                     }
                 }
@@ -1068,8 +1070,8 @@
                     let item = { id: key, ...data[key] };
                     if (!item.sizes) {
                         item.sizes = {
-                            medium: { syrup: item.syrup || '-', espresso: item.espresso || '-', milk: item.milk || '-', ice: item.ice || '-', steps: item.steps || [] },
-                            large: { syrup: item.syrup || '-', espresso: item.espresso || '-', milk: item.milk || '-', ice: item.ice || '-', steps: item.steps || [] }
+                            medium: { syrup: item.syrup || '-', espresso: item.espresso || '-', creamer: item.creamer || '-', milk: item.milk || '-', ice: item.ice || '-', steps: item.steps || [] },
+                            large: { syrup: item.syrup || '-', espresso: item.espresso || '-', creamer: item.creamer || '-', milk: item.milk || '-', ice: item.ice || '-', steps: item.steps || [] }
                         };
                     }
                     return item;
@@ -1167,7 +1169,8 @@
             
             document.getElementById('recipeGrid').innerHTML = `
                 <div class="recipe-box"><div class="label">Sirup (${size.toUpperCase()})</div><div class="value">${data.syrup || '-'}</div></div>
-                <div class="recipe-box"><div class="label">Kopi (${size.toUpperCase()})</div><div class="value">${data.espresso || '-'}</div></div>
+                <div class="recipe-box"><div class="label">Base/Kopi (${size.toUpperCase()})</div><div class="value">${data.espresso || '-'}</div></div>
+                <div class="recipe-box"><div class="label">Krimer (${size.toUpperCase()})</div><div class="value">${data.creamer || '-'}</div></div>
                 <div class="recipe-box"><div class="label">Susu/Liquid (${size.toUpperCase()})</div><div class="value">${data.milk || '-'}</div></div>
                 <div class="recipe-box"><div class="label">Es/Toping (${size.toUpperCase()})</div><div class="value">${data.ice || '-'}</div></div>`;
             
@@ -1209,7 +1212,8 @@
 
             document.getElementById('focusRecipeGrid').innerHTML = `
                 <div class="focus-card"><div class="focus-label">Sirup (${size.toUpperCase()})</div><div class="focus-value">${data.syrup || '-'}</div></div>
-                <div class="focus-card"><div class="focus-label">Espresso (${size.toUpperCase()})</div><div class="focus-value">${data.espresso || '-'}</div></div>
+                <div class="focus-card"><div class="focus-label">Base/Kopi (${size.toUpperCase()})</div><div class="focus-value">${data.espresso || '-'}</div></div>
+                <div class="focus-card"><div class="focus-label">Krimer (${size.toUpperCase()})</div><div class="focus-value">${data.creamer || '-'}</div></div>
                 <div class="focus-card"><div class="focus-label">Susu (${size.toUpperCase()})</div><div class="focus-value">${data.milk || '-'}</div></div>
                 <div class="focus-card"><div class="focus-label">Es (${size.toUpperCase()})</div><div class="focus-value">${data.ice || '-'}</div></div>`;
 
@@ -1286,7 +1290,8 @@
 
             const textToSpeak = `Resep ${item.title} ukuran ${size}. ` +
                 `Sirup: ${data.syrup}. ` +
-                `Kopi: ${data.espresso}. ` +
+                `Base Kopi: ${data.espresso}. ` +
+                `Krimer: ${data.creamer || 'tidak ada'}. ` +
                 `Susu: ${data.milk}. ` +
                 `Es: ${data.ice}.`;
 
@@ -1407,12 +1412,14 @@
             
             document.getElementById('medSyrup').value = '';
             document.getElementById('medEspresso').value = '';
+            document.getElementById('medCreamer').value = '';
             document.getElementById('medMilk').value = '';
             document.getElementById('medIce').value = '';
             document.getElementById('medSteps').value = '';
 
             document.getElementById('largeSyrup').value = '';
             document.getElementById('largeEspresso').value = '';
+            document.getElementById('largeCreamer').value = '';
             document.getElementById('largeMilk').value = '';
             document.getElementById('largeIce').value = '';
             document.getElementById('largeSteps').value = '';
@@ -1432,6 +1439,7 @@
             const med = item.sizes?.medium || {};
             document.getElementById('medSyrup').value = med.syrup || '';
             document.getElementById('medEspresso').value = med.espresso || '';
+            document.getElementById('medCreamer').value = med.creamer || '';
             document.getElementById('medMilk').value = med.milk || '';
             document.getElementById('medIce').value = med.ice || '';
             document.getElementById('medSteps').value = Array.isArray(med.steps) ? med.steps.join(', ') : (med.steps || '');
@@ -1439,6 +1447,7 @@
             const large = item.sizes?.large || {};
             document.getElementById('largeSyrup').value = large.syrup || '';
             document.getElementById('largeEspresso').value = large.espresso || '';
+            document.getElementById('largeCreamer').value = large.creamer || '';
             document.getElementById('largeMilk').value = large.milk || '';
             document.getElementById('largeIce').value = large.ice || '';
             document.getElementById('largeSteps').value = Array.isArray(large.steps) ? large.steps.join(', ') : (large.steps || '');
@@ -1463,6 +1472,7 @@
                     medium: {
                         syrup: document.getElementById('medSyrup').value.trim() || '-',
                         espresso: document.getElementById('medEspresso').value.trim() || '-',
+                        creamer: document.getElementById('medCreamer').value.trim() || '-',
                         milk: document.getElementById('medMilk').value.trim() || '-',
                         ice: document.getElementById('medIce').value.trim() || '-',
                         steps: document.getElementById('medSteps').value.split(',').map(s => s.trim()).filter(s => s)
@@ -1470,6 +1480,7 @@
                     large: {
                         syrup: document.getElementById('largeSyrup').value.trim() || '-',
                         espresso: document.getElementById('largeEspresso').value.trim() || '-',
+                        creamer: document.getElementById('largeCreamer').value.trim() || '-',
                         milk: document.getElementById('largeMilk').value.trim() || '-',
                         ice: document.getElementById('largeIce').value.trim() || '-',
                         steps: document.getElementById('largeSteps').value.split(',').map(s => s.trim()).filter(s => s)
