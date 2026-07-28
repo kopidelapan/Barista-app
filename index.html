@@ -886,12 +886,31 @@
         <div class="menu-grid" id="menuGrid"></div>
     </div>
 
-    <!-- MODAL FORM (TAMBAH & EDIT DENGAN 2 UKURAN) -->
+    <!-- MODAL FORM (TAMBAH & EDIT DENGAN 2 UKURAN DAN DROPDOWN KATEGORI) -->
     <div class="modal-overlay" id="recipeModal">
         <div class="modal-card">
             <h3 class="modal-title" id="modalTitle">Tambah Menu Baru</h3>
-            <div class="form-group"><label>Nama Menu</label><input type="text" id="newTitle" class="form-control" placeholder="Contoh: Pandan Latte"></div>
-            <div class="form-group"><label>Kata Kunci Suara (Pisahkan koma)</label><input type="text" id="newKeywords" class="form-control" placeholder="Contoh: pandan, kopi pandan"></div>
+            <div class="form-group">
+                <label>Nama Menu</label>
+                <input type="text" id="newTitle" class="form-control" placeholder="Contoh: Pandan Latte">
+            </div>
+
+            <!-- DROPDOWN PILIHAN KATEGORI MENU -->
+            <div class="form-group">
+                <label>Kategori Menu</label>
+                <select id="newCategory" class="form-control">
+                    <option value="Espresso Based">Espresso Based</option>
+                    <option value="Flavored Latte">Flavored Latte</option>
+                    <option value="Black Coffee">Black Coffee</option>
+                    <option value="Non-Coffee">Non-Coffee</option>
+                    <option value="Custom Menu">Custom Menu</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Kata Kunci Suara (Pisahkan koma)</label>
+                <input type="text" id="newKeywords" class="form-control" placeholder="Contoh: pandan, kopi pandan">
+            </div>
             
             <!-- UKURAN MEDIUM -->
             <div class="section-box">
@@ -1408,6 +1427,7 @@
             editingId = null;
             document.getElementById('modalTitle').innerText = "Tambah Menu Baru";
             document.getElementById('newTitle').value = '';
+            document.getElementById('newCategory').value = 'Espresso Based'; // Default Kategori
             document.getElementById('newKeywords').value = '';
             
             document.getElementById('medSyrup').value = '';
@@ -1434,6 +1454,7 @@
             editingId = item.id;
             document.getElementById('modalTitle').innerText = `Edit Resep: ${item.title}`;
             document.getElementById('newTitle').value = item.title || '';
+            document.getElementById('newCategory').value = item.category || 'Espresso Based'; // Set Kategori saat Edit
             document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(', ') : (item.keywords || '');
             
             const med = item.sizes?.medium || {};
@@ -1466,7 +1487,7 @@
             const recipePayload = {
                 title: title, 
                 icon: currentActiveRecipe && editingId ? (currentActiveRecipe.icon || "☕") : "☕", 
-                category: currentActiveRecipe && editingId ? (currentActiveRecipe.category || "Custom Menu") : "Custom Menu",
+                category: document.getElementById('newCategory').value, // Mengambil nilai dari dropdown Kategori
                 keywords: document.getElementById('newKeywords').value.split(',').map(k => k.trim()).filter(k => k),
                 sizes: {
                     medium: {
