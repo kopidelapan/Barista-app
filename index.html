@@ -449,7 +449,7 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* --- ACTIVE DISPLAY & SIZE TOGGLE --- */
+        /* --- ACTIVE DISPLAY, SIZE & SUGAR TOGGLE --- */
         .active-display {
             background: #1e2029;
             border: 2px solid var(--accent-gold);
@@ -494,33 +494,60 @@
             margin-top: 4px;
         }
 
-        .size-selector {
+        .control-panel {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .size-selector, .sugar-selector {
             display: flex;
             background: #121316;
             border: 1px solid var(--card-border);
             border-radius: 30px;
             padding: 4px;
             gap: 4px;
-            margin-bottom: 20px;
             width: fit-content;
         }
 
-        .size-btn {
+        .size-btn, .sugar-btn {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: all 0.2s;
         }
 
-        .size-btn.active {
+        .size-btn.active, .sugar-btn.active {
             background: var(--accent-gold);
             color: #121316;
             box-shadow: 0 2px 10px rgba(217,160,91,0.3);
+        }
+
+        .sugar-btn.active-custom {
+            background: var(--success);
+            color: #ffffff;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
         }
 
         .active-actions {
@@ -558,6 +585,11 @@
             border-radius: 10px;
             padding: 16px;
             text-align: center;
+        }
+
+        .recipe-box.highlight {
+            border-color: var(--accent-gold);
+            background: rgba(217, 160, 91, 0.05);
         }
 
         .recipe-box .label {
@@ -766,6 +798,7 @@
             .focus-title-group h1 { font-size: 2rem; }
             .focus-card .focus-value { font-size: 1.4rem; }
             .focus-steps-list { font-size: 1.1rem; }
+            .control-panel { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -808,10 +841,23 @@
             </div>
         </div>
 
-        <div style="display:flex; justify-content:center; margin-bottom: 15px;">
-            <div class="size-selector">
-                <button id="focusSizeMed" class="size-btn active" onclick="window.changeFocusSize('medium')">Medium (M)</button>
-                <button id="focusSizeLarge" class="size-btn" onclick="window.changeFocusSize('large')">Large (L)</button>
+        <div style="display:flex; justify-content:center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+            <div class="control-group">
+                <div class="control-label">Ukuran Gelas</div>
+                <div class="size-selector">
+                    <button id="focusSizeMed" class="size-btn active" onclick="window.changeFocusSize('medium')">Medium (M)</button>
+                    <button id="focusSizeLarge" class="size-btn" onclick="window.changeFocusSize('large')">Large (L)</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">Level Gula / Sugar</div>
+                <div class="sugar-selector">
+                    <button class="focus-sugar-btn sugar-btn active" data-sugar="100" onclick="window.switchSugar(100)">100%</button>
+                    <button class="focus-sugar-btn sugar-btn" data-sugar="75" onclick="window.switchSugar(75)">75%</button>
+                    <button class="focus-sugar-btn sugar-btn" data-sugar="50" onclick="window.switchSugar(50)">50%</button>
+                    <button class="focus-sugar-btn sugar-btn" data-sugar="25" onclick="window.switchSugar(25)">25%</button>
+                    <button class="focus-sugar-btn sugar-btn" data-sugar="0" onclick="window.switchSugar(0)">0%</button>
+                </div>
             </div>
         </div>
 
@@ -836,7 +882,7 @@
                     <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/></svg>
                     <span id="micBtnText">Tekan & Sebut Menu</span>
                 </button>
-                <div id="voiceStatus" class="voice-status">Status: Klik tombol & sebutkan menu (mis: "Aren")</div>
+                <div id="voiceStatus" class="voice-status">Status: Klik tombol & sebutkan menu (mis: "Aren 50%")</div>
             </div>
         </div>
 
@@ -862,10 +908,26 @@
                 </div>
             </div>
 
-            <!-- TOGGLE UKURAN GELAS -->
-            <div class="size-selector">
-                <button id="btnSizeMedium" class="size-btn active" onclick="window.switchSize('medium')">Medium (M)</button>
-                <button id="btnSizeLarge" class="size-btn" onclick="window.switchSize('large')">Large (L)</button>
+            <!-- PANEL KONTROL: TOGGLE UKURAN & KALKULATOR GULA -->
+            <div class="control-panel">
+                <div class="control-group">
+                    <div class="control-label">Ukuran Gelas</div>
+                    <div class="size-selector">
+                        <button id="btnSizeMedium" class="size-btn active" onclick="window.switchSize('medium')">Medium (M)</button>
+                        <button id="btnSizeLarge" class="size-btn" onclick="window.switchSize('large')">Large (L)</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">Kustomisasi Level Gula (Sugar)</div>
+                    <div class="sugar-selector">
+                        <button class="main-sugar-btn sugar-btn active" data-sugar="100" onclick="window.switchSugar(100)">100%</button>
+                        <button class="main-sugar-btn sugar-btn" data-sugar="75" onclick="window.switchSugar(75)">75%</button>
+                        <button class="main-sugar-btn sugar-btn" data-sugar="50" onclick="window.switchSugar(50)">50%</button>
+                        <button class="main-sugar-btn sugar-btn" data-sugar="25" onclick="window.switchSugar(25)">25%</button>
+                        <button class="main-sugar-btn sugar-btn" data-sugar="0" onclick="window.switchSugar(0)">0%</button>
+                    </div>
+                </div>
             </div>
 
             <div class="recipe-grid" id="recipeGrid"></div>
@@ -974,6 +1036,31 @@
             "Non-Coffee",
             "Custom Menu"
         ];
+
+        let menuData = [];
+        let currentActiveId = null;
+        let currentActiveRecipe = null;
+        let currentSize = 'medium';
+        let currentSugarPercent = 100; // State Level Gula
+        let editingId = null; 
+
+        // KALKULATOR TAKARAN SIRUP / GULA OTOMATIS
+        function adjustSugarText(syrupText, percent) {
+            if (!syrupText || syrupText === '-' || syrupText.toLowerCase().includes('tanpa')) {
+                return syrupText || '-';
+            }
+            if (percent === 100) return syrupText;
+            if (percent === 0) return "0 ml (Tanpa Pemanis)";
+
+            // Ekstrak dan kalikan angka dalam teks resep sirup
+            const adjustedText = syrupText.replace(/(\d+(\.\d+)?)/g, (match) => {
+                const num = parseFloat(match);
+                const val = Math.round((num * (percent / 100)) * 10) / 10;
+                return val;
+            });
+
+            return `${adjustedText} (${percent}%)`;
+        }
 
         window.checkPin = function() {
             const input = document.getElementById('pinInput').value;
@@ -1086,12 +1173,6 @@
             }
         ];
 
-        let menuData = [];
-        let currentActiveId = null;
-        let currentActiveRecipe = null;
-        let currentSize = 'medium';
-        let editingId = null; 
-
         onValue(recipesRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -1116,7 +1197,7 @@
             if (currentActiveId) {
                 const updatedActive = menuData.find(i => i.id === currentActiveId);
                 if (updatedActive) {
-                    showActiveRecipe(updatedActive, currentSize);
+                    showActiveRecipe(updatedActive, currentSize, currentSugarPercent);
                     if (document.getElementById('focusOverlay').classList.contains('active')) {
                         window.openFocusMode();
                     }
@@ -1129,7 +1210,7 @@
             console.error("Gagal konek Firebase Realtime DB:", err);
         });
 
-        // FUNGSI AUTO-SORT BERDASARKAN KATEGORI & NAMA MENU
+        // AUTO-SORT BERDASARKAN KATEGORI & NAMA MENU
         function sortMenuItems(items) {
             return [...items].sort((a, b) => {
                 const catA = a.category || 'Custom Menu';
@@ -1141,18 +1222,15 @@
                 if (idxA === -1) idxA = 999;
                 if (idxB === -1) idxB = 999;
 
-                // Urutkan berdasarkan hirarki kategori
                 if (idxA !== idxB) {
                     return idxA - idxB;
                 }
-
-                // Jika kategori sama, urutkan alfabetis berdasarkan Nama Menu
                 return a.title.localeCompare(b.title);
             });
         }
 
         function renderMenuCards(items = menuData) {
-            const sortedItems = sortMenuItems(items); // Terapkan Auto-Sort
+            const sortedItems = sortMenuItems(items);
             const grid = document.getElementById('menuGrid');
             document.getElementById('menuCount').innerText = sortedItems.length;
             grid.innerHTML = '';
@@ -1160,7 +1238,7 @@
             sortedItems.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'menu-card';
-                card.onclick = () => showActiveRecipe(item, 'medium');
+                card.onclick = () => showActiveRecipe(item, 'medium', 100);
                 const medData = item.sizes?.medium || {};
                 card.innerHTML = `
                     <div class="card-header">
@@ -1190,7 +1268,28 @@
             }
         };
 
-        function showActiveRecipe(item, size = 'medium') {
+        window.switchSugar = function(percent) {
+            currentSugarPercent = percent;
+
+            // Update UI State Tombol Sugar (Main Display & Focus Overlay)
+            document.querySelectorAll('.sugar-btn').forEach(btn => {
+                const bSugar = parseInt(btn.getAttribute('data-sugar'));
+                if (bSugar === percent) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (currentActiveRecipe) {
+                updateActiveRecipeView(currentActiveRecipe, currentSize);
+                if (document.getElementById('focusOverlay').classList.contains('active')) {
+                    updateFocusView(currentActiveRecipe, currentSize);
+                }
+            }
+        };
+
+        function showActiveRecipe(item, size = 'medium', sugarPercent = 100) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 updateSpeakButtons(false);
@@ -1199,9 +1298,13 @@
             currentActiveId = item.id;
             currentActiveRecipe = item;
             currentSize = size;
+            currentSugarPercent = sugarPercent;
 
             document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
             document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
+
+            // Apply level gula ke tombol UI
+            window.switchSugar(sugarPercent);
 
             document.getElementById('activeTitle').innerText = item.title;
             const kwList = Array.isArray(item.keywords) ? item.keywords.join('", "') : item.keywords;
@@ -1217,11 +1320,16 @@
 
         function updateActiveRecipeView(item, size) {
             const data = item.sizes?.[size] || item.sizes?.medium || {};
-            
+            const adjustedSyrup = adjustSugarText(data.syrup, currentSugarPercent);
+            const isCustomSugar = currentSugarPercent !== 100;
+
             document.getElementById('sizeLabelIndicator').innerText = size === 'medium' ? 'Medium (M)' : 'Large (L)';
             
             document.getElementById('recipeGrid').innerHTML = `
-                <div class="recipe-box"><div class="label">Sirup (${size.toUpperCase()})</div><div class="value">${data.syrup || '-'}</div></div>
+                <div class="recipe-box ${isCustomSugar ? 'highlight' : ''}">
+                    <div class="label">Sirup / Pemanis ${isCustomSugar ? `(${currentSugarPercent}%)` : ''}</div>
+                    <div class="value">${adjustedSyrup}</div>
+                </div>
                 <div class="recipe-box"><div class="label">Base/Kopi (${size.toUpperCase()})</div><div class="value">${data.espresso || '-'}</div></div>
                 <div class="recipe-box"><div class="label">Krimer (${size.toUpperCase()})</div><div class="value">${data.creamer || '-'}</div></div>
                 <div class="recipe-box"><div class="label">Susu/Liquid (${size.toUpperCase()})</div><div class="value">${data.milk || '-'}</div></div>
@@ -1261,10 +1369,12 @@
 
         function updateFocusView(item, size) {
             const data = item.sizes?.[size] || item.sizes?.medium || {};
-            document.getElementById('focusTitle').innerText = `${item.title} (${size.toUpperCase()})`;
+            const adjustedSyrup = adjustSugarText(data.syrup, currentSugarPercent);
+
+            document.getElementById('focusTitle').innerText = `${item.title} (${size.toUpperCase()}) ${currentSugarPercent !== 100 ? `- Sugar ${currentSugarPercent}%` : ''}`;
 
             document.getElementById('focusRecipeGrid').innerHTML = `
-                <div class="focus-card"><div class="focus-label">Sirup (${size.toUpperCase()})</div><div class="focus-value">${data.syrup || '-'}</div></div>
+                <div class="focus-card"><div class="focus-label">Sirup / Pemanis</div><div class="focus-value">${adjustedSyrup}</div></div>
                 <div class="focus-card"><div class="focus-label">Base/Kopi (${size.toUpperCase()})</div><div class="focus-value">${data.espresso || '-'}</div></div>
                 <div class="focus-card"><div class="focus-label">Krimer (${size.toUpperCase()})</div><div class="focus-value">${data.creamer || '-'}</div></div>
                 <div class="focus-card"><div class="focus-label">Susu (${size.toUpperCase()})</div><div class="focus-value">${data.milk || '-'}</div></div>
@@ -1322,11 +1432,11 @@
 
         window.speakActiveRecipe = function() {
             if (currentActiveRecipe) {
-                window.speakRecipe(currentActiveRecipe, currentSize);
+                window.speakRecipe(currentActiveRecipe, currentSize, currentSugarPercent);
             }
         };
 
-        window.speakRecipe = function(item, size = 'medium') {
+        window.speakRecipe = function(item, size = 'medium', sugarPercent = 100) {
             if (!('speechSynthesis' in window)) {
                 alert("Browser kamu belum mendukung fitur pemutar suara.");
                 return;
@@ -1340,9 +1450,10 @@
 
             window.speechSynthesis.cancel();
             const data = item.sizes?.[size] || item.sizes?.medium || {};
+            const adjustedSyrup = adjustSugarText(data.syrup, sugarPercent);
 
-            const textToSpeak = `Resep ${item.title} ukuran ${size}. ` +
-                `Sirup: ${data.syrup}. ` +
+            const textToSpeak = `Resep ${item.title} ukuran ${size} ${sugarPercent !== 100 ? `dengan gula ${sugarPercent} persen` : ''}. ` +
+                `Sirup: ${adjustedSyrup}. ` +
                 `Base Kopi: ${data.espresso}. ` +
                 `Krimer: ${data.creamer || 'tidak ada'}. ` +
                 `Susu: ${data.milk}. ` +
@@ -1363,7 +1474,7 @@
             window.speechSynthesis.speak(utterance);
         };
 
-        /* VOICE RECOGNITION */
+        /* VOICE RECOGNITION (DENGAN DETEKSI KUSTOMISASI GULA) */
         let recognition = null;
         let isListening = false;
 
@@ -1389,15 +1500,27 @@
                     if (!e.results || !e.results[0] || !e.results[0][0]) return;
                     const text = e.results[0][0].transcript.toLowerCase().trim();
 
+                    // Deteksi permintaan level gula dari suara
+                    let detectedSugar = 100;
+                    if (text.includes("50%") || text.includes("50 persen") || text.includes("separuh") || text.includes("half sugar")) {
+                        detectedSugar = 50;
+                    } else if (text.includes("75%") || text.includes("75 persen") || text.includes("less sugar")) {
+                        detectedSugar = 75;
+                    } else if (text.includes("25%") || text.includes("25 persen") || text.includes("sedikit gula")) {
+                        detectedSugar = 25;
+                    } else if (text.includes("0%") || text.includes("tanpa gula") || text.includes("no sugar") || text.includes("bebas gula")) {
+                        detectedSugar = 0;
+                    }
+
                     const match = menuData.find(i => 
                         (Array.isArray(i.keywords) && i.keywords.some(k => text.includes(k.toLowerCase()))) || 
                         i.title.toLowerCase().includes(text)
                     );
 
                     if (match) { 
-                        showActiveRecipe(match, 'medium'); 
-                        window.speakRecipe(match, 'medium');
-                        document.getElementById('voiceStatus').innerText = `✅ Ditemukan: ${match.title} (Medium)`; 
+                        showActiveRecipe(match, 'medium', detectedSugar); 
+                        window.speakRecipe(match, 'medium', detectedSugar);
+                        document.getElementById('voiceStatus').innerText = `✅ Ditemukan: ${match.title} (Sugar ${detectedSugar}%)`; 
                     } else { 
                         document.getElementById('voiceStatus').innerText = `❌ Tidak ditemukan: "${text}"`; 
                     }
