@@ -233,9 +233,10 @@
         .voice-section {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             flex-grow: 1;
-            max-width: 500px;
+            max-width: 650px;
+            flex-wrap: wrap;
         }
 
         .mic-btn {
@@ -246,7 +247,7 @@
             padding: 10px 18px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -269,14 +270,44 @@
             box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
         }
 
+        .handsfree-btn {
+            background: var(--info-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
+            padding: 10px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .handsfree-btn.active {
+            background: var(--success);
+            color: #ffffff;
+            border-color: var(--success);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            animation: pulse-green 2s infinite;
+        }
+
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
 
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 18px rgba(16, 185, 129, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.4); }
+        }
+
         .voice-status {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             background: var(--info-bg);
             padding: 8px 14px;
@@ -286,6 +317,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-width: 200px;
         }
 
         .search-box {
@@ -878,11 +910,18 @@
             </div>
 
             <div class="voice-section">
+                <!-- TOMBOL TEKAN MANUAL -->
                 <button id="micBtn" class="mic-btn" onclick="window.toggleVoiceRecognition()">
                     <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/></svg>
                     <span id="micBtnText">Tekan & Sebut Menu</span>
                 </button>
-                <div id="voiceStatus" class="voice-status">Status: Klik tombol & sebutkan menu (mis: "Aren 50%")</div>
+                
+                <!-- TOMBOL TOGGLE HANDS-FREE "HEY KOPI" -->
+                <button id="handsFreeBtn" class="handsfree-btn" onclick="window.toggleHandsFreeMode()">
+                    <span>🎙️ Hands-Free: OFF</span>
+                </button>
+
+                <div id="voiceStatus" class="voice-status">Status: Klik & sebut menu ATAU aktifkan Hands-Free ("Hey Kopi")</div>
             </div>
         </div>
 
@@ -1436,6 +1475,8 @@
             }
         };
 
+        let isSpeakingTTS = false;
+
         window.speakRecipe = function(item, size = 'medium', sugarPercent = 100) {
             if (!('speechSynthesis' in window)) {
                 alert("Browser kamu belum mendukung fitur pemutar suara.");
@@ -1444,6 +1485,7 @@
 
             if (window.speechSynthesis.speaking) {
                 window.speechSynthesis.cancel();
+                isSpeakingTTS = false;
                 updateSpeakButtons(false);
                 return;
             }
@@ -1463,9 +1505,22 @@
             utterance.lang = 'id-ID';
             utterance.rate = 0.95;
 
-            utterance.onstart = () => updateSpeakButtons(true);
-            utterance.onend = () => updateSpeakButtons(false);
-            utterance.onerror = () => updateSpeakButtons(false);
+            utterance.onstart = () => {
+                isSpeakingTTS = true;
+                updateSpeakButtons(true);
+            };
+
+            utterance.onend = () => {
+                isSpeakingTTS = false;
+                updateSpeakButtons(false);
+                if (isHandsFreeMode) restartRecognition();
+            };
+
+            utterance.onerror = () => {
+                isSpeakingTTS = false;
+                updateSpeakButtons(false);
+                if (isHandsFreeMode) restartRecognition();
+            };
 
             if (window.speechSynthesis.paused) {
                 window.speechSynthesis.resume();
@@ -1474,9 +1529,14 @@
             window.speechSynthesis.speak(utterance);
         };
 
-        /* VOICE RECOGNITION (DENGAN DETEKSI KUSTOMISASI GULA) */
+        /* =======================================================
+           VOICE RECOGNITION (SINGLE SHOT + HANDS-FREE ACTIVATION)
+           ======================================================= */
         let recognition = null;
         let isListening = false;
+        let isHandsFreeMode = false;
+        let awaitingCommandInHandsFree = false;
+        const WAKE_WORDS = ["hey kopi", "hei kopi", "hai kopi", "hay kopi", "he kopi"];
 
         function getSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1491,78 +1551,166 @@
 
                 recognition.onstart = () => {
                     isListening = true;
-                    document.getElementById('micBtn').classList.add('listening');
-                    document.getElementById('micBtnText').innerText = 'Mendengarkan...';
-                    document.getElementById('voiceStatus').innerText = 'Status: Bicara sekarang...';
+                    if (!isHandsFreeMode) {
+                        document.getElementById('micBtn').classList.add('listening');
+                        document.getElementById('micBtnText').innerText = 'Mendengarkan...';
+                        document.getElementById('voiceStatus').innerText = 'Status: Bicara sekarang...';
+                    }
                 };
 
                 recognition.onresult = (e) => {
                     if (!e.results || !e.results[0] || !e.results[0][0]) return;
-                    const text = e.results[0][0].transcript.toLowerCase().trim();
+                    const rawText = e.results[0][0].transcript.toLowerCase().trim();
 
-                    // Deteksi permintaan level gula dari suara
-                    let detectedSugar = 100;
-                    if (text.includes("50%") || text.includes("50 persen") || text.includes("separuh") || text.includes("half sugar")) {
-                        detectedSugar = 50;
-                    } else if (text.includes("75%") || text.includes("75 persen") || text.includes("less sugar")) {
-                        detectedSugar = 75;
-                    } else if (text.includes("25%") || text.includes("25 persen") || text.includes("sedikit gula")) {
-                        detectedSugar = 25;
-                    } else if (text.includes("0%") || text.includes("tanpa gula") || text.includes("no sugar") || text.includes("bebas gula")) {
-                        detectedSugar = 0;
-                    }
-
-                    const match = menuData.find(i => 
-                        (Array.isArray(i.keywords) && i.keywords.some(k => text.includes(k.toLowerCase()))) || 
-                        i.title.toLowerCase().includes(text)
-                    );
-
-                    if (match) { 
-                        showActiveRecipe(match, 'medium', detectedSugar); 
-                        window.speakRecipe(match, 'medium', detectedSugar);
-                        document.getElementById('voiceStatus').innerText = `✅ Ditemukan: ${match.title} (Sugar ${detectedSugar}%)`; 
-                    } else { 
-                        document.getElementById('voiceStatus').innerText = `❌ Tidak ditemukan: "${text}"`; 
+                    if (isHandsFreeMode) {
+                        handleHandsFreeResult(rawText);
+                    } else {
+                        processVoiceCommand(rawText);
                     }
                 };
 
                 recognition.onerror = (e) => {
-                    console.error("Speech Rec Error:", e.error);
-                    let errorMsg = `Error: ${e.error}`;
+                    console.warn("Speech Rec Error:", e.error);
                     if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-                        errorMsg = '❌ Akses mikrofon ditolak. Periksa izin Safari/Chrome!';
-                    } else if (e.error === 'no-speech') {
-                        errorMsg = '⚠️ Suara tidak terdeteksi. Coba lagi.';
+                        document.getElementById('voiceStatus').innerText = '❌ Akses mikrofon ditolak!';
+                        isHandsFreeMode = false;
+                        updateHandsFreeUI();
+                        stopListening();
+                        return;
                     }
-                    document.getElementById('voiceStatus').innerText = errorMsg;
-                    stopListening();
+                    if (!isHandsFreeMode && e.error === 'no-speech') {
+                        document.getElementById('voiceStatus').innerText = '⚠️ Suara tidak terdeteksi. Coba lagi.';
+                    }
                 };
 
                 recognition.onend = () => {
-                    stopListening();
+                    isListening = false;
+                    if (!isHandsFreeMode) {
+                        stopListening();
+                    } else if (!isSpeakingTTS) {
+                        restartRecognition();
+                    }
                 };
             }
             return recognition;
         }
 
-        window.toggleVoiceRecognition = function() {
+        function restartRecognition() {
+            if (!isHandsFreeMode || isSpeakingTTS) return;
+            setTimeout(() => {
+                try {
+                    const SR = getSpeechRecognition();
+                    if (SR && !isListening) SR.start();
+                } catch (e) {
+                    console.warn("Error auto-restarting SR:", e);
+                }
+            }, 300);
+        }
+
+        function handleHandsFreeResult(text) {
+            let foundWakeWord = WAKE_WORDS.find(w => text.includes(w));
+
+            if (foundWakeWord || awaitingCommandInHandsFree) {
+                let commandText = text;
+
+                if (foundWakeWord) {
+                    // Hapus kata kunci dari string untuk menyaring perintahnya saja
+                    commandText = text.replace(foundWakeWord, "").trim();
+                }
+
+                if (commandText.length > 0) {
+                    awaitingCommandInHandsFree = false;
+                    processVoiceCommand(commandText);
+                } else {
+                    // Pengguna hanya mengucapkan "Hey Kopi", sistem menunggu perintah berikutnya
+                    awaitingCommandInHandsFree = true;
+                    document.getElementById('voiceStatus').innerText = '🎙️ "Hey Kopi" terdeteksi! Silakan sebutkan nama menu...';
+                }
+            } else {
+                document.getElementById('voiceStatus').innerText = '🎙️ Hands-Free Aktif (Katakan "Hey Kopi" ...)';
+            }
+        }
+
+        function processVoiceCommand(text) {
+            // Deteksi level gula dari teks suara
+            let detectedSugar = 100;
+            if (text.includes("50%") || text.includes("50 persen") || text.includes("separuh") || text.includes("half sugar")) {
+                detectedSugar = 50;
+            } else if (text.includes("75%") || text.includes("75 persen") || text.includes("less sugar")) {
+                detectedSugar = 75;
+            } else if (text.includes("25%") || text.includes("25 persen") || text.includes("sedikit gula")) {
+                detectedSugar = 25;
+            } else if (text.includes("0%") || text.includes("tanpa gula") || text.includes("no sugar") || text.includes("bebas gula")) {
+                detectedSugar = 0;
+            }
+
+            const match = menuData.find(i => 
+                (Array.isArray(i.keywords) && i.keywords.some(k => text.includes(k.toLowerCase()))) || 
+                i.title.toLowerCase().includes(text)
+            );
+
+            if (match) { 
+                showActiveRecipe(match, 'medium', detectedSugar); 
+                window.speakRecipe(match, 'medium', detectedSugar);
+                document.getElementById('voiceStatus').innerText = `✅ Ditemukan: ${match.title} (Sugar ${detectedSugar}%)`; 
+            } else { 
+                document.getElementById('voiceStatus').innerText = `❌ Tidak ditemukan: "${text}"`; 
+            }
+        }
+
+        window.toggleHandsFreeMode = function() {
             const SR = getSpeechRecognition();
             if (!SR) {
-                alert("Browser Anda/In-App Browser ini tidak mendukung Speech Recognition. Silakan buka langsung di Safari (iOS) atau Chrome (Android).");
+                alert("Browser Anda tidak mendukung Speech Recognition. Silakan gunakan Google Chrome / Safari.");
+                return;
+            }
+
+            isHandsFreeMode = !isHandsFreeMode;
+            awaitingCommandInHandsFree = false;
+            updateHandsFreeUI();
+
+            if (isHandsFreeMode) {
+                try {
+                    if (isListening) SR.stop();
+                    setTimeout(() => { SR.start(); }, 200);
+                } catch(e) { console.warn(e); }
+            } else {
+                try { SR.stop(); } catch(e) {}
+            }
+        };
+
+        function updateHandsFreeUI() {
+            const handsFreeBtn = document.getElementById('handsFreeBtn');
+            const voiceStatus = document.getElementById('voiceStatus');
+
+            if (isHandsFreeMode) {
+                handsFreeBtn.classList.add('active');
+                handsFreeBtn.innerHTML = '<span>🎙️ Hands-Free: ON</span>';
+                voiceStatus.innerText = '🎙️ Hands-Free Aktif (Katakan "Hey Kopi" ...)';
+            } else {
+                handsFreeBtn.classList.remove('active');
+                handsFreeBtn.innerHTML = '<span>🎙️ Hands-Free: OFF</span>';
+                voiceStatus.innerText = 'Status: Klik & sebut menu ATAU aktifkan Hands-Free ("Hey Kopi")';
+            }
+        }
+
+        window.toggleVoiceRecognition = function() {
+            if (isHandsFreeMode) {
+                window.toggleHandsFreeMode(); // Matikan mode hands-free jika tombol tekan manual diklik
+            }
+
+            const SR = getSpeechRecognition();
+            if (!SR) {
+                alert("Browser Anda tidak mendukung Speech Recognition. Silakan buka di Chrome atau Safari.");
                 return;
             }
 
             if (isListening) {
-                try {
-                    SR.stop();
-                } catch (e) {
-                    stopListening();
-                }
+                try { SR.stop(); } catch (e) { stopListening(); }
             } else {
                 try {
                     SR.start();
                 } catch (e) {
-                    console.warn("Re-instantiating recognition for iOS:", e);
                     recognition = null;
                     const freshSR = getSpeechRecognition();
                     if (freshSR) freshSR.start();
