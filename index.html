@@ -1381,7 +1381,11 @@
             document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
             document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
             if (currentActiveRecipe) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                }
                 updateActiveRecipeView(currentActiveRecipe, size);
+                window.speakRecipe(currentActiveRecipe, size, currentSugarPercent);
             }
         };
 
@@ -1399,10 +1403,14 @@
             });
 
             if (currentActiveRecipe) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                }
                 updateActiveRecipeView(currentActiveRecipe, currentSize);
                 if (document.getElementById('focusOverlay').classList.contains('active')) {
                     updateFocusView(currentActiveRecipe, currentSize);
                 }
+                window.speakRecipe(currentActiveRecipe, currentSize, percent);
             }
         };
 
@@ -1477,10 +1485,14 @@
             document.getElementById('focusSizeMed').classList.toggle('active', size === 'medium');
             document.getElementById('focusSizeLarge').classList.toggle('active', size === 'large');
             if (currentActiveRecipe) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                }
                 updateFocusView(currentActiveRecipe, size);
                 updateActiveRecipeView(currentActiveRecipe, size);
                 document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
                 document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
+                window.speakRecipe(currentActiveRecipe, size, currentSugarPercent);
             }
         };
 
