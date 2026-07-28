@@ -197,11 +197,9 @@
             top: 0;
             z-index: 100;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            /* TAMBAHAN TRANSISI AUTO-HIDE */
             transition: transform 0.3s ease-in-out;
         }
 
-        /* KELAS UNTUK MENYEMBUNYIKAN HEADER SAAT SCROLL DOWN */
         header.hide-header {
             transform: translateY(-100%);
         }
@@ -1129,6 +1127,40 @@
         let currentSugarPercent = 100; // State Level Gula
         let editingId = null; 
 
+        /* =======================================================
+           SCREEN WAKE LOCK API (MENCEGAH LAYAR HP TERKUNCI/MATI)
+           ======================================================= */
+        let wakeLock = null;
+
+        async function enableWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Screen Wake Lock Aktif: Layar tidak akan mati.');
+                }
+            } catch (err) {
+                console.warn(`Gagal mengaktifkan Wake Lock: ${err.name}, ${err.message}`);
+            }
+        }
+
+        function disableWakeLock() {
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => {
+                    wakeLock = null;
+                    console.log('Screen Wake Lock Dinonaktifkan.');
+                }).catch(err => {
+                    console.warn('Gagal melepaskan Wake Lock:', err);
+                });
+            }
+        }
+
+        // Otomatis aktifkan kembali jika pengguna sempat berpindah tab lalu kembali ke app saat Hands-Free ON
+        document.addEventListener('visibilitychange', async () => {
+            if (wakeLock !== null && document.visibilityState === 'visible' && isHandsFreeMode) {
+                await enableWakeLock();
+            }
+        });
+
         // KALKULATOR TAKARAN SIRUP / GULA OTOMATIS
         function adjustSugarText(syrupText, percent) {
             if (!syrupText || syrupText === '-' || syrupText.toLowerCase().includes('tanpa')) {
@@ -1620,6 +1652,7 @@
                     if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
                         document.getElementById('voiceStatus').innerText = '❌ Akses mikrofon ditolak!';
                         isHandsFreeMode = false;
+                        disableWakeLock(); // Lepas Wake Lock jika gagal izin mic
                         updateHandsFreeUI();
                         stopListening();
                         return;
@@ -1671,7 +1704,7 @@
                     document.getElementById('voiceStatus').innerText = '🎙️ "Hey Kopi" terdeteksi! Silakan sebutkan nama menu...';
                 }
             } else {
-                document.getElementById('voiceStatus').innerText = '🎙️ Hands-Free Aktif (Katakan "Hey Kopi" ...)';
+                document.getElementById('voiceStatus').innerText = '🎙️ Hands-Free & Screen Lock Preserved (Katakan "Hey Kopi" ...)';
             }
         }
 
@@ -1713,11 +1746,13 @@
             updateHandsFreeUI();
 
             if (isHandsFreeMode) {
+                enableWakeLock(); // PERTAHANKAN LAYAR HP TETAP NYALA
                 try {
                     if (isListening) SR.stop();
                     setTimeout(() => { SR.start(); }, 200);
                 } catch(e) { console.warn(e); }
             } else {
+                disableWakeLock(); // KEMBALIKAN FITUR TERKUNCI NOMAL LAYAR HP
                 try { SR.stop(); } catch(e) {}
             }
         };
@@ -1729,7 +1764,7 @@
             if (isHandsFreeMode) {
                 handsFreeBtn.classList.add('active');
                 handsFreeBtn.innerHTML = '<span>🎙️ Hands-Free: ON</span>';
-                voiceStatus.innerText = '🎙️ Hands-Free Aktif (Katakan "Hey Kopi" ...)';
+                voiceStatus.innerText = '🎙️ Hands-Free & Layar Aktif (Katakan "Hey Kopi" ...)';
             } else {
                 handsFreeBtn.classList.remove('active');
                 handsFreeBtn.innerHTML = '<span>🎙️ Hands-Free: OFF</span>';
