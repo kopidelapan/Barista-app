@@ -197,6 +197,13 @@
             top: 0;
             z-index: 100;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            /* TAMBAHAN TRANSISI AUTO-HIDE */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* KELAS UNTUK MENYEMBUNYIKAN HEADER SAAT SCROLL DOWN */
+        header.hide-header {
+            transform: translateY(-100%);
         }
 
         .header-container {
@@ -239,7 +246,6 @@
             flex-wrap: wrap;
         }
 
-        /* Wrapper khusus kelompok tombol suara agar selalu berdampingan horizontal */
         .voice-btn-group {
             display: flex;
             align-items: center;
@@ -918,7 +924,7 @@
         </div>
     </div>
 
-    <header>
+    <header id="appHeader">
         <div class="header-container">
             <div class="brand">
                 <img src="logo.png" alt="Logo" class="brand-logo">
@@ -1062,6 +1068,26 @@
             </div>
         </div>
     </div>
+
+    <!-- SCRIPT AUTO-HIDE HEADER SAAT SCROLL -->
+    <script>
+        let lastScrollY = window.scrollY;
+        const appHeader = document.getElementById('appHeader');
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            // Jika scroll ke bawah dan sudah melewati 60px, sembunyikan header
+            if (currentScrollY > 60 && currentScrollY > lastScrollY) {
+                appHeader.classList.add('hide-header');
+            } else {
+                // Jika scroll ke atas, tampilkan kembali header
+                appHeader.classList.remove('hide-header');
+            }
+
+            lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+        });
+    </script>
 
     <!-- MAIN SCRIPT MODULE -->
     <script type="module">
@@ -1634,7 +1660,6 @@
                 let commandText = text;
 
                 if (foundWakeWord) {
-                    // Hapus kata kunci dari string untuk menyaring perintahnya saja
                     commandText = text.replace(foundWakeWord, "").trim();
                 }
 
@@ -1642,7 +1667,6 @@
                     awaitingCommandInHandsFree = false;
                     processVoiceCommand(commandText);
                 } else {
-                    // Pengguna hanya mengucapkan "Hey Kopi", sistem menunggu perintah berikutnya
                     awaitingCommandInHandsFree = true;
                     document.getElementById('voiceStatus').innerText = '🎙️ "Hey Kopi" terdeteksi! Silakan sebutkan nama menu...';
                 }
@@ -1652,7 +1676,6 @@
         }
 
         function processVoiceCommand(text) {
-            // Deteksi level gula dari teks suara
             let detectedSugar = 100;
             if (text.includes("50%") || text.includes("50 persen") || text.includes("separuh") || text.includes("half sugar")) {
                 detectedSugar = 50;
@@ -1716,7 +1739,7 @@
 
         window.toggleVoiceRecognition = function() {
             if (isHandsFreeMode) {
-                window.toggleHandsFreeMode(); // Matikan mode hands-free jika tombol tekan manual diklik
+                window.toggleHandsFreeMode();
             }
 
             const SR = getSpeechRecognition();
