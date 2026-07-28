@@ -239,6 +239,14 @@
             flex-wrap: wrap;
         }
 
+        /* Wrapper khusus kelompok tombol suara agar selalu berdampingan horizontal */
+        .voice-btn-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+
         .mic-btn {
             background: var(--accent-gold);
             color: #121316;
@@ -251,6 +259,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             transition: all 0.2s ease;
             box-shadow: 0 0 12px rgba(217, 160, 91, 0.3);
@@ -281,6 +290,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
             transition: all 0.2s ease;
             white-space: nowrap;
@@ -826,6 +836,13 @@
         @media (max-width: 768px) {
             .header-container { flex-direction: column; align-items: stretch; }
             .voice-section { max-width: 100%; }
+            .voice-btn-group { width: 100%; }
+            .voice-btn-group .mic-btn, 
+            .voice-btn-group .handsfree-btn {
+                flex: 1;
+                font-size: 0.8rem;
+                padding: 10px 8px;
+            }
             .recipe-grid { grid-template-columns: 1fr 1fr; }
             .focus-title-group h1 { font-size: 2rem; }
             .focus-card .focus-value { font-size: 1.4rem; }
@@ -910,16 +927,19 @@
             </div>
 
             <div class="voice-section">
-                <!-- TOMBOL TEKAN MANUAL -->
-                <button id="micBtn" class="mic-btn" onclick="window.toggleVoiceRecognition()">
-                    <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/></svg>
-                    <span id="micBtnText">Tekan & Sebut Menu</span>
-                </button>
-                
-                <!-- TOMBOL TOGGLE HANDS-FREE "HEY KOPI" -->
-                <button id="handsFreeBtn" class="handsfree-btn" onclick="window.toggleHandsFreeMode()">
-                    <span>🎙️ Hands-Free: OFF</span>
-                </button>
+                <!-- WRAPPER TOMBOL KONTROL SUARA SEJAJAR -->
+                <div class="voice-btn-group">
+                    <!-- TOMBOL TEKAN MANUAL -->
+                    <button id="micBtn" class="mic-btn" onclick="window.toggleVoiceRecognition()">
+                        <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/></svg>
+                        <span id="micBtnText">Tekan & Sebut Menu</span>
+                    </button>
+                    
+                    <!-- TOMBOL TOGGLE HANDS-FREE "HEY KOPI" -->
+                    <button id="handsFreeBtn" class="handsfree-btn" onclick="window.toggleHandsFreeMode()">
+                        <span>🎙️ Hands-Free: OFF</span>
+                    </button>
+                </div>
 
                 <div id="voiceStatus" class="voice-status">Status: Klik & sebut menu ATAU aktifkan Hands-Free ("Hey Kopi")</div>
             </div>
