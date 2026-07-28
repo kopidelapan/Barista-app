@@ -1107,7 +1107,18 @@
         const db = getDatabase(app);
         const recipesRef = ref(db, 'recipes');
 
-        const MASTER_PIN = "brekele";
+        // Hash SHA-256 untuk PIN "brekele"
+        const MASTER_PIN_HASH = "954508492fbf84d0b27b38cb0ed8c2e6f49969ca18bb9b1580aa5ea9ff9b8bb5";
+
+        // Fungsi Helper Hashing SHA-256 (Native Web Crypto API)
+        async function hashSHA256(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
         let pendingActionType = null; 
         let pendingDeleteId = null;
 
@@ -1179,9 +1190,10 @@
             return `${adjustedText} (${percent}%)`;
         }
 
-        window.checkPin = function() {
+        window.checkPin = async function() {
             const input = document.getElementById('pinInput').value;
-            if (input === MASTER_PIN) {
+            const hashedInput = await hashSHA256(input);
+            if (hashedInput === MASTER_PIN_HASH) {
                 sessionStorage.setItem('barista_auth', 'true');
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('pinInput').value = '';
@@ -1227,9 +1239,10 @@
             pendingDeleteId = null;
         };
 
-        window.verifyActionPin = function() {
+        window.verifyActionPin = async function() {
             const inputPin = document.getElementById('actionPinInput').value;
-            if (inputPin === MASTER_PIN) {
+            const hashedInput = await hashSHA256(inputPin);
+            if (hashedInput === MASTER_PIN_HASH) {
                 const action = pendingActionType;
                 const delId = pendingDeleteId;
                 window.closeActionPinModal();
