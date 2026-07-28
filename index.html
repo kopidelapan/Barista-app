@@ -412,8 +412,9 @@
 
         .card-category {
             font-size: 0.75rem;
-            color: var(--text-muted);
+            color: var(--accent-gold);
             margin-top: 2px;
+            font-weight: 600;
         }
 
         .delete-card-btn {
@@ -886,7 +887,7 @@
         <div class="menu-grid" id="menuGrid"></div>
     </div>
 
-    <!-- MODAL FORM (TAMBAH & EDIT DENGAN 2 UKURAN DAN DROPDOWN KATEGORI) -->
+    <!-- MODAL FORM -->
     <div class="modal-overlay" id="recipeModal">
         <div class="modal-card">
             <h3 class="modal-title" id="modalTitle">Tambah Menu Baru</h3>
@@ -965,6 +966,15 @@
         let pendingActionType = null; 
         let pendingDeleteId = null;
 
+        // PRIORITAS URUTAN KATEGORI MENU
+        const CATEGORY_ORDER = [
+            "Espresso Based",
+            "Flavored Latte",
+            "Black Coffee",
+            "Non-Coffee",
+            "Custom Menu"
+        ];
+
         window.checkPin = function() {
             const input = document.getElementById('pinInput').value;
             if (input === MASTER_PIN) {
@@ -1030,7 +1040,7 @@
             }
         };
 
-        // --- DATA DEFAULT DENGAN STRUKTUR SIZES (MEDIUM & LARGE) ---
+        // --- DATA DEFAULT ---
         const defaultMenuData = [
             {
                 title: "Kopi Susu Aren", icon: "☕", category: "Espresso Based",
@@ -1119,11 +1129,35 @@
             console.error("Gagal konek Firebase Realtime DB:", err);
         });
 
+        // FUNGSI AUTO-SORT BERDASARKAN KATEGORI & NAMA MENU
+        function sortMenuItems(items) {
+            return [...items].sort((a, b) => {
+                const catA = a.category || 'Custom Menu';
+                const catB = b.category || 'Custom Menu';
+
+                let idxA = CATEGORY_ORDER.indexOf(catA);
+                let idxB = CATEGORY_ORDER.indexOf(catB);
+
+                if (idxA === -1) idxA = 999;
+                if (idxB === -1) idxB = 999;
+
+                // Urutkan berdasarkan hirarki kategori
+                if (idxA !== idxB) {
+                    return idxA - idxB;
+                }
+
+                // Jika kategori sama, urutkan alfabetis berdasarkan Nama Menu
+                return a.title.localeCompare(b.title);
+            });
+        }
+
         function renderMenuCards(items = menuData) {
+            const sortedItems = sortMenuItems(items); // Terapkan Auto-Sort
             const grid = document.getElementById('menuGrid');
-            document.getElementById('menuCount').innerText = items.length;
+            document.getElementById('menuCount').innerText = sortedItems.length;
             grid.innerHTML = '';
-            items.forEach(item => {
+            
+            sortedItems.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'menu-card';
                 card.onclick = () => showActiveRecipe(item, 'medium');
@@ -1329,9 +1363,7 @@
             window.speechSynthesis.speak(utterance);
         };
 
-        /* ==========================================================
-           LOGIKA VOICE RECOGNITION (CROSS-PLATFORM: iOS & ANDROID)
-           ========================================================== */
+        /* VOICE RECOGNITION */
         let recognition = null;
         let isListening = false;
 
@@ -1427,7 +1459,7 @@
             editingId = null;
             document.getElementById('modalTitle').innerText = "Tambah Menu Baru";
             document.getElementById('newTitle').value = '';
-            document.getElementById('newCategory').value = 'Espresso Based'; // Default Kategori
+            document.getElementById('newCategory').value = 'Espresso Based';
             document.getElementById('newKeywords').value = '';
             
             document.getElementById('medSyrup').value = '';
@@ -1454,7 +1486,7 @@
             editingId = item.id;
             document.getElementById('modalTitle').innerText = `Edit Resep: ${item.title}`;
             document.getElementById('newTitle').value = item.title || '';
-            document.getElementById('newCategory').value = item.category || 'Espresso Based'; // Set Kategori saat Edit
+            document.getElementById('newCategory').value = item.category || 'Espresso Based';
             document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(', ') : (item.keywords || '');
             
             const med = item.sizes?.medium || {};
@@ -1487,7 +1519,7 @@
             const recipePayload = {
                 title: title, 
                 icon: currentActiveRecipe && editingId ? (currentActiveRecipe.icon || "☕") : "☕", 
-                category: document.getElementById('newCategory').value, // Mengambil nilai dari dropdown Kategori
+                category: document.getElementById('newCategory').value,
                 keywords: document.getElementById('newKeywords').value.split(',').map(k => k.trim()).filter(k => k),
                 sizes: {
                     medium: {
