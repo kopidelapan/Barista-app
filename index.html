@@ -42,6 +42,11 @@
         .section-box { background: #16181d; border: 1px solid var(--card-border); padding: 12px; border-radius: 10px; margin-bottom: 12px; }
         .section-box h4 { color: var(--accent-gold); font-size: 0.9rem; margin-bottom: 8px; border-bottom: 1px solid var(--card-border); padding-bottom: 4px; }
 
+        /* checkbox style */
+        .checkbox-group { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+        .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent-gold); cursor: pointer; }
+        .checkbox-group label { color: var(--text-muted); font-size: 0.85rem; cursor: pointer; }
+
         header { background: #181a20; border-bottom: 1px solid var(--card-border); padding: 16px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease-in-out; }
         header.hide-header { transform: translateY(-100%); }
         .header-container { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
@@ -86,6 +91,7 @@
         .delete-card-btn:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
         .quick-ingredients { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .ing-tag { background: var(--info-bg); color: #d1d5db; font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
+        .size-badge { font-size: 0.65rem; background: var(--accent-gold); color: #121316; padding: 1px 8px; border-radius: 10px; font-weight: 700; margin-left: 6px; }
 
         .active-display { background: #1e2029; border: 2px solid var(--accent-gold); border-radius: 16px; padding: 24px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(217,160,91,0.15); animation: fadeIn 0.3s ease; display: none; scroll-margin-top: 160px; }
         .active-display.visible { display: block; }
@@ -99,6 +105,7 @@
         .size-selector, .sugar-selector { display: flex; background: #121316; border: 1px solid var(--card-border); border-radius: 30px; padding: 4px; gap: 4px; width: fit-content; }
         .size-btn, .sugar-btn { background: transparent; border: none; color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
         .size-btn.active, .sugar-btn.active { background: var(--accent-gold); color: #121316; box-shadow: 0 2px 10px rgba(217,160,91,0.3); }
+        .size-btn.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
         .active-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .close-display-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
         .close-display-btn:hover { color: #fff; background: var(--card-border); }
@@ -254,7 +261,7 @@
                 <button class="close-batch-btn" onclick="window.closeBatchOrder()">✕</button>
             </div>
             <div class="batch-form">
-                <select id="batchMenuSelect" class="form-control"></select>
+                <select id="batchMenuSelect" class="form-control" onchange="window.updateBatchSizeOptions()"></select>
                 <select id="batchSizeSelect" class="form-control">
                     <option value="medium">Medium (M)</option>
                     <option value="large">Large (L)</option>
@@ -403,21 +410,27 @@
                 <label>Kata Kunci Suara (pisahkan koma)</label>
                 <input type="text" id="newKeywords" class="form-control" placeholder="Contoh: pandan, kopi pandan" />
             </div>
+            <!-- TERSEDIA UKURAN -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="newAvailableLarge" checked />
+                <label for="newAvailableLarge">Tersedia untuk ukuran Large</label>
+                <span style="color:var(--text-muted); font-size:0.7rem; margin-left:auto;">(jika tidak dicentang, hanya Medium)</span>
+            </div>
             <div class="section-box">
                 <h4>Takaran Medium (M)</h4>
                 <div class="form-group"><label>Sirup / Pemanis (M)</label><input type="text" id="medSyrup" class="form-control" placeholder="15 ml Pandan" /></div>
-                <div class="form-group"><label>Base / Kopi (M)</label><input type="text" id="medEspresso" class="form-control" placeholder="30 ml Espresso, 15 ml Vanilla" /></div>
+                <div class="form-group"><label>Base / Kopi (M)</label><input type="text" id="medEspresso" class="form-control" placeholder="30 ml Espresso" /></div>
                 <div class="form-group"><label>Krimer (M)</label><input type="text" id="medCreamer" class="form-control" placeholder="15 gr Powder" /></div>
-                <div class="form-group"><label>Susu / Liquid (M)</label><input type="text" id="medMilk" class="form-control" placeholder="100 ml Fresh Milk, 50 ml Oat Milk" /></div>
+                <div class="form-group"><label>Susu / Liquid (M)</label><input type="text" id="medMilk" class="form-control" placeholder="100 ml Fresh Milk" /></div>
                 <div class="form-group"><label>Es / Toping (M)</label><input type="text" id="medIce" class="form-control" placeholder="Secukupnya" /></div>
                 <div class="form-group"><label>Langkah (M, pisahkan koma)</label><input type="text" id="medSteps" class="form-control" placeholder="Tuang sirup, Mix krimer, Tuang susu, Masukkan es" /></div>
             </div>
             <div class="section-box">
                 <h4>Takaran Large (L)</h4>
                 <div class="form-group"><label>Sirup / Pemanis (L)</label><input type="text" id="largeSyrup" class="form-control" placeholder="25 ml Pandan" /></div>
-                <div class="form-group"><label>Base / Kopi (L)</label><input type="text" id="largeEspresso" class="form-control" placeholder="60 ml Espresso, 25 ml Vanilla" /></div>
+                <div class="form-group"><label>Base / Kopi (L)</label><input type="text" id="largeEspresso" class="form-control" placeholder="60 ml Espresso" /></div>
                 <div class="form-group"><label>Krimer (L)</label><input type="text" id="largeCreamer" class="form-control" placeholder="25 gr Powder" /></div>
-                <div class="form-group"><label>Susu / Liquid (L)</label><input type="text" id="largeMilk" class="form-control" placeholder="150 ml Fresh Milk, 75 ml Oat Milk" /></div>
+                <div class="form-group"><label>Susu / Liquid (L)</label><input type="text" id="largeMilk" class="form-control" placeholder="150 ml Fresh Milk" /></div>
                 <div class="form-group"><label>Es / Toping (L)</label><input type="text" id="largeIce" class="form-control" placeholder="Penuh" /></div>
                 <div class="form-group"><label>Langkah (L, pisahkan koma)</label><input type="text" id="largeSteps" class="form-control" placeholder="Tuang sirup, Mix krimer, Tuang susu, Masukkan es" /></div>
             </div>
@@ -517,7 +530,6 @@
                 // Ambil nama: hapus angka dan satuan
                 let name = p.replace(/(\d+(\.\d+)?)\s*(ml|gr|gram|shot|sdm|sendok|pump)/gi, '').trim();
                 if (!name) {
-                    // jika tidak ada nama, coba ambil kata setelah angka
                     const words = p.split(/\s+/);
                     for (let w of words) {
                         if (!/\d/.test(w) && !/(ml|gr|gram|shot|sdm|sendok|pump)/i.test(w) && w.length > 1) {
@@ -609,12 +621,13 @@
             }
         };
 
-        // ===== DEFAULT DATA =====
+        // ===== DEFAULT DATA (dengan availableSizes) =====
         const defaultMenuData = [{
             title: "Kopi Susu Aren",
             icon: "☕",
             category: "Espresso Based",
             keywords: ["aren", "kopi susu aren", "kopsu", "gula aren"],
+            availableSizes: ['medium', 'large'],
             sizes: {
                 medium: {
                     syrup: "15 ml Gula Aren",
@@ -642,6 +655,7 @@
             icon: "🥜",
             category: "Flavored Latte",
             keywords: ["hazelnut", "kopi hazelnut", "hazelnut latte"],
+            availableSizes: ['medium', 'large'],
             sizes: {
                 medium: {
                     syrup: "15 ml Sirup (1 Pump)",
@@ -669,6 +683,7 @@
             icon: "🧊",
             category: "Black Coffee",
             keywords: ["americano", "kopi hitam", "ice americano"],
+            availableSizes: ['medium', 'large'],
             sizes: {
                 medium: {
                     syrup: "Tanpa Pemanis",
@@ -705,6 +720,10 @@
                                 steps: item.steps || [] }
                         };
                     }
+                    // pastikan availableSizes ada
+                    if (!item.availableSizes || !Array.isArray(item.availableSizes) || item.availableSizes.length === 0) {
+                        item.availableSizes = ['medium', 'large'];
+                    }
                     return item;
                 });
             } else {
@@ -728,6 +747,7 @@
             }
             if (document.getElementById('batchOverlay').classList.contains('active')) {
                 populateBatchMenuSelect();
+                updateBatchSizeOptions();
             }
         }, (err) => console.error("Firebase error:", err));
 
@@ -752,12 +772,14 @@
                 card.className = 'menu-card';
                 card.onclick = () => showActiveRecipe(item, 'medium', 100);
                 const med = item.sizes?.medium || {};
+                const sizes = item.availableSizes || ['medium', 'large'];
+                const sizeLabel = sizes.includes('large') ? '' : ' (Medium only)';
                 card.innerHTML = `
                     <div class="card-header">
                         <div class="card-info">
                             <div class="card-icon">${item.icon || '☕'}</div>
                             <div>
-                                <div class="card-title">${item.title}</div>
+                                <div class="card-title">${item.title}${sizeLabel}</div>
                                 <div class="card-category">${item.category || 'Custom Menu'}</div>
                             </div>
                         </div>
@@ -774,9 +796,17 @@
 
         // ===== SIZE & SUGAR =====
         window.switchSize = function(size) {
+            if (!currentActiveRecipe) return;
+            const available = currentActiveRecipe.availableSizes || ['medium', 'large'];
+            if (!available.includes(size)) {
+                // jika size tidak tersedia, switch ke medium (fallback)
+                size = 'medium';
+            }
             currentSize = size;
             document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
             document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
+            // disable tombol yang tidak tersedia
+            document.getElementById('btnSizeLarge').classList.toggle('disabled', !available.includes('large'));
             if (currentActiveRecipe) {
                 if ('speechSynthesis' in window) window.speechSynthesis.cancel();
                 updateActiveRecipeView(currentActiveRecipe, size);
@@ -808,8 +838,16 @@
             currentActiveRecipe = item;
             currentSize = size;
             currentSugarPercent = sugarPercent;
+
+            const available = item.availableSizes || ['medium', 'large'];
+            // pastikan size valid
+            if (!available.includes(size)) size = 'medium';
+            currentSize = size;
+
             document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
             document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
+            document.getElementById('btnSizeLarge').classList.toggle('disabled', !available.includes('large'));
+
             window.switchSugar(sugarPercent);
             document.getElementById('activeTitle').innerText = item.title;
             const kw = Array.isArray(item.keywords) ? item.keywords.join('", "') : item.keywords;
@@ -855,6 +893,9 @@
             updateFocusView(currentActiveRecipe, currentSize);
         };
         window.changeFocusSize = function(size) {
+            if (!currentActiveRecipe) return;
+            const available = currentActiveRecipe.availableSizes || ['medium', 'large'];
+            if (!available.includes(size)) size = 'medium';
             currentSize = size;
             document.getElementById('focusSizeMed').classList.toggle('active', size === 'medium');
             document.getElementById('focusSizeLarge').classList.toggle('active', size === 'large');
@@ -921,6 +962,10 @@
             document.getElementById('newCategory').value = item.category || 'Espresso Based';
             document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(
                 ', ') : (item.keywords || '');
+            // available sizes
+            const avail = item.availableSizes || ['medium', 'large'];
+            document.getElementById('newAvailableLarge').checked = avail.includes('large');
+
             const med = item.sizes?.medium || {};
             document.getElementById('medSyrup').value = med.syrup || '';
             document.getElementById('medEspresso').value = med.espresso || '';
@@ -947,11 +992,15 @@
         window.saveMenu = function() {
             const title = document.getElementById('newTitle').value.trim();
             if (!title) return alert("Harap isi nama menu!");
+            const availableLarge = document.getElementById('newAvailableLarge').checked;
+            const availableSizes = availableLarge ? ['medium', 'large'] : ['medium'];
+
             const payload = {
                 title,
                 icon: currentActiveRecipe && editingId ? (currentActiveRecipe.icon || "☕") : "☕",
                 category: document.getElementById('newCategory').value,
                 keywords: document.getElementById('newKeywords').value.split(',').map(k => k.trim()).filter(k => k),
+                availableSizes: availableSizes,
                 sizes: {
                     medium: {
                         syrup: document.getElementById('medSyrup').value.trim() || '-',
@@ -1195,6 +1244,7 @@
         window.openBatchOrder = function() {
             document.getElementById('batchOverlay').classList.add('active');
             populateBatchMenuSelect();
+            updateBatchSizeOptions();
             renderBatchOrders();
             updateBatchSummary();
             document.querySelectorAll('.batch-sugar-btn').forEach(btn => {
@@ -1214,9 +1264,51 @@
                 const opt = document.createElement('option');
                 opt.value = item.id;
                 opt.textContent = item.title;
+                // simpan availableSizes di data attribute untuk digunakan di updateBatchSizeOptions
+                opt.dataset.sizes = JSON.stringify(item.availableSizes || ['medium', 'large']);
                 select.appendChild(opt);
             });
         }
+
+        // ===== UPDATE BATCH SIZE OPTIONS berdasarkan menu yang dipilih =====
+        window.updateBatchSizeOptions = function() {
+            const select = document.getElementById('batchMenuSelect');
+            const sizeSelect = document.getElementById('batchSizeSelect');
+            const selectedOption = select.options[select.selectedIndex];
+            if (!selectedOption) return;
+            let availableSizes = ['medium', 'large'];
+            try {
+                const parsed = JSON.parse(selectedOption.dataset.sizes);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    availableSizes = parsed;
+                }
+            } catch (e) {}
+
+            // Simpan value saat ini
+            const currentSize = sizeSelect.value;
+
+            // Clear dan rebuild options
+            sizeSelect.innerHTML = '';
+            if (availableSizes.includes('medium')) {
+                const opt = document.createElement('option');
+                opt.value = 'medium';
+                opt.textContent = 'Medium (M)';
+                sizeSelect.appendChild(opt);
+            }
+            if (availableSizes.includes('large')) {
+                const opt = document.createElement('option');
+                opt.value = 'large';
+                opt.textContent = 'Large (L)';
+                sizeSelect.appendChild(opt);
+            }
+
+            // Set value ke yang tersedia (jika currentSize tersedia, gunakan, else pilih yang pertama)
+            if (availableSizes.includes(currentSize)) {
+                sizeSelect.value = currentSize;
+            } else {
+                sizeSelect.value = availableSizes[0] || 'medium';
+            }
+        };
 
         window.setBatchSugar = function(percent) {
             batchSugarPercent = percent;
@@ -1440,6 +1532,7 @@
             document.getElementById('newTitle').value = '';
             document.getElementById('newCategory').value = 'Espresso Based';
             document.getElementById('newKeywords').value = '';
+            document.getElementById('newAvailableLarge').checked = true;
             document.getElementById('medSyrup').value = '';
             document.getElementById('medEspresso').value = '';
             document.getElementById('medCreamer').value = '';
@@ -1455,7 +1548,7 @@
             document.getElementById('recipeModal').classList.add('open');
         };
 
-        console.log('✅ Barista Assistant with multi-item parsing loaded!');
+        console.log('✅ Barista Assistant with multi-item parsing and size availability loaded!');
     </script>
 </body>
 </html>
