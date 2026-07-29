@@ -4,8 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Barista Assistant - Resep Kopi Suara</title>
-    <!-- Tesseract.js for OCR -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         :root {
             --bg-dark: #121316;
@@ -1084,60 +1082,6 @@
             word-break: break-word;
         }
 
-        /* Upload screenshot */
-        .upload-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        .upload-area input[type="file"] {
-            display: none;
-        }
-        .upload-label {
-            background: var(--card-border);
-            color: var(--text-main);
-            padding: 6px 14px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.2s;
-            border: 1px solid var(--accent-gold);
-        }
-        .upload-label:hover {
-            background: var(--accent-gold);
-            color: #121316;
-        }
-        .upload-preview {
-            max-width: 180px;
-            max-height: 120px;
-            border-radius: 8px;
-            border: 1px solid var(--card-border);
-            object-fit: contain;
-            display: none;
-        }
-        .ocr-status {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-        .ocr-result {
-            background: var(--info-bg);
-            border-radius: 8px;
-            padding: 10px;
-            margin-top: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid var(--card-border);
-            font-size: 0.8rem;
-            white-space: pre-wrap;
-            display: none;
-        }
-        .ocr-result.show {
-            display: block;
-        }
-
         @media (max-width: 768px) {
             .header-row-top {
                 flex-wrap: wrap;
@@ -1393,22 +1337,6 @@
                 <input type="number" id="batchQuantity" class="form-control" value="1" min="1" style="width:70px;">
                 <button class="btn btn-primary" onclick="window.addBatchOrder()">+ Tambah</button>
             </div>
-
-            <!-- Upload Screenshot -->
-            <div style="margin-bottom:12px; border-top:1px solid var(--card-border); padding-top:12px;">
-                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                    <span style="font-size:0.8rem; color:var(--text-muted);">📸 Upload Screenshot Order:</span>
-                    <div class="upload-area">
-                        <label for="screenshotInput" class="upload-label">📁 Pilih Gambar</label>
-                        <input type="file" id="screenshotInput" accept="image/*" />
-                        <button class="btn btn-secondary" id="processScreenshotBtn" onclick="window.processScreenshot()" style="display:none;">⚡ Proses OCR</button>
-                        <img id="screenshotPreview" class="upload-preview" alt="Preview" />
-                    </div>
-                </div>
-                <div id="ocrStatus" class="ocr-status"></div>
-                <div id="ocrResult" class="ocr-result"></div>
-            </div>
-
             <div class="batch-orders">
                 <h3>Daftar Pesanan (<span id="batchCount">0</span>)</h3>
                 <table id="batchTable">
@@ -1684,6 +1612,7 @@
             saveFavorites();
             renderFavorites();
             renderMenuCards();
+            // Re-populate batch dropdown if open
             if (document.getElementById('batchOverlay').classList.contains('active')) {
                 populateBatchMenuSelect();
             }
@@ -2634,13 +2563,6 @@
                 btn.classList.toggle('active', parseInt(btn.dataset.sugar) === 100);
             });
             batchSugarPercent = 100;
-            // Reset upload UI
-            document.getElementById('screenshotInput').value = '';
-            document.getElementById('screenshotPreview').style.display = 'none';
-            document.getElementById('ocrResult').classList.remove('show');
-            document.getElementById('ocrResult').textContent = '';
-            document.getElementById('ocrStatus').textContent = '';
-            document.getElementById('processScreenshotBtn').style.display = 'none';
         };
 
         window.closeBatchOrder = function() {
@@ -2652,6 +2574,7 @@
             const select = document.getElementById('batchMenuSelect');
             select.innerHTML = '';
 
+            // Urutkan: Favorit di atas, lalu berdasarkan kategori, lalu alfabetis
             const sortedItems = [...menuData].sort((a, b) => {
                 const aIsFav = favorites.includes(a.id);
                 const bIsFav = favorites.includes(b.id);
@@ -2905,136 +2828,6 @@
             document.getElementById('batchInstructionModal').classList.remove('open');
         };
 
-        // ===== UPLOAD SCREENSHOT & OCR =====
-        // Trigger when file selected
-        document.getElementById('screenshotInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                const img = document.getElementById('screenshotPreview');
-                img.src = ev.target.result;
-                img.style.display = 'block';
-                document.getElementById('processScreenshotBtn').style.display = 'inline-flex';
-                document.getElementById('ocrStatus').textContent = 'Gambar siap diproses. Klik "Proses OCR"';
-                document.getElementById('ocrResult').classList.remove('show');
-                document.getElementById('ocrResult').textContent = '';
-            };
-            reader.readAsDataURL(file);
-        });
-
-        window.processScreenshot = function() {
-            const img = document.getElementById('screenshotPreview');
-            if (!img.src || img.style.display === 'none') {
-                alert('Pilih gambar terlebih dahulu.');
-                return;
-            }
-            const status = document.getElementById('ocrStatus');
-            status.textContent = '⏳ Memproses OCR... (mungkin memakan waktu)';
-            const resultDiv = document.getElementById('ocrResult');
-            resultDiv.classList.remove('show');
-            resultDiv.textContent = '';
-
-            // Use Tesseract.js
-            const worker = Tesseract.createWorker({
-                logger: m => {
-                    if (m.status === 'recognizing text') {
-                        status.textContent = `⏳ OCR: ${Math.round(m.progress * 100)}%`;
-                    }
-                }
-            });
-
-            (async () => {
-                await worker.load();
-                await worker.loadLanguage('ind');
-                await worker.initialize('ind');
-                const { data: { text } } = await worker.recognize(img);
-                await worker.terminate();
-
-                status.textContent = '✅ OCR selesai. Hasil parsing:';
-                resultDiv.textContent = text;
-                resultDiv.classList.add('show');
-
-                // Parse OCR text to extract orders
-                const parsed = parseOCROrders(text);
-                if (parsed.length === 0) {
-                    status.textContent = '⚠️ Tidak ada item yang dikenali dari gambar. Coba periksa teks hasil OCR di atas.';
-                } else {
-                    status.textContent =
-                    `✅ Ditemukan ${parsed.length} item. Menambahkan ke batch order...`;
-                    parsed.forEach(item => {
-                        // cari menu berdasarkan title (case insensitive)
-                        const menu = menuData.find(m => m.title.toLowerCase().includes(item.title.toLowerCase()));
-                        if (menu) {
-                            let size = item.size || 'medium';
-                            const avail = menu.availableSizes || ['medium', 'large'];
-                            if (!avail.includes(size)) size = avail[0] || 'medium';
-                            let sugar = item.sugar || 100;
-                            if (sugar < 0 || sugar > 100) sugar = 100;
-                            const qty = item.qty || 1;
-                            batchOrders.push({
-                                menuId: menu.id,
-                                title: menu.title,
-                                size: size,
-                                sugar: sugar,
-                                quantity: qty
-                            });
-                        } else {
-                            status.textContent += `\n⚠️ Menu "${item.title}" tidak ditemukan.`;
-                        }
-                    });
-                    renderBatchOrders();
-                    updateBatchSummary();
-                }
-            }).catch(err => {
-                status.textContent = '❌ Error OCR: ' + err.message;
-                console.error(err);
-            });
-        };
-
-        // Fungsi parsing sederhana: cari pola "Nama Menu (M/L) x Qty" atau "Nama Menu (M/L)" dll.
-        function parseOCROrders(text) {
-            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            const results = [];
-            // Pola: cari kata yang mirip dengan menu title
-            // Coba cari masing-masing menuData di dalam teks
-            // Untuk setiap baris atau gabungan baris, cari menu yang cocok
-            // Kita akan scan seluruh teks, cari setiap menu title yang ada
-            const allMenuTitles = menuData.map(m => m.title.toLowerCase());
-            // Gabungkan semua baris menjadi satu string
-            const fullText = text.toLowerCase();
-            for (const menu of menuData) {
-                const titleLower = menu.title.toLowerCase();
-                if (fullText.includes(titleLower)) {
-                    // cari detail ukuran, qty, sugar di sekitar
-                    // cari ukuran: "m" atau "l" atau "medium" atau "large"
-                    let size = 'medium';
-                    let qty = 1;
-                    let sugar = 100;
-                    // cari qty: angka di depan atau di belakang
-                    const qtyMatch = fullText.match(new RegExp(`(\\d+)\\s*[x×]\\s*${titleLower}|${titleLower}\\s*[x×]\\s*(\\d+)`, 'i'));
-                    if (qtyMatch) {
-                        const num = parseInt(qtyMatch[1] || qtyMatch[2]);
-                        if (num > 0) qty = num;
-                    }
-                    // cari ukuran: kata "large", "l", "medium", "m" (hindari false positive)
-                    if (fullText.includes('large') || fullText.includes(' l ')) size = 'large';
-                    else if (fullText.includes('medium')) size = 'medium';
-                    // cari sugar: misal "sugar 50%" atau "50% sugar"
-                    const sugarMatch = fullText.match(/(\d+)\s*%/);
-                    if (sugarMatch) {
-                        const s = parseInt(sugarMatch[1]);
-                        if (s >= 0 && s <= 100) sugar = s;
-                    }
-                    // cek apakah menu sudah ditambahkan (hindari duplikat)
-                    if (!results.some(r => r.title === menu.title && r.size === size && r.sugar === sugar)) {
-                        results.push({ title: menu.title, size, qty, sugar });
-                    }
-                }
-            }
-            return results;
-        }
-
         // ===== OPEN ADD MODAL =====
         window.openAddModal = function() {
             editingId = null;
@@ -3061,7 +2854,7 @@
 
         // ===== INIT =====
         loadFavorites();
-        console.log('✅ Barista Assistant - Batch dropdown terurut & Upload Screenshot OCR!');
+        console.log('✅ Barista Assistant - Batch dropdown terurut: Favorit di atas, lalu kategori!');
     </script>
 </body>
 </html>
