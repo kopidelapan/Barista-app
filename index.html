@@ -2420,176 +2420,8 @@
             }, 300);
         }
 
-        // ===== PERINTAH SUARA - BATCH PARSING =====
-        function parseBatchCommand(text) {
-            // Pola: [qty] [menu] [size] [sugar] ... batch
-            // Deteksi kata kunci batch
-            const batchKeywords = ['batch', 'tambah', 'order', 'daftar', 'ke batch', 'tambahkan', 'tambahin', '+'];
-            let hasBatchKeyword = false;
-            for (const kw of batchKeywords) {
-                if (text.includes(kw)) { hasBatchKeyword = true; break; }
-            }
-            if (!hasBatchKeyword) return null;
-
-            // Ambil qty (angka)
-            let qty = 1;
-            const qtyMatch = text.match(/\b(\d+)\s*(?:x|porsi|cup|gelas|)/i);
-            if (qtyMatch) qty = parseInt(qtyMatch[1]);
-
-            // Deteksi ukuran
-            let size = null;
-            if (text.includes('large') || text.includes('besar') || text.includes('L')) size = 'large';
-            else if (text.includes('medium') || text.includes('sedang') || text.includes('M')) size = 'medium';
-            // default nanti akan diisi jika menu punya size
-
-            // Deteksi sugar
-            let sugar = null;
-            const sugarMatch = text.match(/\b(100|75|50|25|0)\s*%/i);
-            if (sugarMatch) sugar = parseInt(sugarMatch[1]);
-            else if (text.includes('no sugar') || text.includes('tanpa gula') || text.includes('bebas gula')) sugar = 0;
-            else if (text.includes('half sugar') || text.includes('separuh')) sugar = 50;
-            else if (text.includes('less sugar') || text.includes('sedikit gula')) sugar = 75;
-            else if (text.includes('full sugar') || text.includes('penuh')) sugar = 100;
-
-            // Cari menu: coba cocokkan dengan title atau keywords
-            let matchedMenu = null;
-            // Hapus angka, ukuran, sugar, batch keywords dari text untuk mencari nama
-            let cleanText = text;
-            // Hapus angka qty
-            cleanText = cleanText.replace(/\b\d+\s*(?:x|porsi|cup|gelas)/gi, '');
-            // Hapus kata ukuran
-            cleanText = cleanText.replace(/\b(large|medium|besar|sedang|L|M)\b/gi, '');
-            // Hapus sugar
-            cleanText = cleanText.replace(/\b(\d+%|no sugar|tanpa gula|bebas gula|half sugar|separuh|less sugar|sedikit gula|full sugar|penuh)\b/gi, '');
-            // Hapus batch keywords
-            for (const kw of batchKeywords) {
-                cleanText = cleanText.replace(new RegExp('\\b' + kw + '\\b', 'gi'), '');
-            }
-            cleanText = cleanText.trim();
-
-            // Coba cari berdasarkan kata kunci atau title
-            if (cleanText.length > 0) {
-                const words = cleanText.split(/\s+/);
-                // Cari menu yang memiliki semua kata? Atau sebagian?
-                // Lebih baik cari yang mengandung substring terpanjang
-                let bestMatch = null;
-                let bestScore = 0;
-                for (const menu of menuData) {
-                    const titleLower = menu.title.toLowerCase();
-                    const keywords = (menu.keywords || []).map(k => k.toLowerCase());
-                    // Hitung skor: jumlah kata yang cocok dengan title atau keywords
-                    let score = 0;
-                    for (const w of words) {
-                        if (titleLower.includes(w)) score += 2;
-                        if (keywords.some(k => k.includes(w) || w.includes(k))) score += 1;
-                    }
-                    // prioritas: jika kata persis sama dengan title
-                    if (titleLower === cleanText) score += 10;
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestMatch = menu;
-                    }
-                }
-                if (bestScore >= 1) matchedMenu = bestMatch;
-            }
-
-            // Jika tidak ketemu, coba dengan title yang mengandung seluruh cleanText (tanpa spasi)
-            if (!matchedMenu && cleanText.length > 0) {
-                const query = cleanText.replace(/\s+/g, '');
-                for (const menu of menuData) {
-                    const titleClean = menu.title.replace(/\s+/g, '').toLowerCase();
-                    if (titleClean === query || titleClean.includes(query) || query.includes(titleClean)) {
-                        matchedMenu = menu;
-                        break;
-                    }
-                }
-            }
-
-            if (!matchedMenu) return null;
-
-            // Tentukan size: jika belum terdeteksi, gunakan size pertama yang tersedia
-            const availSizes = matchedMenu.availableSizes || ['medium'];
-            if (!size || !availSizes.includes(size)) {
-                size = availSizes[0];
-            }
-            // Sugar default 100 jika belum
-            if (sugar === null) sugar = 100;
-
-            return {
-                menu: matchedMenu,
-                size: size,
-                sugar: sugar,
-                qty: qty
-            };
-        }
-
-        // ===== FUNGSI TAMBAH BATCH DARI SUARA =====
-        window.addBatchOrderFromVoice = function(order) {
-            // order: { menu, size, sugar, qty }
-            if (!order.menu) return false;
-            // Cek apakah ukuran tersedia
-            const avail = order.menu.availableSizes || ['medium'];
-            if (!avail.includes(order.size)) {
-                speakConfirmation(`Maaf, ${order.menu.title} tidak tersedia ukuran ${order.size}`);
-                return false;
-            }
-            // Tambahkan ke batchOrders
-            batchOrders.push({
-                menuId: order.menu.id,
-                title: order.menu.title,
-                size: order.size,
-                sugar: order.sugar,
-                quantity: order.qty
-            });
-            renderBatchOrders();
-            updateBatchSummary();
-            // Buka overlay batch jika belum
-            const overlay = document.getElementById('batchOverlay');
-            if (!overlay.classList.contains('active')) {
-                overlay.classList.add('active');
-                populateBatchMenuSelect();
-                updateBatchSizeOptions();
-            }
-            // Konfirmasi suara
-            const sugarText = order.sugar === 100 ? '' : ` gula ${order.sugar} persen`;
-            speakConfirmation(`Menambahkan ${order.qty} ${order.menu.title} ukuran ${order.size}${sugarText} ke batch`);
-            document.getElementById('voiceStatus').innerText =
-                `✅ ${order.qty} ${order.menu.title} (${order.size}) sugar ${order.sugar}% ditambahkan`;
-            return true;
-        };
-
-        // ===== FUNGSI SPEAK KONFIRMASI =====
-        function speakConfirmation(text) {
-            if (isSilentMode) return;
-            if (!('speechSynthesis' in window)) return;
-            if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'id-ID';
-            utter.rate = 0.9;
-            utter.pitch = 1.0;
-            const voices = window.speechSynthesis.getVoices();
-            const preferred = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google'));
-            if (preferred) utter.voice = preferred;
-            else {
-                const fallback = voices.find(v => v.lang === 'id-ID');
-                if (fallback) utter.voice = fallback;
-            }
-            window.speechSynthesis.speak(utter);
-        }
-
-        // ===== PROSES PERINTAH SUARA (DIPERLUAS) =====
+        // ===== PERINTAH SUARA =====
         function processVoiceCommand(text) {
-            // Cek perintah batch terlebih dahulu
-            const batchOrder = parseBatchCommand(text);
-            if (batchOrder) {
-                const added = window.addBatchOrderFromVoice(batchOrder);
-                if (!added) {
-                    document.getElementById('voiceStatus').innerText = `❌ Gagal menambahkan: menu tidak ditemukan atau ukuran tidak tersedia`;
-                }
-                return;
-            }
-
-            // Perintah lain
             if (text.startsWith('cari ')) {
                 const query = text.substring(5).trim();
                 if (query) {
@@ -2720,7 +2552,7 @@
             }
         }
 
-        // ===== BATCH ORDER (UI) =====
+        // ===== BATCH ORDER =====
         window.openBatchOrder = function() {
             document.getElementById('batchOverlay').classList.add('active');
             populateBatchMenuSelect();
@@ -2737,14 +2569,18 @@
             document.getElementById('batchOverlay').classList.remove('active');
         };
 
+        // ===== PERBAIKAN UTAMA: URUTKAN MENU DI DROPDOWN BATCH =====
         function populateBatchMenuSelect() {
             const select = document.getElementById('batchMenuSelect');
             select.innerHTML = '';
+
+            // Urutkan: Favorit di atas, lalu berdasarkan kategori, lalu alfabetis
             const sortedItems = [...menuData].sort((a, b) => {
                 const aIsFav = favorites.includes(a.id);
                 const bIsFav = favorites.includes(b.id);
                 if (aIsFav && !bIsFav) return -1;
                 if (!aIsFav && bIsFav) return 1;
+
                 let idxA = CATEGORY_ORDER.indexOf(a.category || 'Custom Menu');
                 let idxB = CATEGORY_ORDER.indexOf(b.category || 'Custom Menu');
                 if (idxA === -1) idxA = 999;
@@ -2752,6 +2588,7 @@
                 if (idxA !== idxB) return idxA - idxB;
                 return a.title.localeCompare(b.title);
             });
+
             sortedItems.forEach(item => {
                 const opt = document.createElement('option');
                 opt.value = item.id;
@@ -2771,6 +2608,7 @@
                 const parsed = JSON.parse(selectedOption.dataset.sizes);
                 if (Array.isArray(parsed) && parsed.length > 0) availableSizes = parsed;
             } catch (e) {}
+
             const currentSize = sizeSelect.value;
             sizeSelect.innerHTML = '';
             if (availableSizes.includes('medium')) {
@@ -2840,22 +2678,26 @@
             document.getElementById('batchCount').textContent = batchOrders.reduce((sum, o) => sum + o.quantity, 0);
         }
 
+        // ===== BATCH SUMMARY =====
         function updateBatchSummary() {
             const summaryDiv = document.getElementById('batchSummaryContent');
             if (batchOrders.length === 0) {
                 summaryDiv.innerHTML = '<p style="color:var(--text-muted);">Belum ada pesanan.</p>';
                 return;
             }
+
             const syrupBreakdown = {};
             const baseBreakdown = {};
             const milkBreakdown = {};
             let totalCreamer = 0,
                 totalIce = 0;
+
             batchOrders.forEach(order => {
                 const menu = menuData.find(m => m.id === order.menuId);
                 if (!menu) return;
                 const sizeData = menu.sizes?.[order.size] || menu.sizes?.medium || {};
                 const qty = order.quantity;
+
                 const syrupItems = parseFlavorItems(sizeData.syrup);
                 syrupItems.forEach(item => {
                     const adjusted = Math.round((item.amount * (order.sugar / 100)) * 10) / 10;
@@ -2866,6 +2708,7 @@
                         syrupBreakdown[name].total += adjusted * qty;
                     }
                 });
+
                 const baseItems = parseFlavorItems(sizeData.espresso);
                 baseItems.forEach(item => {
                     const name = item.name;
@@ -2873,6 +2716,7 @@
                     if (!baseBreakdown[name]) baseBreakdown[name] = { total: 0, unit };
                     baseBreakdown[name].total += item.amount * qty;
                 });
+
                 const milkItems = parseFlavorItems(sizeData.milk);
                 milkItems.forEach(item => {
                     const name = item.name;
@@ -2880,12 +2724,16 @@
                     if (!milkBreakdown[name]) milkBreakdown[name] = { total: 0, unit };
                     milkBreakdown[name].total += item.amount * qty;
                 });
+
                 const creamerStr = sizeData.creamer || '-';
                 if (creamerStr !== '-') totalCreamer += extractNumber(creamerStr) * qty;
+
                 const iceStr = sizeData.ice || '-';
                 if (iceStr !== '-') totalIce += extractNumber(iceStr) * qty;
             });
+
             let html = '<div class="breakdown-grid">';
+
             if (Object.keys(syrupBreakdown).length) {
                 html += `<div class="breakdown-item">
                     <div class="label">Sirup / Pemanis</div>
@@ -2896,6 +2744,7 @@
                     </div>
                 </div>`;
             }
+
             if (Object.keys(baseBreakdown).length) {
                 html += `<div class="breakdown-item">
                     <div class="label">Base</div>
@@ -2906,6 +2755,7 @@
                     </div>
                 </div>`;
             }
+
             if (Object.keys(milkBreakdown).length) {
                 html += `<div class="breakdown-item">
                     <div class="label">Susu / Liquid</div>
@@ -2916,27 +2766,33 @@
                     </div>
                 </div>`;
             }
+
             html += `<div class="breakdown-item">
                 <div class="label">Krimer (total)</div>
                 <div class="value">${totalCreamer > 0 ? totalCreamer + ' gr/ml' : '-'}</div>
             </div>`;
+
             html += `<div class="breakdown-item">
                 <div class="label">Es / Toping (total)</div>
                 <div class="value">${totalIce > 0 ? totalIce + ' gr' : 'Secukupnya'}</div>
             </div>`;
+
             html += '</div>';
             summaryDiv.innerHTML = html;
         }
 
+        // ===== BATCH INSTRUCTIONS =====
         window.showBatchInstructions = function() {
             if (batchOrders.length === 0) return alert('Tidak ada pesanan.');
             document.getElementById('batchOverlay').classList.remove('active');
+
             const grouped = {};
             batchOrders.forEach(o => {
                 const key = `${o.menuId}|${o.size}|${o.sugar}`;
                 if (!grouped[key]) grouped[key] = { ...o, quantity: 0 };
                 grouped[key].quantity += o.quantity;
             });
+
             let html = '';
             let totalItems = 0;
             for (const key in grouped) {
@@ -2998,7 +2854,7 @@
 
         // ===== INIT =====
         loadFavorites();
-        console.log('✅ Barista Assistant - Perintah suara batch siap!');
+        console.log('✅ Barista Assistant - Batch dropdown terurut: Favorit di atas, lalu kategori!');
     </script>
 </body>
 </html>
