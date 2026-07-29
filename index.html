@@ -23,7 +23,6 @@
             --batch-overlay-bg: rgba(0,0,0,0.85);
             --focus-bg: #0d0e11;
         }
-        /* Light mode override */
         body.light-mode {
             --bg-dark: #f0f2f5;
             --card-bg: #ffffff;
@@ -66,25 +65,28 @@
         .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent-gold); cursor: pointer; }
         .checkbox-group label { color: var(--text-muted); font-size: 0.85rem; cursor: pointer; }
 
-        /* HEADER */
+        /* HEADER (1 BARIS - TAMPILAN AWAL) */
         header { background: var(--header-bg); border-bottom: 1px solid var(--card-border); padding: 16px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease-in-out, background 0.3s; }
         header.hide-header { transform: translateY(-100%); }
         .header-container { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+
         .brand { display: flex; align-items: center; gap: 12px; }
         .brand-logo { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
         .brand h1 { font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
-        .header-actions { display: flex; align-items: center; gap: 8px; }
+
+        .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .batch-btn { background: var(--accent-gold); color: #121316; border: none; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .batch-btn:hover { background: var(--accent-gold-hover); }
-        .logout-btn { background: transparent; border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s; }
-        .logout-btn:hover { color: var(--text-main); border-color: var(--text-muted); }
         .theme-btn { background: transparent; border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 10px; border-radius: 20px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; line-height: 1; }
         .theme-btn:hover { background: var(--card-border); color: var(--text-main); }
+        .logout-btn { background: transparent; border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s; }
+        .logout-btn:hover { color: var(--text-main); border-color: var(--text-muted); }
+
         .voice-section { display: flex; align-items: center; gap: 10px; flex-grow: 1; max-width: 650px; flex-wrap: wrap; }
         .voice-btn-group { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
         .mic-btn { background: var(--accent-gold); color: #121316; border: none; padding: 10px 18px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 12px rgba(217,160,91,0.3); white-space: nowrap; }
         .mic-btn:hover { background: var(--accent-gold-hover); transform: translateY(-1px); }
-        .mic-btn.listening { background: var(--danger); color: #fff; animation: pulse 1.5s infinite; box-shadow: 0 0 15px rgba(239,68,68,0.5); }
+        .mic-btn.listening { background: var(--danger); color: #fff; animation: pulse 1.5s infinite; }
         .handsfree-btn { background: var(--info-bg); color: var(--text-muted); border: 1px solid var(--card-border); padding: 10px 16px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap; }
         .handsfree-btn.active { background: var(--success); color: #fff; border-color: var(--success); animation: pulse-green 2s infinite; }
         .silent-btn { background: var(--info-bg); color: var(--text-muted); border: 1px solid var(--card-border); width: 42px; height: 42px; border-radius: 50%; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
@@ -92,6 +94,7 @@
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes pulse-green { 0% { box-shadow: 0 0 5px rgba(16,185,129,0.4); } 50% { box-shadow: 0 0 18px rgba(16,185,129,0.8); } 100% { box-shadow: 0 0 5px rgba(16,185,129,0.4); } }
         .voice-status { font-size: 0.8rem; color: var(--text-muted); background: var(--info-bg); padding: 8px 14px; border-radius: 20px; border: 1px solid var(--card-border); flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 200px; transition: background 0.3s; }
+
         .search-box { width: 100%; max-width: 1100px; margin: 15px auto 0; position: relative; }
         .search-input { width: 100%; padding: 12px 16px 12px 42px; background: var(--search-bg); border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-main); font-size: 0.95rem; outline: none; transition: border-color 0.2s, background 0.3s, color 0.3s; }
         .search-input:focus { border-color: var(--accent-gold); }
@@ -199,7 +202,7 @@
         .breakdown-item .sub { font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 4px; padding-top: 4px; }
         .sub-item { display: flex; justify-content: space-between; padding: 2px 0; }
 
-        #favoritesSection { margin-bottom: 20px; display: none; }
+        #favoritesSection { margin-bottom: 20px; display: none; scroll-margin-top: 80px; }
         .fav-section-title { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
         .fav-section-title span:first-child { font-size: 1.2rem; }
         .fav-section-title span:last-child { color: var(--accent-gold); font-weight: 700; }
@@ -335,7 +338,7 @@
         </div>
     </div>
 
-    <!-- HEADER -->
+    <!-- HEADER (TAMPILAN AWAL 1 BARIS) -->
     <header id="appHeader">
         <div class="header-container">
             <div class="brand">
@@ -358,7 +361,7 @@
                     </button>
                     <button id="silentModeBtn" class="silent-btn" onclick="window.toggleSilentMode()" title="Mode Suara (On/Off)">🔊</button>
                 </div>
-                <div id="voiceStatus" class="voice-status">Status: Klik & sebut menu ATAU aktifkan Hands-Free ("Hey Kopi")</div>
+                <div id="voiceStatus" class="voice-status">Status: Klik & sebut menu ATAU aktifkan Hands-Free (langsung perintah)</div>
             </div>
         </div>
         <div class="search-box">
@@ -369,7 +372,6 @@
 
     <!-- MAIN -->
     <div class="main-content">
-        <!-- FAVORITES SECTION -->
         <div id="favoritesSection">
             <div class="fav-section-title">
                 <span>⭐</span>
@@ -504,7 +506,6 @@
             if (toggleBtn) toggleBtn.textContent = isLight ? '☀️' : '🌙';
         };
 
-        // Apply saved theme
         (function() {
             const savedTheme = localStorage.getItem('barista_theme');
             const toggleBtn = document.getElementById('themeToggle');
@@ -572,11 +573,8 @@
 
         window.toggleFavorite = function(id) {
             const idx = favorites.indexOf(id);
-            if (idx > -1) {
-                favorites.splice(idx, 1);
-            } else {
-                favorites.push(id);
-            }
+            if (idx > -1) favorites.splice(idx, 1);
+            else favorites.push(id);
             saveFavorites();
             renderFavorites();
             renderMenuCards();
@@ -586,10 +584,7 @@
             const section = document.getElementById('favoritesSection');
             const grid = document.getElementById('favoritesGrid');
             const favItems = menuData.filter(item => favorites.includes(item.id));
-            if (favItems.length === 0) {
-                section.style.display = 'none';
-                return;
-            }
+            if (favItems.length === 0) { section.style.display = 'none'; return; }
             section.style.display = 'block';
             grid.innerHTML = '';
             favItems.forEach(item => {
@@ -615,6 +610,10 @@
                 `;
                 grid.appendChild(card);
             });
+            if (window._scrollToFavorites) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                window._scrollToFavorites = false;
+            }
         }
 
         // ===== UTILITY =====
@@ -1243,17 +1242,34 @@
                         document.getElementById('micBtn').classList.add('listening');
                         document.getElementById('micBtnText').innerText = 'Mendengarkan...';
                         document.getElementById('voiceStatus').innerText = 'Status: Bicara sekarang...';
+                    } else {
+                        document.getElementById('voiceStatus').innerText = '🎙️ Hands-Free aktif...';
                     }
                 };
                 recognition.onresult = (e) => {
                     if (!e.results || !e.results[0] || !e.results[0][0]) return;
                     const raw = e.results[0][0].transcript.toLowerCase().trim();
-                    if (isHandsFreeMode) handleHandsFreeResult(raw);
-                    else processVoiceCommand(raw);
+                    if (isHandsFreeMode) {
+                        // Hands-free: langsung proses tanpa wake word
+                        processVoiceCommand(raw);
+                    } else {
+                        // Mode tekan: cek wake word
+                        let foundWake = WAKE_WORDS.some(w => raw.includes(w));
+                        if (foundWake) {
+                            let cmd = raw;
+                            for (let w of WAKE_WORDS) {
+                                cmd = cmd.replace(w, "").trim();
+                            }
+                            if (cmd) processVoiceCommand(cmd);
+                            else document.getElementById('voiceStatus').innerText = '🎙️ Sebutkan perintah...';
+                        } else {
+                            document.getElementById('voiceStatus').innerText = '🔊 Katakan "Hey Kopi" ...';
+                        }
+                    }
                 };
                 recognition.onerror = (e) => {
                     if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-                        document.getElementById('voiceStatus').innerText = '❌ Akses mikrofon ditolak!';
+                        document.getElementById('voiceStatus').innerText = '❌ Mikrofon ditolak!';
                         isHandsFreeMode = false;
                         disableWakeLock();
                         updateHandsFreeUI();
@@ -1261,7 +1277,7 @@
                         return;
                     }
                     if (!isHandsFreeMode && e.error === 'no-speech') {
-                        document.getElementById('voiceStatus').innerText = '⚠️ Suara tidak terdeteksi. Coba lagi.';
+                        document.getElementById('voiceStatus').innerText = '⚠️ Ulangi...';
                     }
                 };
                 recognition.onend = () => {
@@ -1281,46 +1297,100 @@
             }, 300);
         }
 
-        function handleHandsFreeResult(text) {
-            let found = WAKE_WORDS.find(w => text.includes(w));
-            if (found || awaitingCommandInHandsFree) {
-                let cmd = text;
-                if (found) cmd = text.replace(found, "").trim();
-                if (cmd.length > 0) {
-                    awaitingCommandInHandsFree = false;
-                    processVoiceCommand(cmd);
-                } else {
-                    awaitingCommandInHandsFree = true;
-                    document.getElementById('voiceStatus').innerText =
-                        '🎙️ "Hey Kopi" terdeteksi! Silakan sebutkan nama menu...';
-                }
-            } else {
-                document.getElementById('voiceStatus').innerText =
-                    '🎙️ Hands-Free & Screen Lock Preserved (Katakan "Hey Kopi" ...)';
-            }
-        }
-
+        // ===== PERINTAH SUARA =====
         function processVoiceCommand(text) {
+            // 1. Deteksi perintah "cari ..."
+            if (text.startsWith('cari ')) {
+                const query = text.substring(5).trim();
+                if (query) {
+                    document.getElementById('searchInput').value = query;
+                    window.filterMenu();
+                    document.getElementById('voiceStatus').innerText = `🔍 Mencari: "${query}"`;
+                } else {
+                    document.getElementById('voiceStatus').innerText = '⚠️ Apa yang ingin dicari?';
+                }
+                return;
+            }
+
+            // 2. "tampilkan favorit"
+            if (text.includes('tampilkan favorit') || text.includes('tampilkan favourite')) {
+                window._scrollToFavorites = true;
+                renderFavorites();
+                document.getElementById('voiceStatus').innerText = '⭐ Menampilkan favorit';
+                return;
+            }
+
+            // 3. "reset sugar" / "reset gula"
+            if (text.includes('reset sugar') || text.includes('reset gula')) {
+                window.switchSugar(100);
+                document.getElementById('voiceStatus').innerText = '🔄 Sugar direset ke 100%';
+                return;
+            }
+
+            // 4. "ukuran large" / "ukuran medium"
+            if (text.includes('ukuran large') || text.includes('ukuran besar')) {
+                if (currentActiveRecipe) {
+                    const avail = currentActiveRecipe.availableSizes || ['medium', 'large'];
+                    if (avail.includes('large')) {
+                        window.switchSize('large');
+                        document.getElementById('voiceStatus').innerText = '📏 Ukuran Large';
+                    } else {
+                        document.getElementById('voiceStatus').innerText = '❌ Menu ini tidak tersedia Large';
+                    }
+                } else {
+                    document.getElementById('voiceStatus').innerText = '❌ Pilih menu dulu';
+                }
+                return;
+            }
+            if (text.includes('ukuran medium') || text.includes('ukuran sedang')) {
+                if (currentActiveRecipe) {
+                    window.switchSize('medium');
+                    document.getElementById('voiceStatus').innerText = '📏 Ukuran Medium';
+                } else {
+                    document.getElementById('voiceStatus').innerText = '❌ Pilih menu dulu';
+                }
+                return;
+            }
+
+            // 5. Deteksi level gula
             let sugar = 100;
-            if (text.includes("50%") || text.includes("50 persen") || text.includes("separuh") || text.includes(
-                "half sugar")) sugar = 50;
-            else if (text.includes("75%") || text.includes("75 persen") || text.includes("less sugar")) sugar = 75;
-            else if (text.includes("25%") || text.includes("25 persen") || text.includes("sedikit gula")) sugar = 25;
-            else if (text.includes("0%") || text.includes("tanpa gula") || text.includes("no sugar") || text.includes(
-                "bebas gula")) sugar = 0;
+            let sugarDetected = false;
+            if (text.includes('50%') || text.includes('50 persen') || text.includes('separuh') || text.includes(
+                'half sugar')) { sugar = 50;
+                sugarDetected = true; } else if (text.includes('75%') || text.includes('75 persen') || text.includes(
+                'less sugar')) { sugar = 75;
+                sugarDetected = true; } else if (text.includes('25%') || text.includes('25 persen') || text.includes(
+                'sedikit gula')) { sugar = 25;
+                sugarDetected = true; } else if (text.includes('0%') || text.includes('0 persen') || text.includes(
+                'tanpa gula') || text.includes('no sugar') || text.includes('bebas gula')) { sugar = 0;
+                sugarDetected = true; }
+
+            // 6. Cari menu berdasarkan nama atau kata kunci
             const match = menuData.find(i =>
                 (Array.isArray(i.keywords) && i.keywords.some(k => text.includes(k.toLowerCase()))) ||
                 i.title.toLowerCase().includes(text)
             );
+
             if (match) {
-                showActiveRecipe(match, 'medium', sugar);
-                window.speakRecipe(match, 'medium', sugar);
-                document.getElementById('voiceStatus').innerText = `✅ Ditemukan: ${match.title} (Sugar ${sugar}%)`;
-            } else {
+                const finalSugar = sugarDetected ? sugar : currentSugarPercent;
+                showActiveRecipe(match, 'medium', finalSugar);
+                window.speakRecipe(match, 'medium', finalSugar);
+                document.getElementById('voiceStatus').innerText =
+                    `✅ ${match.title} ${sugarDetected ? `(Sugar ${finalSugar}%)` : ''}`;
+            } else if (!sugarDetected) {
                 document.getElementById('voiceStatus').innerText = `❌ Tidak ditemukan: "${text}"`;
+            } else {
+                if (currentActiveRecipe) {
+                    window.switchSugar(sugar);
+                    document.getElementById('voiceStatus').innerText = `🍬 Sugar ${sugar}% diterapkan`;
+                } else {
+                    document.getElementById('voiceStatus').innerText =
+                    `❌ Tidak ada menu aktif, sebutkan nama menu dengan sugar`;
+                }
             }
         }
 
+        // ===== HANDS-FREE TOGGLE =====
         window.toggleHandsFreeMode = function() {
             const sr = getSpeechRecognition();
             if (!sr) return alert("Browser tidak support Speech Recognition.");
@@ -1329,25 +1399,24 @@
             updateHandsFreeUI();
             if (isHandsFreeMode) {
                 enableWakeLock();
+                document.getElementById('voiceStatus').innerText = '🎙️ Hands-Free: ON (langsung perintah)';
                 try { if (isListening) sr.stop();
                     setTimeout(() => sr.start(), 200); } catch (e) { console.warn(e); }
             } else {
                 disableWakeLock();
                 try { sr.stop(); } catch (e) {}
+                document.getElementById('voiceStatus').innerText = 'Status: Klik & sebut menu ATAU aktifkan Hands-Free (langsung perintah)';
             }
         };
 
         function updateHandsFreeUI() {
             const btn = document.getElementById('handsFreeBtn');
-            const status = document.getElementById('voiceStatus');
             if (isHandsFreeMode) {
                 btn.classList.add('active');
                 btn.innerHTML = '<span>🎙️ Hands-Free: ON</span>';
-                status.innerText = '🎙️ Hands-Free & Layar Aktif (Katakan "Hey Kopi" ...)';
             } else {
                 btn.classList.remove('active');
                 btn.innerHTML = '<span>🎙️ Hands-Free: OFF</span>';
-                status.innerText = 'Status: Klik & sebut menu ATAU aktifkan Hands-Free ("Hey Kopi")';
             }
         }
 
@@ -1361,8 +1430,13 @@
 
         function stopListening() {
             isListening = false;
-            document.getElementById('micBtn').classList.remove('listening');
+            const micBtn = document.getElementById('micBtn');
+            if (micBtn) micBtn.classList.remove('listening');
             document.getElementById('micBtnText').innerText = 'Tekan & Sebut Menu';
+            if (!isHandsFreeMode) {
+                document.getElementById('voiceStatus').innerText =
+                'Status: Klik & sebut menu ATAU aktifkan Hands-Free (langsung perintah)';
+            }
         }
 
         // ===== BATCH ORDER =====
@@ -1402,9 +1476,7 @@
             let availableSizes = ['medium', 'large'];
             try {
                 const parsed = JSON.parse(selectedOption.dataset.sizes);
-                if (Array.isArray(parsed) && parsed.length > 0) {
-                    availableSizes = parsed;
-                }
+                if (Array.isArray(parsed) && parsed.length > 0) availableSizes = parsed;
             } catch (e) {}
 
             const currentSize = sizeSelect.value;
@@ -1421,11 +1493,8 @@
                 opt.textContent = 'Large (L)';
                 sizeSelect.appendChild(opt);
             }
-            if (availableSizes.includes(currentSize)) {
-                sizeSelect.value = currentSize;
-            } else {
-                sizeSelect.value = availableSizes[0] || 'medium';
-            }
+            if (availableSizes.includes(currentSize)) sizeSelect.value = currentSize;
+            else sizeSelect.value = availableSizes[0] || 'medium';
         };
 
         window.setBatchSugar = function(percent) {
@@ -1479,7 +1548,7 @@
             document.getElementById('batchCount').textContent = batchOrders.reduce((sum, o) => sum + o.quantity, 0);
         }
 
-        // ===== UPDATE BATCH SUMMARY =====
+        // ===== BATCH SUMMARY =====
         function updateBatchSummary() {
             const summaryDiv = document.getElementById('batchSummaryContent');
             if (batchOrders.length === 0) {
@@ -1490,8 +1559,8 @@
             const syrupBreakdown = {};
             const baseBreakdown = {};
             const milkBreakdown = {};
-            let totalCreamer = 0;
-            let totalIce = 0;
+            let totalCreamer = 0,
+                totalIce = 0;
 
             batchOrders.forEach(order => {
                 const menu = menuData.find(m => m.id === order.menuId);
@@ -1652,10 +1721,9 @@
             document.getElementById('recipeModal').classList.add('open');
         };
 
-        // ===== INIT FAVORITES =====
+        // ===== INIT =====
         loadFavorites();
-
-        console.log('✅ Barista Assistant with favorites and light/dark mode loaded!');
+        console.log('✅ Barista Assistant dengan Hands-Free tanpa wake word dan tampilan awal header siap!');
     </script>
 </body>
 </html>
