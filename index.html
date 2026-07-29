@@ -61,11 +61,11 @@
         .form-control:focus { border-color: var(--accent-gold); }
         .section-box { background: var(--info-bg); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px; margin-bottom: 12px; transition: background 0.3s; }
         .section-box h4 { color: var(--accent-gold); font-size: 0.9rem; margin-bottom: 8px; border-bottom: 1px solid var(--card-border); padding-bottom: 4px; }
-        .checkbox-group { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+        .checkbox-group { display: flex; align-items: center; gap: 8px; margin: 6px 0; flex-wrap: wrap; }
         .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent-gold); cursor: pointer; }
         .checkbox-group label { color: var(--text-muted); font-size: 0.85rem; cursor: pointer; }
 
-        /* HEADER - OPSI B */
+        /* HEADER */
         header { background: var(--header-bg); border-bottom: 1px solid var(--card-border); padding: 10px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease-in-out, background 0.3s; }
         header.hide-header { transform: translateY(-100%); }
         .header-container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
@@ -95,28 +95,28 @@
         .search-input:focus { border-color: var(--accent-gold); }
         .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); fill: var(--text-muted); width: 16px; height: 16px; }
 
-        /* MAIN CONTENT - PERBAIKAN UNTUK HP */
+        /* MAIN CONTENT */
         .main-content { max-width: 1100px; margin: 16px auto; padding: 0 12px; }
         .section-title { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .add-btn { background: transparent; border: 1px dashed var(--accent-gold); color: var(--accent-gold); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; white-space: nowrap; }
         .add-btn:hover { background: rgba(217,160,91,0.1); }
 
-        /* GRID MENU - LEBIH KECIL UNTUK HP */
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
         .menu-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
         .menu-card:hover { border-color: var(--accent-gold); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
         .card-info { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; }
         .card-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(217,160,91,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
-        .card-title { font-size: 0.9rem; font-weight: 600; color: var(--text-main); line-height: 1.2; word-break: break-word; overflow-wrap: break-word; }
+        .card-title { font-size: 0.9rem; font-weight: 600; color: var(--text-main); line-height: 1.2; word-break: break-word; }
         .card-category { font-size: 0.65rem; color: var(--accent-gold); margin-top: 2px; font-weight: 600; }
+        .size-badge { font-size: 0.6rem; background: var(--accent-gold); color: #121316; padding: 0 6px; border-radius: 10px; font-weight: 700; margin-left: 4px; display: inline-block; }
         .delete-card-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 2px 4px; border-radius: 4px; transition: 0.2s; flex-shrink: 0; }
         .delete-card-btn:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
         .fav-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; padding: 0 2px; transition: 0.2s; line-height: 1; flex-shrink: 0; }
         .fav-btn.active { color: var(--accent-gold); }
         .fav-btn:hover { transform: scale(1.1); }
         .quick-ingredients { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-        .ing-tag { background: var(--info-bg); color: var(--text-muted); font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--card-border); word-break: break-word; overflow-wrap: break-word; max-width: 100%; }
+        .ing-tag { background: var(--info-bg); color: var(--text-muted); font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--card-border); word-break: break-word; max-width: 100%; }
 
         .active-display { background: var(--card-bg); border: 2px solid var(--accent-gold); border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(217,160,91,0.15); animation: fadeIn 0.3s ease; display: none; scroll-margin-top: 160px; transition: background 0.3s; }
         .active-display.visible { display: block; }
@@ -483,11 +483,19 @@
                 <label>Kata Kunci Suara (pisahkan koma)</label>
                 <input type="text" id="newKeywords" class="form-control" placeholder="Contoh: pandan, kopi pandan" />
             </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="newAvailableLarge" checked />
-                <label for="newAvailableLarge">Tersedia untuk ukuran Large</label>
-                <span style="color:var(--text-muted); font-size:0.7rem; margin-left:auto;">(jika tidak dicentang, hanya Medium)</span>
+
+            <!-- Pilihan Ukuran -->
+            <div class="form-group">
+                <label>Ukuran yang Tersedia</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="newSizeMedium" checked />
+                    <label for="newSizeMedium">Medium (M)</label>
+                    <input type="checkbox" id="newSizeLarge" checked />
+                    <label for="newSizeLarge">Large (L)</label>
+                </div>
+                <small style="color:var(--text-muted); font-size:0.7rem;">Centang ukuran yang tersedia untuk menu ini</small>
             </div>
+
             <div class="section-box">
                 <h4>Takaran Medium (M)</h4>
                 <div class="form-group"><label>Sirup / Pemanis (M)</label><input type="text" id="medSyrup" class="form-control" placeholder="15 ml Pandan" /></div>
@@ -623,13 +631,14 @@
                 card.className = 'menu-card';
                 card.onclick = () => showActiveRecipe(item, 'medium', 100);
                 const med = item.sizes?.medium || {};
+                const sizeLabel = item.availableSizes ? item.availableSizes.map(s => s === 'medium' ? 'M' : 'L').join('/') : 'M/L';
                 card.innerHTML = `
                     <div class="card-header">
                         <div class="card-info">
                             <div class="card-icon">${item.icon || '☕'}</div>
                             <div>
                                 <div class="card-title">${item.title}</div>
-                                <div class="card-category">${item.category || 'Custom Menu'}</div>
+                                <div class="card-category">${item.category || 'Custom Menu'} <span class="size-badge">${sizeLabel}</span></div>
                             </div>
                         </div>
                         <button class="fav-btn active" onclick="event.stopPropagation(); window.toggleFavorite('${item.id}')">⭐</button>
@@ -869,7 +878,12 @@
                         };
                     }
                     if (!item.availableSizes || !Array.isArray(item.availableSizes) || item.availableSizes.length === 0) {
-                        item.availableSizes = ['medium', 'large'];
+                        // fallback: cek apakah ada data large, jika tidak ada berarti hanya medium
+                        if (item.sizes && item.sizes.large && item.sizes.large.syrup !== '-') {
+                            item.availableSizes = ['medium', 'large'];
+                        } else {
+                            item.availableSizes = ['medium'];
+                        }
                     }
                     return item;
                 });
@@ -884,7 +898,13 @@
             if (currentActiveId) {
                 const updatedActive = menuData.find(i => i.id === currentActiveId);
                 if (updatedActive) {
-                    showActiveRecipe(updatedActive, currentSize, currentSugarPercent);
+                    // Pastikan ukuran yang dipilih tersedia
+                    let size = currentSize;
+                    const avail = updatedActive.availableSizes || ['medium', 'large'];
+                    if (!avail.includes(size)) {
+                        size = avail[0] || 'medium';
+                    }
+                    showActiveRecipe(updatedActive, size, currentSugarPercent);
                     if (document.getElementById('focusOverlay').classList.contains('active')) {
                         window.openFocusMode();
                     }
@@ -921,15 +941,15 @@
                 card.onclick = () => showActiveRecipe(item, 'medium', 100);
                 const med = item.sizes?.medium || {};
                 const sizes = item.availableSizes || ['medium', 'large'];
-                const sizeLabel = sizes.includes('large') ? '' : ' (Medium only)';
+                const sizeLabel = sizes.map(s => s === 'medium' ? 'M' : 'L').join('/');
                 const isFav = favorites.includes(item.id);
                 card.innerHTML = `
                     <div class="card-header">
                         <div class="card-info">
                             <div class="card-icon">${item.icon || '☕'}</div>
                             <div>
-                                <div class="card-title">${item.title}${sizeLabel}</div>
-                                <div class="card-category">${item.category || 'Custom Menu'}</div>
+                                <div class="card-title">${item.title}</div>
+                                <div class="card-category">${item.category || 'Custom Menu'} <span class="size-badge">${sizeLabel}</span></div>
                             </div>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
@@ -951,11 +971,13 @@
             if (!currentActiveRecipe) return;
             const available = currentActiveRecipe.availableSizes || ['medium', 'large'];
             if (!available.includes(size)) {
-                size = 'medium';
+                // jika size tidak tersedia, fallback ke yang tersedia pertama
+                size = available[0] || 'medium';
             }
             currentSize = size;
             document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
             document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
+            document.getElementById('btnSizeMedium').classList.toggle('disabled', !available.includes('medium'));
             document.getElementById('btnSizeLarge').classList.toggle('disabled', !available.includes('large'));
             if (currentActiveRecipe) {
                 if ('speechSynthesis' in window) window.speechSynthesis.cancel();
@@ -986,15 +1008,16 @@
                 updateSpeakButtons(false); }
             currentActiveId = item.id;
             currentActiveRecipe = item;
+            const available = item.availableSizes || ['medium', 'large'];
+            if (!available.includes(size)) {
+                size = available[0] || 'medium';
+            }
             currentSize = size;
             currentSugarPercent = sugarPercent;
 
-            const available = item.availableSizes || ['medium', 'large'];
-            if (!available.includes(size)) size = 'medium';
-            currentSize = size;
-
             document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
             document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
+            document.getElementById('btnSizeMedium').classList.toggle('disabled', !available.includes('medium'));
             document.getElementById('btnSizeLarge').classList.toggle('disabled', !available.includes('large'));
 
             window.switchSugar(sugarPercent);
@@ -1044,7 +1067,9 @@
         window.changeFocusSize = function(size) {
             if (!currentActiveRecipe) return;
             const available = currentActiveRecipe.availableSizes || ['medium', 'large'];
-            if (!available.includes(size)) size = 'medium';
+            if (!available.includes(size)) {
+                size = available[0] || 'medium';
+            }
             currentSize = size;
             document.getElementById('focusSizeMed').classList.toggle('active', size === 'medium');
             document.getElementById('focusSizeLarge').classList.toggle('active', size === 'large');
@@ -1118,8 +1143,10 @@
             document.getElementById('newCategory').value = item.category || 'Espresso Based';
             document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(
                 ', ') : (item.keywords || '');
+
             const avail = item.availableSizes || ['medium', 'large'];
-            document.getElementById('newAvailableLarge').checked = avail.includes('large');
+            document.getElementById('newSizeMedium').checked = avail.includes('medium');
+            document.getElementById('newSizeLarge').checked = avail.includes('large');
 
             const med = item.sizes?.medium || {};
             document.getElementById('medSyrup').value = med.syrup || '';
@@ -1147,8 +1174,13 @@
         window.saveMenu = function() {
             const title = document.getElementById('newTitle').value.trim();
             if (!title) return alert("Harap isi nama menu!");
-            const availableLarge = document.getElementById('newAvailableLarge').checked;
-            const availableSizes = availableLarge ? ['medium', 'large'] : ['medium'];
+
+            const availableSizes = [];
+            if (document.getElementById('newSizeMedium').checked) availableSizes.push('medium');
+            if (document.getElementById('newSizeLarge').checked) availableSizes.push('large');
+            if (availableSizes.length === 0) {
+                return alert("Pilih setidaknya satu ukuran yang tersedia!");
+            }
 
             const payload = {
                 title,
@@ -1354,8 +1386,13 @@
             }
             if (text.includes('ukuran medium') || text.includes('ukuran sedang')) {
                 if (currentActiveRecipe) {
-                    window.switchSize('medium');
-                    document.getElementById('voiceStatus').innerText = '📏 Ukuran Medium';
+                    const avail = currentActiveRecipe.availableSizes || ['medium', 'large'];
+                    if (avail.includes('medium')) {
+                        window.switchSize('medium');
+                        document.getElementById('voiceStatus').innerText = '📏 Ukuran Medium';
+                    } else {
+                        document.getElementById('voiceStatus').innerText = '❌ Menu ini tidak tersedia Medium';
+                    }
                 } else {
                     document.getElementById('voiceStatus').innerText = '❌ Pilih menu dulu';
                 }
@@ -1706,7 +1743,8 @@
             document.getElementById('newTitle').value = '';
             document.getElementById('newCategory').value = 'Espresso Based';
             document.getElementById('newKeywords').value = '';
-            document.getElementById('newAvailableLarge').checked = true;
+            document.getElementById('newSizeMedium').checked = true;
+            document.getElementById('newSizeLarge').checked = true;
             document.getElementById('medSyrup').value = '';
             document.getElementById('medEspresso').value = '';
             document.getElementById('medCreamer').value = '';
@@ -1724,7 +1762,7 @@
 
         // ===== INIT =====
         loadFavorites();
-        console.log('✅ Barista Assistant - tampilan HP diperbaiki!');
+        console.log('✅ Barista Assistant - ukuran fleksibel (Medium/Large) siap!');
     </script>
 </body>
 </html>
