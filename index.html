@@ -308,6 +308,30 @@
             animation: pulse-green 2s infinite;
         }
 
+        /* --- STYLES TOMBOL MODE SILENT (IKON SPEAKER SAJA) --- */
+        .silent-btn {
+            background: var(--info-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .silent-btn.muted {
+            background: var(--danger);
+            color: #ffffff;
+            border-color: var(--danger);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -840,12 +864,15 @@
         @media (max-width: 768px) {
             .header-container { flex-direction: column; align-items: stretch; }
             .voice-section { max-width: 100%; }
-            .voice-btn-group { width: 100%; }
-            .voice-btn-group .mic-btn, 
-            .voice-btn-group .handsfree-btn {
-                flex: 1;
+            .voice-btn-group { width: 100%; justify-content: space-between; }
+            .voice-btn-group .mic-btn {
+                flex-grow: 1;
                 font-size: 0.8rem;
                 padding: 10px 8px;
+            }
+            .voice-btn-group .handsfree-btn {
+                font-size: 0.8rem;
+                padding: 10px 12px;
             }
             .recipe-grid { grid-template-columns: 1fr 1fr; }
             .focus-title-group h1 { font-size: 2rem; }
@@ -942,6 +969,11 @@
                     <!-- TOMBOL TOGGLE HANDS-FREE "HEY KOPI" -->
                     <button id="handsFreeBtn" class="handsfree-btn" onclick="window.toggleHandsFreeMode()">
                         <span>🎙️ Hands-Free: OFF</span>
+                    </button>
+
+                    <!-- TOMBOL MODE SILENT (IKON SPEAKER SAJA) -->
+                    <button id="silentModeBtn" class="silent-btn" onclick="window.toggleSilentMode()" title="Mode Suara (On/Off)">
+                        🔊
                     </button>
                 </div>
 
@@ -1075,11 +1107,9 @@
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
 
-            // Jika scroll ke bawah dan sudah melewati 60px, sembunyikan header
             if (currentScrollY > 60 && currentScrollY > lastScrollY) {
                 appHeader.classList.add('hide-header');
             } else {
-                // Jika scroll ke atas, tampilkan kembali header
                 appHeader.classList.remove('hide-header');
             }
 
@@ -1124,8 +1154,33 @@
         let currentActiveId = null;
         let currentActiveRecipe = null;
         let currentSize = 'medium';
-        let currentSugarPercent = 100; // State Level Gula
+        let currentSugarPercent = 100;
         let editingId = null; 
+        let isSpeakingTTS = false;
+
+        // --- STATUS MODE SILENT ---
+        let isSilentMode = false;
+
+        window.toggleSilentMode = function() {
+            isSilentMode = !isSilentMode;
+            const btn = document.getElementById('silentModeBtn');
+            
+            if (isSilentMode) {
+                btn.classList.add('muted');
+                btn.innerHTML = '🔇';
+                btn.title = "Mode Suara (OFF)";
+                
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    isSpeakingTTS = false;
+                    updateSpeakButtons(false);
+                }
+            } else {
+                btn.classList.remove('muted');
+                btn.innerHTML = '🔊';
+                btn.title = "Mode Suara (ON)";
+            }
+        };
 
         /* =======================================================
            SCREEN WAKE LOCK API (MENCEGAH LAYAR HP TERKUNCI/MATI)
@@ -1154,7 +1209,6 @@
             }
         }
 
-        // Otomatis aktifkan kembali jika pengguna sempat berpindah tab lalu kembali ke app saat Hands-Free ON
         document.addEventListener('visibilitychange', async () => {
             if (wakeLock !== null && document.visibilityState === 'visible' && isHandsFreeMode) {
                 await enableWakeLock();
@@ -1169,7 +1223,6 @@
             if (percent === 100) return syrupText;
             if (percent === 0) return "0 ml (Tanpa Pemanis)";
 
-            // Ekstrak dan kalikan angka dalam teks resep sirup
             const adjustedText = syrupText.replace(/(\d+(\.\d+)?)/g, (match) => {
                 const num = parseFloat(match);
                 const val = Math.round((num * (percent / 100)) * 10) / 10;
@@ -1327,7 +1380,6 @@
             console.error("Gagal konek Firebase Realtime DB:", err);
         });
 
-        // AUTO-SORT BERDASARKAN KATEGORI & NAMA MENU
         function sortMenuItems(items) {
             return [...items].sort((a, b) => {
                 const catA = a.category || 'Custom Menu';
@@ -1392,7 +1444,6 @@
         window.switchSugar = function(percent) {
             currentSugarPercent = percent;
 
-            // Update UI State Tombol Sugar (Main Display & Focus Overlay)
             document.querySelectorAll('.sugar-btn').forEach(btn => {
                 const bSugar = parseInt(btn.getAttribute('data-sugar'));
                 if (bSugar === percent) {
@@ -1428,7 +1479,6 @@
             document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
             document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
 
-            // Apply level gula ke tombol UI
             window.switchSugar(sugarPercent);
 
             document.getElementById('activeTitle').innerText = item.title;
@@ -1565,9 +1615,11 @@
             }
         };
 
-        let isSpeakingTTS = false;
-
         window.speakRecipe = function(item, size = 'medium', sugarPercent = 100) {
+            if (isSilentMode) {
+                return; 
+            }
+
             if (!('speechSynthesis' in window)) {
                 alert("Browser kamu belum mendukung fitur pemutar suara.");
                 return;
@@ -1664,7 +1716,7 @@
                     if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
                         document.getElementById('voiceStatus').innerText = '❌ Akses mikrofon ditolak!';
                         isHandsFreeMode = false;
-                        disableWakeLock(); // Lepas Wake Lock jika gagal izin mic
+                        disableWakeLock();
                         updateHandsFreeUI();
                         stopListening();
                         return;
@@ -1758,13 +1810,13 @@
             updateHandsFreeUI();
 
             if (isHandsFreeMode) {
-                enableWakeLock(); // PERTAHANKAN LAYAR HP TETAP NYALA
+                enableWakeLock();
                 try {
                     if (isListening) SR.stop();
                     setTimeout(() => { SR.start(); }, 200);
                 } catch(e) { console.warn(e); }
             } else {
-                disableWakeLock(); // KEMBALIKAN FITUR TERKUNCI NOMAL LAYAR HP
+                disableWakeLock();
                 try { SR.stop(); } catch(e) {}
             }
         };
