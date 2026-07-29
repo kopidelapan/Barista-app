@@ -878,7 +878,6 @@
                         };
                     }
                     if (!item.availableSizes || !Array.isArray(item.availableSizes) || item.availableSizes.length === 0) {
-                        // fallback: cek apakah ada data large, jika tidak ada berarti hanya medium
                         if (item.sizes && item.sizes.large && item.sizes.large.syrup !== '-') {
                             item.availableSizes = ['medium', 'large'];
                         } else {
@@ -898,7 +897,6 @@
             if (currentActiveId) {
                 const updatedActive = menuData.find(i => i.id === currentActiveId);
                 if (updatedActive) {
-                    // Pastikan ukuran yang dipilih tersedia
                     let size = currentSize;
                     const avail = updatedActive.availableSizes || ['medium', 'large'];
                     if (!avail.includes(size)) {
@@ -971,7 +969,6 @@
             if (!currentActiveRecipe) return;
             const available = currentActiveRecipe.availableSizes || ['medium', 'large'];
             if (!available.includes(size)) {
-                // jika size tidak tersedia, fallback ke yang tersedia pertama
                 size = available[0] || 'medium';
             }
             currentSize = size;
@@ -1253,9 +1250,25 @@
             const adjustedSyrup = adjustSugarText(data.syrup, sugarPercent);
             const text =
                 `Resep ${item.title} ukuran ${size} ${sugarPercent !== 100 ? `dengan gula ${sugarPercent} persen` : ''}. Sirup: ${adjustedSyrup}. Base Kopi: ${data.espresso}. Krimer: ${data.creamer || 'tidak ada'}. Susu: ${data.milk}. Es: ${data.ice}.`;
+
+            // ===== PERBAIKAN SUARA =====
+            // Gunakan suara bawaan Android/iPhone yang lebih alami
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'id-ID';
-            utterance.rate = 0.95;
+            utterance.rate = 0.9;      // Sedikit lebih lambat agar lebih jelas
+            utterance.pitch = 1.0;
+
+            // Coba gunakan suara "Google Indonesia" jika tersedia
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google'));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            } else {
+                // Fallback: cari suara Indonesia apa saja
+                const fallbackVoice = voices.find(v => v.lang === 'id-ID');
+                if (fallbackVoice) utterance.voice = fallbackVoice;
+            }
+
             utterance.onstart = () => { isSpeakingTTS = true;
                 updateSpeakButtons(true); };
             utterance.onend = () => { isSpeakingTTS = false;
@@ -1297,13 +1310,44 @@
                 recognition.continuous = false;
                 recognition.interimResults = false;
                 recognition.maxAlternatives = 1;
+
+                // ===== PERBAIKAN UNTUK KATA ASING =====
+                // Kita tidak bisa mengubah engine speech recognition, tapi kita bisa
+                // menambahkan variasi kata yang umum salah ucap
                 recognition.onstart = () => {
                     isListening = true;
                     document.getElementById('voiceStatus').innerText = '🎙️ Mendengarkan...';
                 };
                 recognition.onresult = (e) => {
                     if (!e.results || !e.results[0] || !e.results[0][0]) return;
-                    const raw = e.results[0][0].transcript.toLowerCase().trim();
+                    let raw = e.results[0][0].transcript.toLowerCase().trim();
+                    // Normalisasi untuk kata asing yang sering salah
+                    // Contoh: "americano" sering terbaca "amerikano" atau "amerika no"
+                    // Kita tambahkan mapping di sini
+                    const correctionMap = {
+                        'amerikano': 'americano',
+                        'amerika no': 'americano',
+                        'america no': 'americano',
+                        'orange': 'orange',
+                        'oren': 'orange',
+                        'oranye': 'orange',
+                        'caramel': 'caramel',
+                        'karamel': 'caramel',
+                        'vanilla': 'vanilla',
+                        'vanila': 'vanilla',
+                        'mocha': 'mocha',
+                        'moka': 'mocha',
+                        'matcha': 'matcha',
+                        'macha': 'matcha',
+                        'taro': 'taro',
+                        'taro': 'taro',
+                        'pandan': 'pandan'
+                    };
+                    for (const [wrong, correct] of Object.entries(correctionMap)) {
+                        if (raw.includes(wrong)) {
+                            raw = raw.replace(new RegExp(wrong, 'g'), correct);
+                        }
+                    }
                     processVoiceCommand(raw);
                 };
                 recognition.onerror = (e) => {
@@ -1762,7 +1806,7 @@
 
         // ===== INIT =====
         loadFavorites();
-        console.log('✅ Barista Assistant - ukuran fleksibel (Medium/Large) siap!');
+        console.log('✅ Barista Assistant - suara lebih natural & pengenalan kata asing ditingkatkan!');
     </script>
 </body>
 </html>
