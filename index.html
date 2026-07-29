@@ -1252,19 +1252,16 @@
                 `Resep ${item.title} ukuran ${size} ${sugarPercent !== 100 ? `dengan gula ${sugarPercent} persen` : ''}. Sirup: ${adjustedSyrup}. Base Kopi: ${data.espresso}. Krimer: ${data.creamer || 'tidak ada'}. Susu: ${data.milk}. Es: ${data.ice}.`;
 
             // ===== PERBAIKAN SUARA =====
-            // Gunakan suara bawaan Android/iPhone yang lebih alami
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'id-ID';
-            utterance.rate = 0.9;      // Sedikit lebih lambat agar lebih jelas
+            utterance.rate = 0.9;
             utterance.pitch = 1.0;
 
-            // Coba gunakan suara "Google Indonesia" jika tersedia
             const voices = window.speechSynthesis.getVoices();
             const preferredVoice = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google'));
             if (preferredVoice) {
                 utterance.voice = preferredVoice;
             } else {
-                // Fallback: cari suara Indonesia apa saja
                 const fallbackVoice = voices.find(v => v.lang === 'id-ID');
                 if (fallbackVoice) utterance.voice = fallbackVoice;
             }
@@ -1311,9 +1308,104 @@
                 recognition.interimResults = false;
                 recognition.maxAlternatives = 1;
 
-                // ===== PERBAIKAN UNTUK KATA ASING =====
-                // Kita tidak bisa mengubah engine speech recognition, tapi kita bisa
-                // menambahkan variasi kata yang umum salah ucap
+                // ===== KOREKSI KATA ASING (LENGKAP) =====
+                const correctionMap = {
+                    // Americano
+                    'amerikano': 'americano',
+                    'amerika no': 'americano',
+                    'america no': 'americano',
+                    'america': 'americano',
+                    'american': 'americano',
+                    // Cappuccino
+                    'kapucino': 'cappuccino',
+                    'capucino': 'cappuccino',
+                    'cappucino': 'cappuccino',
+                    'kapuchino': 'cappuccino',
+                    // Espresso
+                    'espreso': 'espresso',
+                    'expresso': 'espresso',
+                    'esprezo': 'espresso',
+                    'espro': 'espresso',
+                    // Latte
+                    'late': 'latte',
+                    'latti': 'latte',
+                    'lat': 'latte',
+                    // Mocha
+                    'moka': 'mocha',
+                    'moca': 'mocha',
+                    // Macchiato
+                    'makiyato': 'macchiato',
+                    'makiatto': 'macchiato',
+                    // Caramel
+                    'karamel': 'caramel',
+                    'karemil': 'caramel',
+                    // Vanilla
+                    'vanila': 'vanilla',
+                    'vanela': 'vanilla',
+                    // Hazelnut
+                    'hazelnat': 'hazelnut',
+                    'hezelnut': 'hazelnut',
+                    // Matcha
+                    'macha': 'matcha',
+                    'maccha': 'matcha',
+                    // Almond
+                    'almend': 'almond',
+                    'amandel': 'almond',
+                    // Butterscotch
+                    'buterskot': 'butterscotch',
+                    'butirskot': 'butterscotch',
+                    // Strawberry
+                    'stroberi': 'strawberry',
+                    'strawberi': 'strawberry',
+                    // Blueberry
+                    'blueberi': 'blueberry',
+                    // Pistachio
+                    'pistacio': 'pistachio',
+                    'pistasyo': 'pistachio',
+                    // Affogato
+                    'afogato': 'affogato',
+                    // Frappe
+                    'frape': 'frappe',
+                    // Toffee
+                    'tofi': 'toffee',
+                    // Gingerbread
+                    'gingerbred': 'gingerbread',
+                    'jinjerbred': 'gingerbread',
+                    // Coconut
+                    'coco': 'coconut',
+                    'kelapa': 'coconut',
+                    // Oreo
+                    'orio': 'oreo',
+                    // Red Velvet
+                    'red velvit': 'red velvet',
+                    'redvelvet': 'red velvet',
+                    // Flat White
+                    'flat wait': 'flat white',
+                    'flatwite': 'flat white',
+                    // Cold Brew
+                    'kol brew': 'cold brew',
+                    'coldbre': 'cold brew',
+                    // Banana
+                    'pisang': 'banana',
+                    // Mango
+                    'manggo': 'mango',
+                    // Chocolate
+                    'coklat': 'chocolate',
+                    'cokelat': 'chocolate',
+                    // Tiramisu
+                    'tiramisu': 'tiramisu',
+                    // Pandan
+                    'pandan': 'pandan',
+                    // Taro
+                    'taro': 'taro',
+                    // Orange
+                    'oren': 'orange',
+                    'oranye': 'orange',
+                    // Aren
+                    'aren': 'aren',
+                    'gula aren': 'aren'
+                };
+
                 recognition.onstart = () => {
                     isListening = true;
                     document.getElementById('voiceStatus').innerText = '🎙️ Mendengarkan...';
@@ -1321,28 +1413,6 @@
                 recognition.onresult = (e) => {
                     if (!e.results || !e.results[0] || !e.results[0][0]) return;
                     let raw = e.results[0][0].transcript.toLowerCase().trim();
-                    // Normalisasi untuk kata asing yang sering salah
-                    // Contoh: "americano" sering terbaca "amerikano" atau "amerika no"
-                    // Kita tambahkan mapping di sini
-                    const correctionMap = {
-                        'amerikano': 'americano',
-                        'amerika no': 'americano',
-                        'america no': 'americano',
-                        'orange': 'orange',
-                        'oren': 'orange',
-                        'oranye': 'orange',
-                        'caramel': 'caramel',
-                        'karamel': 'caramel',
-                        'vanilla': 'vanilla',
-                        'vanila': 'vanilla',
-                        'mocha': 'mocha',
-                        'moka': 'mocha',
-                        'matcha': 'matcha',
-                        'macha': 'matcha',
-                        'taro': 'taro',
-                        'taro': 'taro',
-                        'pandan': 'pandan'
-                    };
                     for (const [wrong, correct] of Object.entries(correctionMap)) {
                         if (raw.includes(wrong)) {
                             raw = raw.replace(new RegExp(wrong, 'g'), correct);
@@ -1806,7 +1876,7 @@
 
         // ===== INIT =====
         loadFavorites();
-        console.log('✅ Barista Assistant - suara lebih natural & pengenalan kata asing ditingkatkan!');
+        console.log('✅ Barista Assistant - suara natural + mapping lengkap kata asing!');
     </script>
 </body>
 </html>
