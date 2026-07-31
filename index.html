@@ -1484,7 +1484,7 @@
             <div class="form-group">
                 <label>Foto Menu</label>
                 <input type="file" id="newImageFile" class="form-control" accept="image/*" />
-                <small style="color:var(--text-muted); font-size:0.7rem;">Upload gambar (akan disimpan di Firebase Storage)</small>
+                <small style="color:var(--text-muted); font-size:0.7rem;">Upload gambar (PNG, JPG, dll.) – disimpan di Firebase Storage</small>
             </div>
 
             <!-- Pilihan Ukuran -->
@@ -2154,7 +2154,6 @@
             document.getElementById('newCategory').value = item.category || 'Espresso Based';
             document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(
                 ', ') : (item.keywords || '');
-            // Kosongkan input file karena tidak bisa set value
             document.getElementById('newImageFile').value = '';
 
             const avail = item.availableSizes || ['medium', 'large'];
@@ -2184,9 +2183,20 @@
             document.getElementById('recipeModal').classList.remove('open');
         };
 
-        // ===== UPLOAD GAMBAR =====
+        // ===== UPLOAD GAMBAR (DIPERBAIKI) =====
         async function uploadImage(file) {
             if (!file) return null;
+            // Validasi tipe file
+            if (!file.type.startsWith('image/')) {
+                alert('File harus berupa gambar!');
+                return null;
+            }
+            // Batasi ukuran 2MB
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran gambar terlalu besar (maks 2MB). Silakan kompres.');
+                return null;
+            }
+
             const filePath = `menu_images/${Date.now()}_${file.name}`;
             const fileRef = storageRef(storage, filePath);
             try {
@@ -2194,77 +2204,98 @@
                 const url = await getDownloadURL(snapshot.ref);
                 return url;
             } catch (error) {
-                console.error("Upload error:", error);
-                alert("Gagal upload gambar: " + error.message);
+                console.error('❌ Upload error detail:', error);
+                let msg = 'Gagal upload gambar. ';
+                if (error.code === 'storage/unauthorized') {
+                    msg += 'Pastikan aturan Firebase Storage mengizinkan upload.';
+                } else if (error.code === 'storage/quota-exceeded') {
+                    msg += 'Kuota penyimpanan penuh.';
+                } else {
+                    msg += error.message;
+                }
+                alert(msg);
                 return null;
             }
         }
 
+        // ===== SAVE MENU (DIPERBAIKI) =====
         window.saveMenu = async function() {
-            const title = document.getElementById('newTitle').value.trim();
-            if (!title) return alert("Harap isi nama menu!");
+            try {
+                console.log('▶️ Save menu mulai...');
+                const title = document.getElementById('newTitle').value.trim();
+                if (!title) return alert('Harap isi nama menu!');
 
-            const availableSizes = [];
-            if (document.getElementById('newSizeMedium').checked) availableSizes.push('medium');
-            if (document.getElementById('newSizeLarge').checked) availableSizes.push('large');
-            if (availableSizes.length === 0) {
-                return alert("Pilih setidaknya satu ukuran yang tersedia!");
-            }
+                const availableSizes = [];
+                if (document.getElementById('newSizeMedium').checked) availableSizes.push('medium');
+                if (document.getElementById('newSizeLarge').checked) availableSizes.push('large');
+                if (availableSizes.length === 0) {
+                    return alert('Pilih setidaknya satu ukuran yang tersedia!');
+                }
 
-            // Upload image if any
-            const fileInput = document.getElementById('newImageFile');
-            let imageUrl = null;
-            if (fileInput.files.length > 0) {
-                imageUrl = await uploadImage(fileInput.files[0]);
-                if (!imageUrl) return; // upload failed
-            }
-
-            const payload = {
-                title,
-                category: document.getElementById('newCategory').value,
-                keywords: document.getElementById('newKeywords').value.split(',').map(k => k.trim()).filter(k => k),
-                availableSizes: availableSizes,
-                sizes: {
-                    medium: {
-                        syrup: document.getElementById('medSyrup').value.trim() || '-',
-                        espresso: document.getElementById('medEspresso').value.trim() || '-',
-                        creamer: document.getElementById('medCreamer').value.trim() || '-',
-                        milk: document.getElementById('medMilk').value.trim() || '-',
-                        ice: document.getElementById('medIce').value.trim() || '-',
-                        steps: document.getElementById('medSteps').value.split(',').map(s => s.trim()).filter(s => s)
-                    },
-                    large: {
-                        syrup: document.getElementById('largeSyrup').value.trim() || '-',
-                        espresso: document.getElementById('largeEspresso').value.trim() || '-',
-                        creamer: document.getElementById('largeCreamer').value.trim() || '-',
-                        milk: document.getElementById('largeMilk').value.trim() || '-',
-                        ice: document.getElementById('largeIce').value.trim() || '-',
-                        steps: document.getElementById('largeSteps').value.split(',').map(s => s.trim()).filter(s => s)
+                // Upload image if any
+                const fileInput = document.getElementById('newImageFile');
+                let imageUrl = null;
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    console.log('📤 Upload file:', file.name, file.size, file.type);
+                    imageUrl = await uploadImage(file);
+                    if (imageUrl === null) {
+                        if (!confirm('Upload gambar gagal. Lanjutkan menyimpan menu tanpa gambar?')) {
+                            return;
+                        }
+                    } else {
+                        console.log('✅ Upload berhasil, URL:', imageUrl);
                     }
                 }
-            };
-            if (imageUrl) payload.imageUrl = imageUrl;
 
-            try {
-                if (editingId) {
-                    // Jika edit, kita bisa update imageUrl jika ada yang baru, atau biarkan lama jika tidak
-                    if (imageUrl) {
-                        payload.imageUrl = imageUrl;
-                    } else {
-                        // Jika tidak ada upload baru, kita tetap pertahankan imageUrl lama dengan mengambil dari currentActiveRecipe
-                        if (currentActiveRecipe && currentActiveRecipe.imageUrl) {
-                            payload.imageUrl = currentActiveRecipe.imageUrl;
+                // Build payload
+                const payload = {
+                    title,
+                    category: document.getElementById('newCategory').value,
+                    keywords: document.getElementById('newKeywords').value.split(',').map(k => k.trim()).filter(k => k),
+                    availableSizes: availableSizes,
+                    sizes: {
+                        medium: {
+                            syrup: document.getElementById('medSyrup').value.trim() || '-',
+                            espresso: document.getElementById('medEspresso').value.trim() || '-',
+                            creamer: document.getElementById('medCreamer').value.trim() || '-',
+                            milk: document.getElementById('medMilk').value.trim() || '-',
+                            ice: document.getElementById('medIce').value.trim() || '-',
+                            steps: document.getElementById('medSteps').value.split(',').map(s => s.trim()).filter(s => s)
+                        },
+                        large: {
+                            syrup: document.getElementById('largeSyrup').value.trim() || '-',
+                            espresso: document.getElementById('largeEspresso').value.trim() || '-',
+                            creamer: document.getElementById('largeCreamer').value.trim() || '-',
+                            milk: document.getElementById('largeMilk').value.trim() || '-',
+                            ice: document.getElementById('largeIce').value.trim() || '-',
+                            steps: document.getElementById('largeSteps').value.split(',').map(s => s.trim()).filter(s => s)
                         }
+                    }
+                };
+                if (imageUrl) payload.imageUrl = imageUrl;
+
+                console.log('📦 Payload:', payload);
+
+                // Simpan ke Firebase
+                if (editingId) {
+                    // Jika edit dan tidak ada gambar baru, pertahankan gambar lama
+                    if (!imageUrl && currentActiveRecipe && currentActiveRecipe.imageUrl) {
+                        payload.imageUrl = currentActiveRecipe.imageUrl;
                     }
                     const targetRef = ref(db, `recipes/${editingId}`);
                     await set(targetRef, payload);
+                    console.log('✅ Menu updated');
                 } else {
                     const newRef = push(recipesRef);
                     await set(newRef, payload);
+                    console.log('✅ Menu baru ditambahkan');
                 }
                 window.closeModal();
+                alert('Menu berhasil disimpan!');
             } catch (err) {
-                alert("Gagal simpan: " + err.message);
+                console.error('❌ Error di saveMenu:', err);
+                alert('Gagal simpan ke database: ' + err.message);
             }
         };
 
