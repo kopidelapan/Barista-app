@@ -476,13 +476,14 @@
         }
         .card-info {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 8px;
             min-width: 0;
             flex: 1;
         }
         .card-title {
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.95rem;
+            font-weight: 700;
             color: var(--text-main);
             line-height: 1.2;
             word-break: break-word;
@@ -587,17 +588,11 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .active-title-group {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
         .active-title-group h2 {
             font-size: 1.5rem;
             color: var(--accent-gold);
             font-weight: 700;
             word-break: break-word;
-            margin: 0;
         }
         .active-title-group p {
             color: var(--text-muted);
@@ -605,14 +600,20 @@
             margin-top: 2px;
             word-break: break-word;
         }
-        .active-image {
-            max-width: 120px;
-            max-height: 120px;
-            object-fit: cover;
-            border-radius: 10px;
+        .product-image-container {
+            width: 100%;
+            max-width: 200px;
+            height: 150px;
+            border-radius: 12px;
+            overflow: hidden;
             border: 1px solid var(--card-border);
-            flex-shrink: 0;
-            background: var(--info-bg);
+            margin-bottom: 16px;
+            display: none;
+        }
+        .product-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .control-panel {
             display: flex;
@@ -1006,85 +1007,6 @@
             flex-wrap: wrap;
         }
 
-        .breakdown-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-        }
-        .breakdown-item {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 8px;
-            transition: background 0.3s;
-        }
-        .breakdown-item .label {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-        }
-        .breakdown-item .value {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-        .breakdown-item .sub {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--card-border);
-            margin-top: 4px;
-            padding-top: 4px;
-        }
-        .sub-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 0;
-            gap: 6px;
-        }
-        .sub-item span:last-child {
-            text-align: right;
-        }
-
-        .instruction-item {
-            background: var(--info-bg);
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--accent-gold);
-            transition: background 0.3s;
-        }
-        .instruction-item .head {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            margin-bottom: 4px;
-            gap: 4px;
-        }
-        .instruction-item .head strong {
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-        .instruction-item .head span {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-        .instruction-item .syrup {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-        .instruction-item ol {
-            padding-left: 18px;
-            margin-top: 6px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-        .instruction-item ol li {
-            margin-bottom: 2px;
-            word-break: break-word;
-        }
-
         @media (max-width: 768px) {
             .header-row-top {
                 flex-wrap: wrap;
@@ -1210,10 +1132,6 @@
             .batch-container {
                 padding: 14px;
             }
-            .active-image {
-                max-width: 80px;
-                max-height: 80px;
-            }
         }
         @media (max-width: 480px) {
             .menu-grid {
@@ -1245,10 +1163,6 @@
             }
             .active-display {
                 padding: 10px;
-            }
-            .active-image {
-                max-width: 60px;
-                max-height: 60px;
             }
         }
     </style>
@@ -1288,6 +1202,9 @@
                 <button id="focusSpeakBtn" class="btn btn-secondary" onclick="window.speakActiveRecipe()" style="font-size:0.95rem; padding:8px 14px;">🔊 Baca Suara</button>
                 <button class="btn btn-danger" onclick="window.closeFocusMode()" style="font-size:0.95rem; padding:8px 14px;">✕ Keluar Fokus</button>
             </div>
+        </div>
+        <div id="focusImageContainer" class="product-image-container" style="max-width: 250px; height: 180px; margin: 0 auto 16px auto;">
+            <img id="focusProductImg" src="" alt="Foto Produk">
         </div>
         <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:16px;">
             <div class="control-group">
@@ -1356,17 +1273,6 @@
         </div>
     </div>
 
-    <!-- MODAL INSTRUKSI BATCH -->
-    <div class="modal-overlay" id="batchInstructionModal">
-        <div class="modal-card" style="max-width:700px;">
-            <h3 class="modal-title">📋 Instruksi Pembuatan Batch</h3>
-            <div id="batchInstructionContent" style="max-height:60vh; overflow-y:auto; padding-right:5px;"></div>
-            <div style="display:flex; justify-content:flex-end; margin-top:15px;">
-                <button class="btn btn-secondary" onclick="window.closeBatchInstruction()">Tutup</button>
-            </div>
-        </div>
-    </div>
-
     <!-- HEADER -->
     <header id="appHeader">
         <div class="header-container">
@@ -1413,7 +1319,6 @@
                     <h2 id="activeTitle">Kopi Susu Aren</h2>
                     <p id="activeKeywords">Kata kunci suara: "aren", "kopi susu aren"</p>
                 </div>
-                <img id="activeImage" class="active-image" src="" alt="Foto menu" style="display:none;" />
                 <div class="active-actions">
                     <button class="btn btn-primary" onclick="window.openFocusMode()">📺 Mode Fokus</button>
                     <button id="speakBtn" class="btn btn-secondary" onclick="window.speakActiveRecipe()">🔊 Baca Resep</button>
@@ -1421,6 +1326,9 @@
                     <button id="activeDeleteBtn" class="btn btn-danger" onclick="">🗑️ Hapus Menu</button>
                     <button class="close-display-btn" onclick="window.closeActiveDisplay()">✕</button>
                 </div>
+            </div>
+            <div id="activeImageContainer" class="product-image-container">
+                <img id="activeProductImg" src="" alt="Foto Produk">
             </div>
             <div class="control-panel">
                 <div class="control-group">
@@ -1467,6 +1375,10 @@
                 <input type="text" id="newTitle" class="form-control" placeholder="Contoh: Pandan Latte" />
             </div>
             <div class="form-group">
+                <label>URL Foto Produk (opsional)</label>
+                <input type="text" id="newImageUrl" class="form-control" placeholder="https://example.com/foto-produk.jpg" />
+            </div>
+            <div class="form-group">
                 <label>Kategori</label>
                 <select id="newCategory" class="form-control">
                     <option value="Espresso Based">Espresso Based</option>
@@ -1479,12 +1391,6 @@
             <div class="form-group">
                 <label>Kata Kunci Suara (pisahkan koma)</label>
                 <input type="text" id="newKeywords" class="form-control" placeholder="Contoh: pandan, kopi pandan" />
-            </div>
-            <!-- Upload Foto -->
-            <div class="form-group">
-                <label>Foto Menu</label>
-                <input type="file" id="newImageFile" class="form-control" accept="image/*" />
-                <small style="color:var(--text-muted); font-size:0.7rem;">Upload gambar (PNG, JPG, dll.) – disimpan di Firebase Storage</small>
             </div>
 
             <!-- Pilihan Ukuran -->
@@ -1525,7 +1431,6 @@
     </div>
 
     <script>
-        // Auto-hide header
         let lastScrollY = window.scrollY;
         const appHeader = document.getElementById('appHeader');
         window.addEventListener('scroll', () => {
@@ -1538,7 +1443,6 @@
             lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
         });
 
-        // ===== THEME TOGGLE =====
         window.toggleTheme = function() {
             const body = document.body;
             body.classList.toggle('light-mode');
@@ -1563,7 +1467,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAanEHUkmBWVcbDx5J3RkxNiB8eBA-gi-Q",
@@ -1577,7 +1480,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const storage = getStorage(app);
         const recipesRef = ref(db, 'recipes');
 
         const MASTER_PIN = "brekele";
@@ -1597,10 +1499,6 @@
         let isSpeakingTTS = false;
         let isSilentMode = false;
 
-        let batchOrders = [];
-        let batchSugarPercent = 100;
-
-        // ===== FAVORITES =====
         let favorites = [];
 
         function loadFavorites() {
@@ -1622,9 +1520,6 @@
             saveFavorites();
             renderFavorites();
             renderMenuCards();
-            if (document.getElementById('batchOverlay').classList.contains('active')) {
-                populateBatchMenuSelect();
-            }
         };
 
         function renderFavorites() {
@@ -1639,13 +1534,14 @@
                 card.className = 'menu-card';
                 card.onclick = () => showActiveRecipe(item, 'medium', 100);
                 const med = item.sizes?.medium || {};
-                const sizeLabel = item.availableSizes ? item.availableSizes.map(s => s === 'medium' ? 'M' : 'L')
-                .join('/') : 'M/L';
+                const sizeLabel = item.availableSizes ? item.availableSizes.map(s => s === 'medium' ? 'M' : 'L').join('/') : 'M/L';
                 card.innerHTML = `
                     <div class="card-header">
                         <div class="card-info">
-                            <div class="card-title">${item.title}</div>
-                            <div class="card-category">${item.category || 'Custom Menu'} <span class="size-badge">${sizeLabel}</span></div>
+                            <div>
+                                <div class="card-title">${item.title}</div>
+                                <div class="card-category">${item.category || 'Custom Menu'} <span class="size-badge">${sizeLabel}</span></div>
+                            </div>
                         </div>
                         <button class="fav-btn active" onclick="event.stopPropagation(); window.toggleFavorite('${item.id}')">⭐</button>
                     </div>
@@ -1656,85 +1552,25 @@
                 `;
                 grid.appendChild(card);
             });
-            if (window._scrollToFavorites) {
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                window._scrollToFavorites = false;
-            }
         }
 
-        // ===== UTILITY =====
         function adjustSugarText(syrupText, percent) {
             if (!syrupText || syrupText === '-' || syrupText.toLowerCase().includes('tanpa')) return syrupText || '-';
             if (percent === 100) return syrupText;
             if (percent === 0) return "0 ml (Tanpa Pemanis)";
             const adjustedText = syrupText.replace(/(\d+(\.\d+)?)/g, (match) => {
                 const num = parseFloat(match);
-                const val = Math.round((num * (percent / 100)) * 10) / 10;
-                return val;
+                return Math.round((num * (percent / 100)) * 10) / 10;
             });
             return `${adjustedText} (${percent}%)`;
         }
 
-        function extractNumber(str) {
-            if (!str) return 0;
-            const match = str.match(/(\d+(\.\d+)?)/);
-            return match ? parseFloat(match[0]) : 0;
-        }
-
-        function parseFlavorItems(str) {
-            if (!str || str === '-' || str.toLowerCase().includes('tanpa')) return [];
-            const parts = str.split(',').map(s => s.trim()).filter(s => s);
-            const result = [];
-            for (let p of parts) {
-                const numMatch = p.match(/(\d+(\.\d+)?)/);
-                if (!numMatch) continue;
-                const amount = parseFloat(numMatch[0]);
-                const unitMatch = p.match(/(ml|gr|gram|shot|sdm|sendok|pump)/i);
-                const unit = unitMatch ? unitMatch[0].toLowerCase() : 'ml';
-                let name = p.replace(/(\d+(\.\d+)?)\s*(ml|gr|gram|shot|sdm|sendok|pump)/gi, '').trim();
-                if (!name) {
-                    const words = p.split(/\s+/);
-                    for (let w of words) {
-                        if (!/\d/.test(w) && !/(ml|gr|gram|shot|sdm|sendok|pump)/i.test(w) && w.length > 1) {
-                            name = w;
-                            break;
-                        }
-                    }
-                }
-                if (!name) name = 'Flavor';
-                result.push({ name, amount, unit });
-            }
-            return result;
-        }
-
-        window.adjustSugarText = adjustSugarText;
-        window.extractNumber = extractNumber;
-        window.parseFlavorItems = parseFlavorItems;
-
-        // ===== WAKE LOCK =====
-        let wakeLock = null;
-        async function enableWakeLock() {
-            try {
-                if ('wakeLock' in navigator) {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                }
-            } catch (e) { console.warn(e); }
-        }
-
-        function disableWakeLock() { if (wakeLock) { wakeLock.release();
-                wakeLock = null; } }
-        document.addEventListener('visibilitychange', async () => {
-            if (wakeLock && document.visibilityState === 'visible' && isHandsFreeMode) await enableWakeLock();
-        });
-
-        // ===== LOGIN =====
         window.checkPin = function() {
             const input = document.getElementById('pinInput').value;
             if (input === MASTER_PIN) {
                 sessionStorage.setItem('barista_auth', 'true');
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('pinInput').value = '';
-                document.getElementById('loginError').style.display = 'none';
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
@@ -1747,200 +1583,46 @@
             document.getElementById('loginOverlay').style.display = 'none';
         }
 
-        // ===== PIN MODAL =====
         window.requestEditAction = function() {
             if (!currentActiveRecipe) return;
             pendingActionType = 'edit';
-            pendingDeleteId = null;
             document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Edit Menu";
-            document.getElementById('actionPinInput').value = '';
-            document.getElementById('actionPinError').style.display = 'none';
             document.getElementById('actionPinModal').classList.add('open');
-            document.getElementById('actionPinInput').focus();
         };
         window.requestDeleteAction = function(id) {
             pendingActionType = 'delete';
             pendingDeleteId = id;
             document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Hapus Menu";
-            document.getElementById('actionPinInput').value = '';
-            document.getElementById('actionPinError').style.display = 'none';
             document.getElementById('actionPinModal').classList.add('open');
-            document.getElementById('actionPinInput').focus();
         };
         window.closeActionPinModal = function() {
             document.getElementById('actionPinModal').classList.remove('open');
-            pendingActionType = null;
-            pendingDeleteId = null;
         };
         window.verifyActionPin = function() {
             const inputPin = document.getElementById('actionPinInput').value;
             if (inputPin === MASTER_PIN) {
-                const action = pendingActionType;
-                const delId = pendingDeleteId;
                 window.closeActionPinModal();
-                if (action === 'edit') window.executeEditRecipe();
-                else if (action === 'delete') window.executeDeleteMenu(delId);
+                if (pendingActionType === 'edit') window.executeEditRecipe();
+                else if (pendingActionType === 'delete') window.executeDeleteMenu(pendingDeleteId);
             } else {
                 document.getElementById('actionPinError').style.display = 'block';
             }
         };
 
-        // ===== DEFAULT DATA =====
-        const defaultMenuData = [{
-            title: "Kopi Susu Aren",
-            icon: "☕",
-            category: "Espresso Based",
-            keywords: ["aren", "kopi susu aren", "kopsu", "gula aren"],
-            availableSizes: ['medium', 'large'],
-            sizes: {
-                medium: {
-                    syrup: "15 ml Gula Aren",
-                    espresso: "30 ml Espresso",
-                    creamer: "Tanpa Krimer",
-                    milk: "100 ml Fresh Milk",
-                    ice: "Secukupnya",
-                    steps: ["Tuang 15 ml Gula Aren ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya",
-                        "Pour 1 shot Espresso"
-                    ]
-                },
-                large: {
-                    syrup: "25 ml Gula Aren",
-                    espresso: "60 ml Espresso",
-                    creamer: "Tanpa Krimer",
-                    milk: "150 ml Fresh Milk",
-                    ice: "Penuh",
-                    steps: ["Tuang 25 ml Gula Aren ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh",
-                        "Pour 2 shot Espresso"
-                    ]
-                }
-            }
-        }, {
-            title: "Hazelnut Latte",
-            icon: "🥜",
-            category: "Flavored Latte",
-            keywords: ["hazelnut", "kopi hazelnut", "hazelnut latte"],
-            availableSizes: ['medium', 'large'],
-            sizes: {
-                medium: {
-                    syrup: "15 ml Sirup (1 Pump)",
-                    espresso: "30 ml Espresso",
-                    creamer: "Tanpa Krimer",
-                    milk: "100 ml Fresh Milk",
-                    ice: "Secukupnya",
-                    steps: ["Pump 1x Hazelnut ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya",
-                        "Pour 1 shot Espresso"
-                    ]
-                },
-                large: {
-                    syrup: "25 ml Sirup (2 Pump)",
-                    espresso: "60 ml Espresso",
-                    creamer: "Tanpa Krimer",
-                    milk: "150 ml Fresh Milk",
-                    ice: "Penuh",
-                    steps: ["Pump 2x Hazelnut ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh",
-                        "Pour 2 shot Espresso"
-                    ]
-                }
-            }
-        }, {
-            title: "Iced Americano",
-            icon: "🧊",
-            category: "Black Coffee",
-            keywords: ["americano", "kopi hitam", "ice americano"],
-            availableSizes: ['medium', 'large'],
-            sizes: {
-                medium: {
-                    syrup: "Tanpa Pemanis",
-                    espresso: "30 ml Espresso",
-                    creamer: "Tanpa Krimer",
-                    milk: "100 ml Air Mineral",
-                    ice: "Secukupnya",
-                    steps: ["Isi cup dengan 100 ml Air", "Isi es secukupnya", "Pour 1 shot Espresso di atasnya"]
-                },
-                large: {
-                    syrup: "Tanpa Pemanis",
-                    espresso: "60 ml Espresso",
-                    creamer: "Tanpa Krimer",
-                    milk: "150 ml Air Mineral",
-                    ice: "Penuh",
-                    steps: ["Isi cup dengan 150 ml Air", "Isi es penuh", "Pour 2 shot Espresso di atasnya"]
-                }
-            }
-        }];
-
-        // ===== FIREBASE =====
         onValue(recipesRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                menuData = Object.keys(data).map(key => {
-                    let item = { id: key, ...data[key] };
-                    if (!item.sizes) {
-                        item.sizes = {
-                            medium: { syrup: item.syrup || '-', espresso: item.espresso || '-',
-                                creamer: item.creamer || '-', milk: item.milk || '-', ice: item.ice || '-',
-                                steps: item.steps || [] },
-                            large: { syrup: item.syrup || '-', espresso: item.espresso || '-',
-                                creamer: item.creamer || '-', milk: item.milk || '-', ice: item.ice || '-',
-                                steps: item.steps || [] }
-                        };
-                    }
-                    if (!item.availableSizes || !Array.isArray(item.availableSizes) || item.availableSizes.length === 0) {
-                        if (item.sizes && item.sizes.large && item.sizes.large.syrup !== '-') {
-                            item.availableSizes = ['medium', 'large'];
-                        } else {
-                            item.availableSizes = ['medium'];
-                        }
-                    }
-                    return item;
-                });
-            } else {
-                defaultMenuData.forEach(item => {
-                    const newRef = push(recipesRef);
-                    set(newRef, item);
-                });
+                menuData = Object.keys(data).map(key => ({ id: key, ...data[key] }));
             }
             renderMenuCards();
             renderFavorites();
-            if (currentActiveId) {
-                const updatedActive = menuData.find(i => i.id === currentActiveId);
-                if (updatedActive) {
-                    let size = currentSize;
-                    const avail = updatedActive.availableSizes || ['medium', 'large'];
-                    if (!avail.includes(size)) {
-                        size = avail[0] || 'medium';
-                    }
-                    showActiveRecipe(updatedActive, size, currentSugarPercent);
-                    if (document.getElementById('focusOverlay').classList.contains('active')) {
-                        window.openFocusMode();
-                    }
-                } else {
-                    window.closeActiveDisplay();
-                    window.closeFocusMode();
-                }
-            }
-            if (document.getElementById('batchOverlay').classList.contains('active')) {
-                populateBatchMenuSelect();
-                updateBatchSizeOptions();
-            }
-        }, (err) => console.error("Firebase error:", err));
-
-        function sortMenuItems(items) {
-            return [...items].sort((a, b) => {
-                let idxA = CATEGORY_ORDER.indexOf(a.category || 'Custom Menu');
-                let idxB = CATEGORY_ORDER.indexOf(b.category || 'Custom Menu');
-                if (idxA === -1) idxA = 999;
-                if (idxB === -1) idxB = 999;
-                if (idxA !== idxB) return idxA - idxB;
-                return a.title.localeCompare(b.title);
-            });
-        }
+        });
 
         function renderMenuCards(items = menuData) {
-            const sorted = sortMenuItems(items);
             const grid = document.getElementById('menuGrid');
-            document.getElementById('menuCount').innerText = sorted.length;
+            document.getElementById('menuCount').innerText = items.length;
             grid.innerHTML = '';
-            sorted.forEach(item => {
+            items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'menu-card';
                 card.onclick = () => showActiveRecipe(item, 'medium', 100);
@@ -1951,12 +1633,14 @@
                 card.innerHTML = `
                     <div class="card-header">
                         <div class="card-info">
-                            <div class="card-title">${item.title}</div>
-                            <div class="card-category">${item.category || 'Custom Menu'} <span class="size-badge">${sizeLabel}</span></div>
+                            <div>
+                                <div class="card-title">${item.title}</div>
+                                <div class="card-category">${item.category || 'Custom Menu'} <span class="size-badge">${sizeLabel}</span></div>
+                            </div>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
                             <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); window.toggleFavorite('${item.id}')">${isFav ? '⭐' : '☆'}</button>
-                            <button class="delete-card-btn" title="Hapus Menu" onclick="event.stopPropagation(); window.requestDeleteAction('${item.id}')">🗑️</button>
+                            <button class="delete-card-btn" onclick="event.stopPropagation(); window.requestDeleteAction('${item.id}')">🗑️</button>
                         </div>
                     </div>
                     <div class="quick-ingredients">
@@ -1968,72 +1652,25 @@
             });
         }
 
-        // ===== SIZE & SUGAR =====
-        window.switchSize = function(size) {
-            if (!currentActiveRecipe) return;
-            const available = currentActiveRecipe.availableSizes || ['medium', 'large'];
-            if (!available.includes(size)) {
-                size = available[0] || 'medium';
-            }
-            currentSize = size;
-            document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
-            document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
-            document.getElementById('btnSizeMedium').classList.toggle('disabled', !available.includes('medium'));
-            document.getElementById('btnSizeLarge').classList.toggle('disabled', !available.includes('large'));
-            if (currentActiveRecipe) {
-                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-                updateActiveRecipeView(currentActiveRecipe, size);
-                window.speakRecipe(currentActiveRecipe, size, currentSugarPercent);
-            }
-        };
-
-        window.switchSugar = function(percent) {
-            currentSugarPercent = percent;
-            document.querySelectorAll('.sugar-btn').forEach(btn => {
-                const bSugar = parseInt(btn.getAttribute('data-sugar'));
-                btn.classList.toggle('active', bSugar === percent);
-            });
-            if (currentActiveRecipe) {
-                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-                updateActiveRecipeView(currentActiveRecipe, currentSize);
-                if (document.getElementById('focusOverlay').classList.contains('active')) {
-                    updateFocusView(currentActiveRecipe, currentSize);
-                }
-                window.speakRecipe(currentActiveRecipe, currentSize, percent);
-            }
-        };
-
-        // ===== ACTIVE RECIPE =====
         function showActiveRecipe(item, size = 'medium', sugarPercent = 100) {
-            if ('speechSynthesis' in window) { window.speechSynthesis.cancel();
-                updateSpeakButtons(false); }
             currentActiveId = item.id;
             currentActiveRecipe = item;
-            const available = item.availableSizes || ['medium', 'large'];
-            if (!available.includes(size)) {
-                size = available[0] || 'medium';
-            }
             currentSize = size;
             currentSugarPercent = sugarPercent;
 
-            document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
-            document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
-            document.getElementById('btnSizeMedium').classList.toggle('disabled', !available.includes('medium'));
-            document.getElementById('btnSizeLarge').classList.toggle('disabled', !available.includes('large'));
-
-            window.switchSugar(sugarPercent);
             document.getElementById('activeTitle').innerText = item.title;
             const kw = Array.isArray(item.keywords) ? item.keywords.join('", "') : item.keywords;
             document.getElementById('activeKeywords').innerText = `Kata kunci suara: "${kw}"`;
             document.getElementById('activeDeleteBtn').onclick = () => window.requestDeleteAction(item.id);
 
-            // Tampilkan foto
-            const img = document.getElementById('activeImage');
-            if (item.imageUrl) {
-                img.src = item.imageUrl;
-                img.style.display = 'block';
+            // Handle Image Pratinjau Foto
+            const imgContainer = document.getElementById('activeImageContainer');
+            const imgTag = document.getElementById('activeProductImg');
+            if (item.imageUrl && item.imageUrl.trim() !== '') {
+                imgTag.src = item.imageUrl;
+                imgContainer.style.display = 'block';
             } else {
-                img.style.display = 'none';
+                imgContainer.style.display = 'none';
             }
 
             updateActiveRecipeView(item, size);
@@ -2045,11 +1682,10 @@
         function updateActiveRecipeView(item, size) {
             const data = item.sizes?.[size] || item.sizes?.medium || {};
             const adjustedSyrup = adjustSugarText(data.syrup, currentSugarPercent);
-            const isCustom = currentSugarPercent !== 100;
             document.getElementById('sizeLabelIndicator').innerText = size === 'medium' ? 'Medium (M)' : 'Large (L)';
             document.getElementById('recipeGrid').innerHTML = `
-                <div class="recipe-box ${isCustom ? 'highlight' : ''}">
-                    <div class="label">Sirup / Pemanis ${isCustom ? `(${currentSugarPercent}%)` : ''}</div>
+                <div class="recipe-box">
+                    <div class="label">Sirup / Pemanis</div>
                     <div class="value">${adjustedSyrup}</div>
                 </div>
                 <div class="recipe-box"><div class="label">Base/Kopi (${size.toUpperCase()})</div><div class="value">${data.espresso || '-'}</div></div>
@@ -2062,87 +1698,18 @@
         }
 
         window.closeActiveDisplay = function() {
-            if ('speechSynthesis' in window) { window.speechSynthesis.cancel();
-                updateSpeakButtons(false); }
             document.getElementById('activeDisplay').classList.remove('visible');
             currentActiveId = null;
             currentActiveRecipe = null;
         };
 
-        // ===== FOCUS MODE =====
-        window.openFocusMode = function() {
-            if (!currentActiveRecipe) return;
-            document.getElementById('focusOverlay').classList.add('active');
-            updateFocusView(currentActiveRecipe, currentSize);
-        };
-        window.changeFocusSize = function(size) {
-            if (!currentActiveRecipe) return;
-            const available = currentActiveRecipe.availableSizes || ['medium', 'large'];
-            if (!available.includes(size)) {
-                size = available[0] || 'medium';
-            }
-            currentSize = size;
-            document.getElementById('focusSizeMed').classList.toggle('active', size === 'medium');
-            document.getElementById('focusSizeLarge').classList.toggle('active', size === 'large');
-            if (currentActiveRecipe) {
-                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-                updateFocusView(currentActiveRecipe, size);
-                updateActiveRecipeView(currentActiveRecipe, size);
-                document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
-                document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
-                window.speakRecipe(currentActiveRecipe, size, currentSugarPercent);
-            }
-        };
-
-        function updateFocusView(item, size) {
-            const data = item.sizes?.[size] || item.sizes?.medium || {};
-            const adjustedSyrup = adjustSugarText(data.syrup, currentSugarPercent);
-            document.getElementById('focusTitle').innerText =
-                `${item.title} (${size.toUpperCase()}) ${currentSugarPercent !== 100 ? `- Sugar ${currentSugarPercent}%` : ''}`;
-            document.getElementById('focusRecipeGrid').innerHTML = `
-                <div class="focus-card"><div class="focus-label">Sirup / Pemanis</div><div class="focus-value">${adjustedSyrup}</div></div>
-                <div class="focus-card"><div class="focus-label">Base/Kopi (${size.toUpperCase()})</div><div class="focus-value">${data.espresso || '-'}</div></div>
-                <div class="focus-card"><div class="focus-label">Krimer (${size.toUpperCase()})</div><div class="focus-value">${data.creamer || '-'}</div></div>
-                <div class="focus-card"><div class="focus-label">Susu (${size.toUpperCase()})</div><div class="focus-value">${data.milk || '-'}</div></div>
-                <div class="focus-card"><div class="focus-label">Es (${size.toUpperCase()})</div><div class="focus-value">${data.ice || '-'}</div></div>
-            `;
-            const steps = Array.isArray(data.steps) ? data.steps : [data.steps || ''];
-            document.getElementById('focusStepsList').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
-        }
-
-        window.closeFocusMode = function() {
-            document.getElementById('focusOverlay').classList.remove('active');
-        };
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                window.closeFocusMode();
-                window.closeActionPinModal();
-                window.closeBatchOrder();
-                window.closeBatchInstruction();
-            }
-        });
-
-        // ===== DELETE & EDIT =====
-        window.executeDeleteMenu = function(id) {
-            const item = menuData.find(i => i.id === id);
-            if (!item) return;
-            if (confirm(`Hapus menu "${item.title}"?`)) {
-                const itemRef = ref(db, `recipes/${id}`);
-                remove(itemRef)
-                    .then(() => {
-                        if (currentActiveId === id) { window.closeActiveDisplay();
-                            window.closeFocusMode(); }
-                        const idx = favorites.indexOf(id);
-                        if (idx > -1) {
-                            favorites.splice(idx, 1);
-                            saveFavorites();
-                            renderFavorites();
-                            renderMenuCards();
-                        }
-                    })
-                    .catch((err) => alert("Gagal hapus: " + err.message));
-            }
+        window.openAddModal = function() {
+            editingId = null;
+            document.getElementById('modalTitle').innerText = "Tambah Menu Baru";
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newImageUrl').value = '';
+            document.getElementById('newKeywords').value = '';
+            document.getElementById('recipeModal').classList.add('open');
         };
 
         window.executeEditRecipe = function() {
@@ -2151,14 +1718,9 @@
             editingId = item.id;
             document.getElementById('modalTitle').innerText = `Edit Resep: ${item.title}`;
             document.getElementById('newTitle').value = item.title || '';
+            document.getElementById('newImageUrl').value = item.imageUrl || '';
             document.getElementById('newCategory').value = item.category || 'Espresso Based';
-            document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(
-                ', ') : (item.keywords || '');
-            document.getElementById('newImageFile').value = '';
-
-            const avail = item.availableSizes || ['medium', 'large'];
-            document.getElementById('newSizeMedium').checked = avail.includes('medium');
-            document.getElementById('newSizeLarge').checked = avail.includes('large');
+            document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(', ') : (item.keywords || '');
 
             const med = item.sizes?.medium || {};
             document.getElementById('medSyrup').value = med.syrup || '';
@@ -2166,16 +1728,16 @@
             document.getElementById('medCreamer').value = med.creamer || '';
             document.getElementById('medMilk').value = med.milk || '';
             document.getElementById('medIce').value = med.ice || '';
-            document.getElementById('medSteps').value = Array.isArray(med.steps) ? med.steps.join(', ') : (med
-                .steps || '');
+            document.getElementById('medSteps').value = Array.isArray(med.steps) ? med.steps.join(', ') : (med.steps || '');
+
             const large = item.sizes?.large || {};
             document.getElementById('largeSyrup').value = large.syrup || '';
             document.getElementById('largeEspresso').value = large.espresso || '';
             document.getElementById('largeCreamer').value = large.creamer || '';
             document.getElementById('largeMilk').value = large.milk || '';
             document.getElementById('largeIce').value = large.ice || '';
-            document.getElementById('largeSteps').value = Array.isArray(large.steps) ? large.steps.join(', ') :
-                (large.steps || '');
+            document.getElementById('largeSteps').value = Array.isArray(large.steps) ? large.steps.join(', ') : (large.steps || '');
+
             document.getElementById('recipeModal').classList.add('open');
         };
 
@@ -2183,875 +1745,74 @@
             document.getElementById('recipeModal').classList.remove('open');
         };
 
-        // ===== UPLOAD GAMBAR (DIPERBAIKI) =====
-        async function uploadImage(file) {
-            if (!file) return null;
-            // Validasi tipe file
-            if (!file.type.startsWith('image/')) {
-                alert('File harus berupa gambar!');
-                return null;
-            }
-            // Batasi ukuran 2MB
-            if (file.size > 2 * 1024 * 1024) {
-                alert('Ukuran gambar terlalu besar (maks 2MB). Silakan kompres.');
-                return null;
-            }
+        window.saveMenu = function() {
+            const title = document.getElementById('newTitle').value.trim();
+            if (!title) return alert("Harap isi nama menu!");
 
-            const filePath = `menu_images/${Date.now()}_${file.name}`;
-            const fileRef = storageRef(storage, filePath);
-            try {
-                const snapshot = await uploadBytes(fileRef, file);
-                const url = await getDownloadURL(snapshot.ref);
-                return url;
-            } catch (error) {
-                console.error('❌ Upload error detail:', error);
-                let msg = 'Gagal upload gambar. ';
-                if (error.code === 'storage/unauthorized') {
-                    msg += 'Pastikan aturan Firebase Storage mengizinkan upload.';
-                } else if (error.code === 'storage/quota-exceeded') {
-                    msg += 'Kuota penyimpanan penuh.';
-                } else {
-                    msg += error.message;
-                }
-                alert(msg);
-                return null;
-            }
-        }
+            const availableSizes = [];
+            if (document.getElementById('newSizeMedium').checked) availableSizes.push('medium');
+            if (document.getElementById('newSizeLarge').checked) availableSizes.push('large');
 
-        // ===== SAVE MENU (DIPERBAIKI) =====
-        window.saveMenu = async function() {
-            try {
-                console.log('▶️ Save menu mulai...');
-                const title = document.getElementById('newTitle').value.trim();
-                if (!title) return alert('Harap isi nama menu!');
-
-                const availableSizes = [];
-                if (document.getElementById('newSizeMedium').checked) availableSizes.push('medium');
-                if (document.getElementById('newSizeLarge').checked) availableSizes.push('large');
-                if (availableSizes.length === 0) {
-                    return alert('Pilih setidaknya satu ukuran yang tersedia!');
-                }
-
-                // Upload image if any
-                const fileInput = document.getElementById('newImageFile');
-                let imageUrl = null;
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    console.log('📤 Upload file:', file.name, file.size, file.type);
-                    imageUrl = await uploadImage(file);
-                    if (imageUrl === null) {
-                        if (!confirm('Upload gambar gagal. Lanjutkan menyimpan menu tanpa gambar?')) {
-                            return;
-                        }
-                    } else {
-                        console.log('✅ Upload berhasil, URL:', imageUrl);
+            const payload = {
+                title,
+                imageUrl: document.getElementById('newImageUrl').value.trim(),
+                category: document.getElementById('newCategory').value,
+                keywords: document.getElementById('newKeywords').value.split(',').map(k => k.trim()).filter(k => k),
+                availableSizes: availableSizes,
+                sizes: {
+                    medium: {
+                        syrup: document.getElementById('medSyrup').value.trim() || '-',
+                        espresso: document.getElementById('medEspresso').value.trim() || '-',
+                        creamer: document.getElementById('medCreamer').value.trim() || '-',
+                        milk: document.getElementById('medMilk').value.trim() || '-',
+                        ice: document.getElementById('medIce').value.trim() || '-',
+                        steps: document.getElementById('medSteps').value.split(',').map(s => s.trim()).filter(s => s)
+                    },
+                    large: {
+                        syrup: document.getElementById('largeSyrup').value.trim() || '-',
+                        espresso: document.getElementById('largeEspresso').value.trim() || '-',
+                        creamer: document.getElementById('largeCreamer').value.trim() || '-',
+                        milk: document.getElementById('largeMilk').value.trim() || '-',
+                        ice: document.getElementById('largeIce').value.trim() || '-',
+                        steps: document.getElementById('largeSteps').value.split(',').map(s => s.trim()).filter(s => s)
                     }
                 }
-
-                // Build payload
-                const payload = {
-                    title,
-                    category: document.getElementById('newCategory').value,
-                    keywords: document.getElementById('newKeywords').value.split(',').map(k => k.trim()).filter(k => k),
-                    availableSizes: availableSizes,
-                    sizes: {
-                        medium: {
-                            syrup: document.getElementById('medSyrup').value.trim() || '-',
-                            espresso: document.getElementById('medEspresso').value.trim() || '-',
-                            creamer: document.getElementById('medCreamer').value.trim() || '-',
-                            milk: document.getElementById('medMilk').value.trim() || '-',
-                            ice: document.getElementById('medIce').value.trim() || '-',
-                            steps: document.getElementById('medSteps').value.split(',').map(s => s.trim()).filter(s => s)
-                        },
-                        large: {
-                            syrup: document.getElementById('largeSyrup').value.trim() || '-',
-                            espresso: document.getElementById('largeEspresso').value.trim() || '-',
-                            creamer: document.getElementById('largeCreamer').value.trim() || '-',
-                            milk: document.getElementById('largeMilk').value.trim() || '-',
-                            ice: document.getElementById('largeIce').value.trim() || '-',
-                            steps: document.getElementById('largeSteps').value.split(',').map(s => s.trim()).filter(s => s)
-                        }
-                    }
-                };
-                if (imageUrl) payload.imageUrl = imageUrl;
-
-                console.log('📦 Payload:', payload);
-
-                // Simpan ke Firebase
-                if (editingId) {
-                    // Jika edit dan tidak ada gambar baru, pertahankan gambar lama
-                    if (!imageUrl && currentActiveRecipe && currentActiveRecipe.imageUrl) {
-                        payload.imageUrl = currentActiveRecipe.imageUrl;
-                    }
-                    const targetRef = ref(db, `recipes/${editingId}`);
-                    await set(targetRef, payload);
-                    console.log('✅ Menu updated');
-                } else {
-                    const newRef = push(recipesRef);
-                    await set(newRef, payload);
-                    console.log('✅ Menu baru ditambahkan');
-                }
-                window.closeModal();
-                alert('Menu berhasil disimpan!');
-            } catch (err) {
-                console.error('❌ Error di saveMenu:', err);
-                alert('Gagal simpan ke database: ' + err.message);
-            }
-        };
-
-        // ===== FILTER =====
-        window.filterMenu = function() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            renderMenuCards(menuData.filter(i =>
-                i.title.toLowerCase().includes(q) ||
-                (Array.isArray(i.keywords) && i.keywords.some(k => k.toLowerCase().includes(q)))
-            ));
-        };
-
-        // ===== TTS =====
-        function updateSpeakButtons(isSpeaking) {
-            const speakBtn = document.getElementById('speakBtn');
-            const focusSpeakBtn = document.getElementById('focusSpeakBtn');
-            if (speakBtn) speakBtn.innerHTML = isSpeaking ? '⏹️ Stop Suara' : '🔊 Baca Resep';
-            if (focusSpeakBtn) focusSpeakBtn.innerHTML = isSpeaking ? '⏹️ Stop Suara' : '🔊 Baca Suara';
-        }
-
-        window.speakActiveRecipe = function() {
-            if (currentActiveRecipe) window.speakRecipe(currentActiveRecipe, currentSize, currentSugarPercent);
-        };
-
-        window.speakRecipe = function(item, size = 'medium', sugarPercent = 100) {
-            if (isSilentMode) return;
-            if (!('speechSynthesis' in window)) return alert("Browser tidak support speech.");
-            if (window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel();
-                isSpeakingTTS = false;
-                updateSpeakButtons(false);
-                return;
-            }
-            window.speechSynthesis.cancel();
-            const data = item.sizes?.[size] || item.sizes?.medium || {};
-            const adjustedSyrup = adjustSugarText(data.syrup, sugarPercent);
-            const text =
-                `${item.title} ukuran ${size} ${sugarPercent !== 100 ? `dengan gula ${sugarPercent} persen` : ''}. Sirup: ${adjustedSyrup}. Base Kopi: ${data.espresso}. Krimer: ${data.creamer || 'tidak ada'}. Susu: ${data.milk}. Es: ${data.ice}.`;
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'id-ID';
-            utterance.rate = 0.9;
-            utterance.pitch = 1.0;
-
-            const voices = window.speechSynthesis.getVoices();
-            const preferredVoice = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google'));
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
-            } else {
-                const fallbackVoice = voices.find(v => v.lang === 'id-ID');
-                if (fallbackVoice) utterance.voice = fallbackVoice;
-            }
-
-            utterance.onstart = () => { isSpeakingTTS = true;
-                updateSpeakButtons(true); };
-            utterance.onend = () => { isSpeakingTTS = false;
-                updateSpeakButtons(false); if (isHandsFreeMode) restartRecognition(); };
-            utterance.onerror = () => { isSpeakingTTS = false;
-                updateSpeakButtons(false); if (isHandsFreeMode) restartRecognition(); };
-            window.speechSynthesis.speak(utterance);
-        };
-
-        // ===== SILENT MODE =====
-        window.toggleSilentMode = function() {
-            isSilentMode = !isSilentMode;
-            const btn = document.getElementById('silentModeBtn');
-            if (isSilentMode) {
-                btn.classList.add('muted');
-                btn.innerHTML = '🔇';
-                btn.title = "Mode Suara (OFF)";
-                if ('speechSynthesis' in window) { window.speechSynthesis.cancel();
-                    isSpeakingTTS = false;
-                    updateSpeakButtons(false); }
-            } else {
-                btn.classList.remove('muted');
-                btn.innerHTML = '🔊';
-                btn.title = "Mode Suara (ON)";
-            }
-        };
-
-        // ===== VOICE RECOGNITION (HANYA HANDS-FREE) =====
-        let recognition = null;
-        let isListening = false;
-        let isHandsFreeMode = false;
-
-        function getSpeechRecognition() {
-            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SR) return null;
-            if (!recognition) {
-                recognition = new SR();
-                recognition.lang = 'id-ID';
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.maxAlternatives = 1;
-
-                const correctionMap = {
-                    'amerikano': 'americano',
-                    'amerika no': 'americano',
-                    'america no': 'americano',
-                    'america': 'americano',
-                    'american': 'americano',
-                    'kapucino': 'cappuccino',
-                    'capucino': 'cappuccino',
-                    'cappucino': 'cappuccino',
-                    'kapuchino': 'cappuccino',
-                    'espreso': 'espresso',
-                    'expresso': 'espresso',
-                    'esprezo': 'espresso',
-                    'espro': 'espresso',
-                    'late': 'latte',
-                    'latti': 'latte',
-                    'lat': 'latte',
-                    'moka': 'mocha',
-                    'moca': 'mocha',
-                    'makiyato': 'macchiato',
-                    'makiatto': 'macchiato',
-                    'karamel': 'caramel',
-                    'karemil': 'caramel',
-                    'vanila': 'vanilla',
-                    'vanela': 'vanilla',
-                    'hazelnat': 'hazelnut',
-                    'hezelnut': 'hazelnut',
-                    'macha': 'matcha',
-                    'maccha': 'matcha',
-                    'almend': 'almond',
-                    'amandel': 'almond',
-                    'buterskot': 'butterscotch',
-                    'butirskot': 'butterscotch',
-                    'stroberi': 'strawberry',
-                    'strawberi': 'strawberry',
-                    'blueberi': 'blueberry',
-                    'pistacio': 'pistachio',
-                    'pistasyo': 'pistachio',
-                    'afogato': 'affogato',
-                    'frape': 'frappe',
-                    'tofi': 'toffee',
-                    'gingerbred': 'gingerbread',
-                    'jinjerbred': 'gingerbread',
-                    'coco': 'coconut',
-                    'kelapa': 'coconut',
-                    'orio': 'oreo',
-                    'red velvit': 'red velvet',
-                    'redvelvet': 'red velvet',
-                    'flat wait': 'flat white',
-                    'flatwite': 'flat white',
-                    'kol brew': 'cold brew',
-                    'coldbre': 'cold brew',
-                    'pisang': 'banana',
-                    'manggo': 'mango',
-                    'coklat': 'chocolate',
-                    'cokelat': 'chocolate',
-                    'tiramisu': 'tiramisu',
-                    'pandan': 'pandan',
-                    'taro': 'taro',
-                    'oren': 'orange',
-                    'oranye': 'orange',
-                    'aren': 'aren',
-                    'gula aren': 'aren'
-                };
-
-                recognition.onstart = () => {
-                    isListening = true;
-                    document.getElementById('voiceStatus').innerText = '🎙️ Mendengarkan...';
-                };
-                recognition.onresult = (e) => {
-                    if (!e.results || !e.results[0] || !e.results[0][0]) return;
-                    let raw = e.results[0][0].transcript.toLowerCase().trim();
-                    for (const [wrong, correct] of Object.entries(correctionMap)) {
-                        if (raw.includes(wrong)) {
-                            raw = raw.replace(new RegExp(wrong, 'g'), correct);
-                        }
-                    }
-                    processVoiceCommand(raw);
-                };
-                recognition.onerror = (e) => {
-                    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-                        document.getElementById('voiceStatus').innerText = '❌ Mikrofon ditolak!';
-                        isHandsFreeMode = false;
-                        disableWakeLock();
-                        updateHandsFreeUI();
-                        stopListening();
-                        return;
-                    }
-                    if (e.error === 'no-speech') {
-                        document.getElementById('voiceStatus').innerText = '⚠️ Tidak ada suara, ulangi...';
-                    }
-                };
-                recognition.onend = () => {
-                    isListening = false;
-                    if (isHandsFreeMode && !isSpeakingTTS) {
-                        restartRecognition();
-                    } else if (!isHandsFreeMode) {
-                        stopListening();
-                    }
-                };
-            }
-            return recognition;
-        }
-
-        function restartRecognition() {
-            if (!isHandsFreeMode || isSpeakingTTS) return;
-            setTimeout(() => {
-                try { const sr = getSpeechRecognition(); if (sr && !isListening) sr.start(); } catch (e) { console
-                        .warn(e); }
-            }, 300);
-        }
-
-        // ===== PERINTAH SUARA - BATCH PARSING =====
-        function parseBatchCommand(text) {
-            const batchKeywords = ['batch', 'tambah', 'order', 'daftar', 'ke batch', 'tambahkan', 'tambahin', '+'];
-            let hasBatchKeyword = false;
-            for (const kw of batchKeywords) {
-                if (text.includes(kw)) { hasBatchKeyword = true; break; }
-            }
-            if (!hasBatchKeyword) return null;
-
-            let qty = 1;
-            const qtyMatch = text.match(/\b(\d+)\s*(?:x|porsi|cup|gelas|)/i);
-            if (qtyMatch) qty = parseInt(qtyMatch[1]);
-
-            let size = null;
-            if (text.includes('large') || text.includes('besar') || text.includes('L')) size = 'large';
-            else if (text.includes('medium') || text.includes('sedang') || text.includes('M')) size = 'medium';
-
-            let sugar = null;
-            const sugarMatch = text.match(/\b(100|75|50|25|0)\s*%/i);
-            if (sugarMatch) sugar = parseInt(sugarMatch[1]);
-            else if (text.includes('no sugar') || text.includes('tanpa gula') || text.includes('bebas gula')) sugar = 0;
-            else if (text.includes('half sugar') || text.includes('separuh')) sugar = 50;
-            else if (text.includes('less sugar') || text.includes('sedikit gula')) sugar = 75;
-            else if (text.includes('full sugar') || text.includes('penuh')) sugar = 100;
-
-            let matchedMenu = null;
-            let cleanText = text;
-            cleanText = cleanText.replace(/\b\d+\s*(?:x|porsi|cup|gelas)/gi, '');
-            cleanText = cleanText.replace(/\b(large|medium|besar|sedang|L|M)\b/gi, '');
-            cleanText = cleanText.replace(/\b(\d+%|no sugar|tanpa gula|bebas gula|half sugar|separuh|less sugar|sedikit gula|full sugar|penuh)\b/gi, '');
-            for (const kw of batchKeywords) {
-                cleanText = cleanText.replace(new RegExp('\\b' + kw + '\\b', 'gi'), '');
-            }
-            cleanText = cleanText.trim();
-
-            if (cleanText.length > 0) {
-                const words = cleanText.split(/\s+/);
-                let bestMatch = null;
-                let bestScore = 0;
-                for (const menu of menuData) {
-                    const titleLower = menu.title.toLowerCase();
-                    const keywords = (menu.keywords || []).map(k => k.toLowerCase());
-                    let score = 0;
-                    for (const w of words) {
-                        if (titleLower.includes(w)) score += 2;
-                        if (keywords.some(k => k.includes(w) || w.includes(k))) score += 1;
-                    }
-                    if (titleLower === cleanText) score += 10;
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestMatch = menu;
-                    }
-                }
-                if (bestScore >= 1) matchedMenu = bestMatch;
-            }
-
-            if (!matchedMenu && cleanText.length > 0) {
-                const query = cleanText.replace(/\s+/g, '');
-                for (const menu of menuData) {
-                    const titleClean = menu.title.replace(/\s+/g, '').toLowerCase();
-                    if (titleClean === query || titleClean.includes(query) || query.includes(titleClean)) {
-                        matchedMenu = menu;
-                        break;
-                    }
-                }
-            }
-
-            if (!matchedMenu) return null;
-
-            const availSizes = matchedMenu.availableSizes || ['medium'];
-            if (!size || !availSizes.includes(size)) {
-                size = availSizes[0];
-            }
-            if (sugar === null) sugar = 100;
-
-            return {
-                menu: matchedMenu,
-                size: size,
-                sugar: sugar,
-                qty: qty
             };
-        }
 
-        window.addBatchOrderFromVoice = function(order) {
-            if (!order.menu) return false;
-            const avail = order.menu.availableSizes || ['medium'];
-            if (!avail.includes(order.size)) {
-                speakConfirmation(`Maaf, ${order.menu.title} tidak tersedia ukuran ${order.size}`);
-                return false;
-            }
-            batchOrders.push({
-                menuId: order.menu.id,
-                title: order.menu.title,
-                size: order.size,
-                sugar: order.sugar,
-                quantity: order.qty
-            });
-            renderBatchOrders();
-            updateBatchSummary();
-            const overlay = document.getElementById('batchOverlay');
-            if (!overlay.classList.contains('active')) {
-                overlay.classList.add('active');
-                populateBatchMenuSelect();
-                updateBatchSizeOptions();
-            }
-            const sugarText = order.sugar === 100 ? '' : ` gula ${order.sugar} persen`;
-            speakConfirmation(`Menambahkan ${order.qty} ${order.menu.title} ukuran ${order.size}${sugarText} ke batch`);
-            document.getElementById('voiceStatus').innerText =
-                `✅ ${order.qty} ${order.menu.title} (${order.size}) sugar ${order.sugar}% ditambahkan`;
-            return true;
-        };
-
-        function speakConfirmation(text) {
-            if (isSilentMode) return;
-            if (!('speechSynthesis' in window)) return;
-            if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'id-ID';
-            utter.rate = 0.9;
-            utter.pitch = 1.0;
-            const voices = window.speechSynthesis.getVoices();
-            const preferred = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google'));
-            if (preferred) utter.voice = preferred;
-            else {
-                const fallback = voices.find(v => v.lang === 'id-ID');
-                if (fallback) utter.voice = fallback;
-            }
-            window.speechSynthesis.speak(utter);
-        }
-
-        function processVoiceCommand(text) {
-            const batchOrder = parseBatchCommand(text);
-            if (batchOrder) {
-                const added = window.addBatchOrderFromVoice(batchOrder);
-                if (!added) {
-                    document.getElementById('voiceStatus').innerText = `❌ Gagal menambahkan: menu tidak ditemukan atau ukuran tidak tersedia`;
-                }
-                return;
-            }
-
-            if (text.startsWith('cari ')) {
-                const query = text.substring(5).trim();
-                if (query) {
-                    document.getElementById('searchInput').value = query;
-                    window.filterMenu();
-                    document.getElementById('voiceStatus').innerText = `🔍 Mencari: "${query}"`;
-                } else {
-                    document.getElementById('voiceStatus').innerText = '⚠️ Apa yang ingin dicari?';
-                }
-                return;
-            }
-
-            if (text.includes('tampilkan favorit') || text.includes('tampilkan favourite')) {
-                window._scrollToFavorites = true;
-                renderFavorites();
-                document.getElementById('voiceStatus').innerText = '⭐ Menampilkan favorit';
-                return;
-            }
-
-            if (text.includes('reset sugar') || text.includes('reset gula')) {
-                window.switchSugar(100);
-                document.getElementById('voiceStatus').innerText = '🔄 Sugar direset ke 100%';
-                return;
-            }
-
-            if (text.includes('ukuran large') || text.includes('ukuran besar')) {
-                if (currentActiveRecipe) {
-                    const avail = currentActiveRecipe.availableSizes || ['medium', 'large'];
-                    if (avail.includes('large')) {
-                        window.switchSize('large');
-                        document.getElementById('voiceStatus').innerText = '📏 Ukuran Large';
-                    } else {
-                        document.getElementById('voiceStatus').innerText = '❌ Menu ini tidak tersedia Large';
-                    }
-                } else {
-                    document.getElementById('voiceStatus').innerText = '❌ Pilih menu dulu';
-                }
-                return;
-            }
-            if (text.includes('ukuran medium') || text.includes('ukuran sedang')) {
-                if (currentActiveRecipe) {
-                    const avail = currentActiveRecipe.availableSizes || ['medium', 'large'];
-                    if (avail.includes('medium')) {
-                        window.switchSize('medium');
-                        document.getElementById('voiceStatus').innerText = '📏 Ukuran Medium';
-                    } else {
-                        document.getElementById('voiceStatus').innerText = '❌ Menu ini tidak tersedia Medium';
-                    }
-                } else {
-                    document.getElementById('voiceStatus').innerText = '❌ Pilih menu dulu';
-                }
-                return;
-            }
-
-            let sugar = 100;
-            let sugarDetected = false;
-            const percentMatch = text.match(/\b(100|75|50|25|0)\s*%/i);
-            if (percentMatch) {
-                sugar = parseInt(percentMatch[1]);
-                sugarDetected = true;
+            if (editingId) {
+                set(ref(db, `recipes/${editingId}`), payload).then(() => window.closeModal());
             } else {
-                if (text.includes('separuh') || text.includes('half sugar')) { sugar = 50;
-                    sugarDetected = true; } else if (text.includes('less sugar')) { sugar = 75;
-                    sugarDetected = true; } else if (text.includes('sedikit gula')) { sugar = 25;
-                    sugarDetected = true; } else if (text.includes('tanpa gula') || text.includes('no sugar') || text
-                    .includes('bebas gula')) { sugar = 0;
-                    sugarDetected = true; }
+                set(push(recipesRef), payload).then(() => window.closeModal());
             }
+        };
 
-            const match = menuData.find(i =>
-                (Array.isArray(i.keywords) && i.keywords.some(k => text.includes(k.toLowerCase()))) ||
-                i.title.toLowerCase().includes(text)
-            );
-
-            if (match) {
-                const finalSugar = sugarDetected ? sugar : currentSugarPercent;
-                showActiveRecipe(match, 'medium', finalSugar);
-                window.speakRecipe(match, 'medium', finalSugar);
-                document.getElementById('voiceStatus').innerText =
-                    `✅ ${match.title} ${sugarDetected ? `(Sugar ${finalSugar}%)` : ''}`;
-            } else if (!sugarDetected) {
-                document.getElementById('voiceStatus').innerText = `❌ Tidak ditemukan: "${text}"`;
+        window.openFocusMode = function() {
+            if (!currentActiveRecipe) return;
+            document.getElementById('focusOverlay').classList.add('active');
+            
+            const imgContainer = document.getElementById('focusImageContainer');
+            const imgTag = document.getElementById('focusProductImg');
+            if (currentActiveRecipe.imageUrl && currentActiveRecipe.imageUrl.trim() !== '') {
+                imgTag.src = currentActiveRecipe.imageUrl;
+                imgContainer.style.display = 'block';
             } else {
-                if (currentActiveRecipe) {
-                    window.switchSugar(sugar);
-                    document.getElementById('voiceStatus').innerText = `🍬 Sugar ${sugar}% diterapkan`;
-                } else {
-                    document.getElementById('voiceStatus').innerText =
-                    `❌ Tidak ada menu aktif, sebutkan nama menu dengan sugar`;
-                }
+                imgContainer.style.display = 'none';
             }
-        }
 
-        window.toggleHandsFreeMode = function() {
-            const sr = getSpeechRecognition();
-            if (!sr) return alert("Browser tidak support Speech Recognition.");
-            isHandsFreeMode = !isHandsFreeMode;
-            updateHandsFreeUI();
-            if (isHandsFreeMode) {
-                enableWakeLock();
-                document.getElementById('voiceStatus').innerText = '🎙️ Hands-Free: ON (langsung perintah)';
-                try { if (isListening) sr.stop();
-                    setTimeout(() => sr.start(), 200); } catch (e) { console.warn(e); }
-            } else {
-                disableWakeLock();
-                try { sr.stop(); } catch (e) {}
-                document.getElementById('voiceStatus').innerText = 'Status: Aktifkan Hands-Free';
-            }
+            document.getElementById('focusTitle').innerText = `${currentActiveRecipe.title}`;
+            const data = currentActiveRecipe.sizes?.[currentSize] || currentActiveRecipe.sizes?.medium || {};
+            document.getElementById('focusRecipeGrid').innerHTML = `
+                <div class="focus-card"><div class="focus-label">Sirup / Pemanis</div><div class="focus-value">${adjustSugarText(data.syrup, currentSugarPercent)}</div></div>
+                <div class="focus-card"><div class="focus-label">Base/Kopi</div><div class="focus-value">${data.espresso || '-'}</div></div>
+                <div class="focus-card"><div class="focus-label">Susu</div><div class="focus-value">${data.milk || '-'}</div></div>
+            `;
+            const steps = Array.isArray(data.steps) ? data.steps : [data.steps || ''];
+            document.getElementById('focusStepsList').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
         };
 
-        function updateHandsFreeUI() {
-            const btn = document.getElementById('handsFreeBtn');
-            if (isHandsFreeMode) {
-                btn.classList.add('active');
-                btn.innerHTML = '<span>🎙️ Hands-Free: ON</span>';
-            } else {
-                btn.classList.remove('active');
-                btn.innerHTML = '<span>🎙️ Hands-Free: OFF</span>';
-            }
-        }
-
-        function stopListening() {
-            isListening = false;
-            const status = document.getElementById('voiceStatus');
-            if (!isHandsFreeMode) {
-                status.innerText = 'Status: Aktifkan Hands-Free';
-            }
-        }
-
-        // ===== BATCH ORDER (UI) =====
-        window.openBatchOrder = function() {
-            document.getElementById('batchOverlay').classList.add('active');
-            populateBatchMenuSelect();
-            updateBatchSizeOptions();
-            renderBatchOrders();
-            updateBatchSummary();
-            document.querySelectorAll('.batch-sugar-btn').forEach(btn => {
-                btn.classList.toggle('active', parseInt(btn.dataset.sugar) === 100);
-            });
-            batchSugarPercent = 100;
+        window.closeFocusMode = function() {
+            document.getElementById('focusOverlay').classList.remove('active');
         };
-
-        window.closeBatchOrder = function() {
-            document.getElementById('batchOverlay').classList.remove('active');
-        };
-
-        function populateBatchMenuSelect() {
-            const select = document.getElementById('batchMenuSelect');
-            select.innerHTML = '';
-            const sortedItems = [...menuData].sort((a, b) => {
-                const aIsFav = favorites.includes(a.id);
-                const bIsFav = favorites.includes(b.id);
-                if (aIsFav && !bIsFav) return -1;
-                if (!aIsFav && bIsFav) return 1;
-                let idxA = CATEGORY_ORDER.indexOf(a.category || 'Custom Menu');
-                let idxB = CATEGORY_ORDER.indexOf(b.category || 'Custom Menu');
-                if (idxA === -1) idxA = 999;
-                if (idxB === -1) idxB = 999;
-                if (idxA !== idxB) return idxA - idxB;
-                return a.title.localeCompare(b.title);
-            });
-            sortedItems.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.id;
-                opt.textContent = item.title;
-                opt.dataset.sizes = JSON.stringify(item.availableSizes || ['medium', 'large']);
-                select.appendChild(opt);
-            });
-        }
-
-        window.updateBatchSizeOptions = function() {
-            const select = document.getElementById('batchMenuSelect');
-            const sizeSelect = document.getElementById('batchSizeSelect');
-            const selectedOption = select.options[select.selectedIndex];
-            if (!selectedOption) return;
-            let availableSizes = ['medium', 'large'];
-            try {
-                const parsed = JSON.parse(selectedOption.dataset.sizes);
-                if (Array.isArray(parsed) && parsed.length > 0) availableSizes = parsed;
-            } catch (e) {}
-            const currentSize = sizeSelect.value;
-            sizeSelect.innerHTML = '';
-            if (availableSizes.includes('medium')) {
-                const opt = document.createElement('option');
-                opt.value = 'medium';
-                opt.textContent = 'Medium (M)';
-                sizeSelect.appendChild(opt);
-            }
-            if (availableSizes.includes('large')) {
-                const opt = document.createElement('option');
-                opt.value = 'large';
-                opt.textContent = 'Large (L)';
-                sizeSelect.appendChild(opt);
-            }
-            if (availableSizes.includes(currentSize)) sizeSelect.value = currentSize;
-            else sizeSelect.value = availableSizes[0] || 'medium';
-        };
-
-        window.setBatchSugar = function(percent) {
-            batchSugarPercent = percent;
-            document.querySelectorAll('.batch-sugar-btn').forEach(btn => {
-                btn.classList.toggle('active', parseInt(btn.dataset.sugar) === percent);
-            });
-        };
-
-        window.addBatchOrder = function() {
-            const menuId = document.getElementById('batchMenuSelect').value;
-            const size = document.getElementById('batchSizeSelect').value;
-            const qty = parseInt(document.getElementById('batchQuantity').value) || 1;
-            const menu = menuData.find(m => m.id === menuId);
-            if (!menu) return;
-            batchOrders.push({ menuId: menu.id, title: menu.title, size, sugar: batchSugarPercent, quantity: qty });
-            renderBatchOrders();
-            updateBatchSummary();
-            document.getElementById('batchQuantity').value = 1;
-        };
-
-        window.removeBatchOrder = function(index) {
-            batchOrders.splice(index, 1);
-            renderBatchOrders();
-            updateBatchSummary();
-        };
-
-        window.resetBatch = function() {
-            if (confirm('Hapus semua pesanan?')) {
-                batchOrders = [];
-                renderBatchOrders();
-                updateBatchSummary();
-            }
-        };
-
-        function renderBatchOrders() {
-            const tbody = document.getElementById('batchTableBody');
-            tbody.innerHTML = '';
-            batchOrders.forEach((o, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${idx+1}</td>
-                    <td>${o.title}</td>
-                    <td>${o.size === 'medium' ? 'M' : 'L'}</td>
-                    <td>${o.sugar}%</td>
-                    <td>${o.quantity}</td>
-                    <td><button class="btn btn-danger" style="padding:2px 6px;font-size:0.7rem;" onclick="window.removeBatchOrder(${idx})">Hapus</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-            document.getElementById('batchCount').textContent = batchOrders.reduce((sum, o) => sum + o.quantity, 0);
-        }
-
-        function updateBatchSummary() {
-            const summaryDiv = document.getElementById('batchSummaryContent');
-            if (batchOrders.length === 0) {
-                summaryDiv.innerHTML = '<p style="color:var(--text-muted);">Belum ada pesanan.</p>';
-                return;
-            }
-            const syrupBreakdown = {};
-            const baseBreakdown = {};
-            const milkBreakdown = {};
-            let totalCreamer = 0,
-                totalIce = 0;
-            batchOrders.forEach(order => {
-                const menu = menuData.find(m => m.id === order.menuId);
-                if (!menu) return;
-                const sizeData = menu.sizes?.[order.size] || menu.sizes?.medium || {};
-                const qty = order.quantity;
-                const syrupItems = parseFlavorItems(sizeData.syrup);
-                syrupItems.forEach(item => {
-                    const adjusted = Math.round((item.amount * (order.sugar / 100)) * 10) / 10;
-                    if (adjusted > 0) {
-                        const name = item.name;
-                        const unit = item.unit;
-                        if (!syrupBreakdown[name]) syrupBreakdown[name] = { total: 0, unit };
-                        syrupBreakdown[name].total += adjusted * qty;
-                    }
-                });
-                const baseItems = parseFlavorItems(sizeData.espresso);
-                baseItems.forEach(item => {
-                    const name = item.name;
-                    const unit = item.unit;
-                    if (!baseBreakdown[name]) baseBreakdown[name] = { total: 0, unit };
-                    baseBreakdown[name].total += item.amount * qty;
-                });
-                const milkItems = parseFlavorItems(sizeData.milk);
-                milkItems.forEach(item => {
-                    const name = item.name;
-                    const unit = item.unit;
-                    if (!milkBreakdown[name]) milkBreakdown[name] = { total: 0, unit };
-                    milkBreakdown[name].total += item.amount * qty;
-                });
-                const creamerStr = sizeData.creamer || '-';
-                if (creamerStr !== '-') totalCreamer += extractNumber(creamerStr) * qty;
-                const iceStr = sizeData.ice || '-';
-                if (iceStr !== '-') totalIce += extractNumber(iceStr) * qty;
-            });
-            let html = '<div class="breakdown-grid">';
-            if (Object.keys(syrupBreakdown).length) {
-                html += `<div class="breakdown-item">
-                    <div class="label">Sirup / Pemanis</div>
-                    <div class="sub">
-                        ${Object.keys(syrupBreakdown).map(type => `
-                            <div class="sub-item"><span>${type}</span><span><strong>${syrupBreakdown[type].total}</strong> ${syrupBreakdown[type].unit}</span></div>
-                        `).join('')}
-                    </div>
-                </div>`;
-            }
-            if (Object.keys(baseBreakdown).length) {
-                html += `<div class="breakdown-item">
-                    <div class="label">Base</div>
-                    <div class="sub">
-                        ${Object.keys(baseBreakdown).map(type => `
-                            <div class="sub-item"><span>${type}</span><span><strong>${baseBreakdown[type].total}</strong> ${baseBreakdown[type].unit}</span></div>
-                        `).join('')}
-                    </div>
-                </div>`;
-            }
-            if (Object.keys(milkBreakdown).length) {
-                html += `<div class="breakdown-item">
-                    <div class="label">Susu / Liquid</div>
-                    <div class="sub">
-                        ${Object.keys(milkBreakdown).map(type => `
-                            <div class="sub-item"><span>${type}</span><span><strong>${milkBreakdown[type].total}</strong> ${milkBreakdown[type].unit}</span></div>
-                        `).join('')}
-                    </div>
-                </div>`;
-            }
-            html += `<div class="breakdown-item">
-                <div class="label">Krimer (total)</div>
-                <div class="value">${totalCreamer > 0 ? totalCreamer + ' gr/ml' : '-'}</div>
-            </div>`;
-            html += `<div class="breakdown-item">
-                <div class="label">Es / Toping (total)</div>
-                <div class="value">${totalIce > 0 ? totalIce + ' gr' : 'Secukupnya'}</div>
-            </div>`;
-            html += '</div>';
-            summaryDiv.innerHTML = html;
-        }
-
-        window.showBatchInstructions = function() {
-            if (batchOrders.length === 0) return alert('Tidak ada pesanan.');
-            document.getElementById('batchOverlay').classList.remove('active');
-            const grouped = {};
-            batchOrders.forEach(o => {
-                const key = `${o.menuId}|${o.size}|${o.sugar}`;
-                if (!grouped[key]) grouped[key] = { ...o, quantity: 0 };
-                grouped[key].quantity += o.quantity;
-            });
-            let html = '';
-            let totalItems = 0;
-            for (const key in grouped) {
-                const order = grouped[key];
-                const menu = menuData.find(m => m.id === order.menuId);
-                if (!menu) {
-                    html +=
-                        `<p style="color: var(--danger);">⚠️ Menu ID "${order.menuId}" tidak ditemukan.</p>`;
-                    continue;
-                }
-                const sizeData = menu.sizes?.[order.size] || menu.sizes?.medium || {};
-                const steps = Array.isArray(sizeData.steps) ? sizeData.steps : [sizeData.steps || ''];
-                const baseSyrup = sizeData.syrup || '-';
-                const adjustedSyrup = order.sugar !== 100 ? adjustSugarText(baseSyrup, order.sugar) : baseSyrup;
-                totalItems += order.quantity;
-                html += `
-                    <div class="instruction-item">
-                        <div class="head">
-                            <strong>🥤 ${menu.title} (${order.size === 'medium' ? 'M' : 'L'})</strong>
-                            <span>x${order.quantity} &nbsp; Sugar ${order.sugar}%</span>
-                        </div>
-                        <div class="syrup">Sirup: ${adjustedSyrup}</div>
-                        <ol>${steps.map(s => `<li>${s} (x${order.quantity})</li>`).join('')}</ol>
-                    </div>
-                `;
-            }
-            if (totalItems === 0) html = '<p style="color: var(--text-muted);">Tidak ada pesanan valid.</p>';
-            document.getElementById('batchInstructionContent').innerHTML = html;
-            document.getElementById('batchInstructionModal').classList.add('open');
-        };
-
-        window.closeBatchInstruction = function() {
-            document.getElementById('batchInstructionModal').classList.remove('open');
-        };
-
-        // ===== OPEN ADD MODAL =====
-        window.openAddModal = function() {
-            editingId = null;
-            document.getElementById('modalTitle').innerText = "Tambah Menu Baru";
-            document.getElementById('newTitle').value = '';
-            document.getElementById('newCategory').value = 'Espresso Based';
-            document.getElementById('newKeywords').value = '';
-            document.getElementById('newImageFile').value = '';
-            document.getElementById('newSizeMedium').checked = true;
-            document.getElementById('newSizeLarge').checked = true;
-            document.getElementById('medSyrup').value = '';
-            document.getElementById('medEspresso').value = '';
-            document.getElementById('medCreamer').value = '';
-            document.getElementById('medMilk').value = '';
-            document.getElementById('medIce').value = '';
-            document.getElementById('medSteps').value = '';
-            document.getElementById('largeSyrup').value = '';
-            document.getElementById('largeEspresso').value = '';
-            document.getElementById('largeCreamer').value = '';
-            document.getElementById('largeMilk').value = '';
-            document.getElementById('largeIce').value = '';
-            document.getElementById('largeSteps').value = '';
-            document.getElementById('recipeModal').classList.add('open');
-        };
-
-        // ===== INIT =====
-        loadFavorites();
-        console.log('✅ Barista Assistant - dengan upload foto di Firebase Storage');
     </script>
 </body>
 </html>
