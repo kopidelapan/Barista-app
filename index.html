@@ -22,6 +22,7 @@
             --modal-overlay: rgba(0, 0, 0, 0.75);
             --batch-overlay-bg: rgba(0, 0, 0, 0.85);
             --focus-bg: #0d0e11;
+            --category-border: #2e323d;
         }
         body.light-mode {
             --bg-dark: #f0f2f5;
@@ -35,6 +36,7 @@
             --modal-overlay: rgba(0, 0, 0, 0.5);
             --batch-overlay-bg: rgba(0, 0, 0, 0.6);
             --focus-bg: #f0f2f5;
+            --category-border: #d0d7de;
         }
         * {
             box-sizing: border-box;
@@ -445,7 +447,39 @@
             background: rgba(217, 160, 91, 0.1);
         }
 
-        .menu-grid {
+        /* KATEGORI */
+        .category-section {
+            margin-bottom: 24px;
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--category-border);
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+        .category-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .category-title .cat-icon {
+            font-size: 1rem;
+        }
+        .category-count {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            background: var(--info-bg);
+            padding: 2px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+        .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 12px;
@@ -562,6 +596,13 @@
             border: 1px solid var(--card-border);
             word-break: break-word;
             max-width: 100%;
+        }
+        .no-results {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 30px 10px;
+            font-size: 0.95rem;
+            grid-column: 1 / -1;
         }
 
         .active-display {
@@ -743,7 +784,7 @@
         }
 
         #favoritesSection {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             display: none;
             scroll-margin-top: 80px;
         }
@@ -751,7 +792,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 6px;
         }
         .fav-section-title span:first-child {
             font-size: 1.1rem;
@@ -760,6 +803,11 @@
             color: var(--accent-gold);
             font-weight: 700;
             font-size: 0.9rem;
+        }
+        .fav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
         }
 
         #focusOverlay {
@@ -1129,7 +1177,11 @@
                 width: 28px;
                 height: 28px;
             }
-            .menu-grid {
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+            .fav-grid {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
                 gap: 10px;
             }
@@ -1214,7 +1266,11 @@
             }
         }
         @media (max-width: 480px) {
-            .menu-grid {
+            .category-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .fav-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
             }
@@ -1398,14 +1454,18 @@
 
     <!-- MAIN -->
     <div class="main-content">
+
+        <!-- FAVORITES -->
         <div id="favoritesSection">
             <div class="fav-section-title">
                 <span>⭐</span>
                 <span>Menu Favorit</span>
+                <span style="flex:1; text-align:right; font-size:0.7rem; color:var(--text-muted);" id="favCount">0</span>
             </div>
-            <div class="menu-grid" id="favoritesGrid"></div>
+            <div class="fav-grid" id="favoritesGrid"></div>
         </div>
 
+        <!-- ACTIVE DISPLAY -->
         <div id="activeDisplay" class="active-display">
             <div class="active-header">
                 <div class="active-title-group">
@@ -1449,11 +1509,12 @@
             </div>
         </div>
 
+        <!-- MENU UTAMA - DIKELOMPOKKAN PER KATEGORI -->
         <div class="section-title">
-            <span>Daftar Menu Kopi & Non-Kopi (<span id="menuCount">0</span>)</span>
+            <span>📋 Semua Menu (<span id="menuCount">0</span>)</span>
             <button class="add-btn" onclick="window.openAddModal()">+ Tambah Menu Baru</button>
         </div>
-        <div class="menu-grid" id="menuGrid"></div>
+        <div id="menuGrid"></div>
     </div>
 
     <!-- MODAL FORM TAMBAH/EDIT -->
@@ -1578,6 +1639,15 @@
             "Espresso Based", "Flavored Latte", "Black Coffee", "Non-Coffee", "Custom Menu"
         ];
 
+        // Ikon untuk setiap kategori
+        const CATEGORY_ICONS = {
+            "Espresso Based": "☕",
+            "Flavored Latte": "🍯",
+            "Black Coffee": "⚫",
+            "Non-Coffee": "🧋",
+            "Custom Menu": "🌟"
+        };
+
         let menuData = [];
         let currentActiveId = null;
         let currentActiveRecipe = null;
@@ -1612,7 +1682,6 @@
             saveFavorites();
             renderFavorites();
             renderMenuCards();
-            // Re-populate batch dropdown if open
             if (document.getElementById('batchOverlay').classList.contains('active')) {
                 populateBatchMenuSelect();
             }
@@ -1621,10 +1690,12 @@
         function renderFavorites() {
             const section = document.getElementById('favoritesSection');
             const grid = document.getElementById('favoritesGrid');
+            const countEl = document.getElementById('favCount');
             const favItems = menuData.filter(item => favorites.includes(item.id));
             if (favItems.length === 0) { section.style.display = 'none'; return; }
             section.style.display = 'block';
             grid.innerHTML = '';
+            countEl.textContent = favItems.length;
             favItems.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'menu-card';
@@ -1918,6 +1989,7 @@
             }
         }, (err) => console.error("Firebase error:", err));
 
+        // ===== SORTING =====
         function sortMenuItems(items) {
             return [...items].sort((a, b) => {
                 let idxA = CATEGORY_ORDER.indexOf(a.category || 'Custom Menu');
@@ -1929,40 +2001,89 @@
             });
         }
 
+        // ===== RENDER MENU UTAMA (PER KATEGORI) =====
         function renderMenuCards(items = menuData) {
             const sorted = sortMenuItems(items);
             const grid = document.getElementById('menuGrid');
             document.getElementById('menuCount').innerText = sorted.length;
             grid.innerHTML = '';
+
+            if (sorted.length === 0) {
+                grid.innerHTML = '<div class="no-results">Tidak ada menu yang cocok.</div>';
+                return;
+            }
+
+            // Group by category
+            const groups = {};
             sorted.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'menu-card';
-                card.onclick = () => showActiveRecipe(item, 'medium', 100);
-                const med = item.sizes?.medium || {};
-                const sizes = item.availableSizes || ['medium', 'large'];
-                const sizeLabel = sizes.map(s => s === 'medium' ? 'M' : 'L').join('/');
-                const isFav = favorites.includes(item.id);
-                card.innerHTML = `
-                    <div class="card-header">
-                        <div class="card-info">
-                            <div class="card-icon">${item.icon || '☕'}</div>
-                            <div>
-                                <div class="card-title">${item.title}</div>
-                                <div class="card-category">${item.category || 'Custom Menu'} <span class="size-badge">${sizeLabel}</span></div>
-                            </div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:4px;">
-                            <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); window.toggleFavorite('${item.id}')">${isFav ? '⭐' : '☆'}</button>
-                            <button class="delete-card-btn" title="Hapus Menu" onclick="event.stopPropagation(); window.requestDeleteAction('${item.id}')">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="quick-ingredients">
-                        <span class="ing-tag">M: ${med.syrup || '-'}</span>
-                        <span class="ing-tag">${med.espresso || '-'}</span>
-                    </div>
-                `;
-                grid.appendChild(card);
+                const cat = item.category || 'Custom Menu';
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(item);
             });
+
+            // Order categories
+            const orderedCategories = CATEGORY_ORDER.filter(c => groups[c]);
+            const otherCategories = Object.keys(groups).filter(c => !CATEGORY_ORDER.includes(c)).sort();
+            const allCategories = [...orderedCategories, ...otherCategories];
+
+            allCategories.forEach(cat => {
+                const itemsInCat = groups[cat];
+                if (!itemsInCat || itemsInCat.length === 0) return;
+
+                const section = document.createElement('div');
+                section.className = 'category-section';
+
+                const icon = CATEGORY_ICONS[cat] || '📂';
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = `
+                    <div class="category-title"><span class="cat-icon">${icon}</span> ${cat}</div>
+                    <span class="category-count">${itemsInCat.length}</span>
+                `;
+                section.appendChild(header);
+
+                const catGrid = document.createElement('div');
+                catGrid.className = 'category-grid';
+
+                itemsInCat.forEach(item => {
+                    const card = createCardElement(item);
+                    catGrid.appendChild(card);
+                });
+
+                section.appendChild(catGrid);
+                grid.appendChild(section);
+            });
+        }
+
+        // ===== CREATE CARD ELEMENT =====
+        function createCardElement(item) {
+            const card = document.createElement('div');
+            card.className = 'menu-card';
+            card.onclick = () => showActiveRecipe(item, 'medium', 100);
+            const med = item.sizes?.medium || {};
+            const sizes = item.availableSizes || ['medium', 'large'];
+            const sizeLabel = sizes.map(s => s === 'medium' ? 'M' : 'L').join('/');
+            const isFav = favorites.includes(item.id);
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-info">
+                        <div class="card-icon">${item.icon || '☕'}</div>
+                        <div>
+                            <div class="card-title">${item.title}</div>
+                            <div class="card-category">${item.category || 'Custom Menu'} <span class="size-badge">${sizeLabel}</span></div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); window.toggleFavorite('${item.id}')">${isFav ? '⭐' : '☆'}</button>
+                        <button class="delete-card-btn" title="Hapus Menu" onclick="event.stopPropagation(); window.requestDeleteAction('${item.id}')">🗑️</button>
+                    </div>
+                </div>
+                <div class="quick-ingredients">
+                    <span class="ing-tag">M: ${med.syrup || '-'}</span>
+                    <span class="ing-tag">${med.espresso || '-'}</span>
+                </div>
+            `;
+            return card;
         }
 
         // ===== SIZE & SUGAR =====
@@ -2219,10 +2340,11 @@
         // ===== FILTER =====
         window.filterMenu = function() {
             const q = document.getElementById('searchInput').value.toLowerCase();
-            renderMenuCards(menuData.filter(i =>
+            const filtered = menuData.filter(i =>
                 i.title.toLowerCase().includes(q) ||
                 (Array.isArray(i.keywords) && i.keywords.some(k => k.toLowerCase().includes(q)))
-            ));
+            );
+            renderMenuCards(filtered);
         };
 
         // ===== TTS =====
@@ -2249,7 +2371,6 @@
             window.speechSynthesis.cancel();
             const data = item.sizes?.[size] || item.sizes?.medium || {};
             const adjustedSyrup = adjustSugarText(data.syrup, sugarPercent);
-            // Hapus kata "Resep" di awal kalimat
             const text =
                 `${item.title} ukuran ${size} ${sugarPercent !== 100 ? `dengan gula ${sugarPercent} persen` : ''}. Sirup: ${adjustedSyrup}. Base Kopi: ${data.espresso}. Krimer: ${data.creamer || 'tidak ada'}. Susu: ${data.milk}. Es: ${data.ice}.`;
 
@@ -2423,8 +2544,6 @@
 
         // ===== PERINTAH SUARA - BATCH PARSING =====
         function parseBatchCommand(text) {
-            // Pola: [qty] [menu] [size] [sugar] ... batch
-            // Deteksi kata kunci batch
             const batchKeywords = ['batch', 'tambah', 'order', 'daftar', 'ke batch', 'tambahkan', 'tambahin', '+'];
             let hasBatchKeyword = false;
             for (const kw of batchKeywords) {
@@ -2432,18 +2551,14 @@
             }
             if (!hasBatchKeyword) return null;
 
-            // Ambil qty (angka)
             let qty = 1;
             const qtyMatch = text.match(/\b(\d+)\s*(?:x|porsi|cup|gelas|)/i);
             if (qtyMatch) qty = parseInt(qtyMatch[1]);
 
-            // Deteksi ukuran
             let size = null;
             if (text.includes('large') || text.includes('besar') || text.includes('L')) size = 'large';
             else if (text.includes('medium') || text.includes('sedang') || text.includes('M')) size = 'medium';
-            // default nanti akan diisi jika menu punya size
 
-            // Deteksi sugar
             let sugar = null;
             const sugarMatch = text.match(/\b(100|75|50|25|0)\s*%/i);
             if (sugarMatch) sugar = parseInt(sugarMatch[1]);
@@ -2452,39 +2567,28 @@
             else if (text.includes('less sugar') || text.includes('sedikit gula')) sugar = 75;
             else if (text.includes('full sugar') || text.includes('penuh')) sugar = 100;
 
-            // Cari menu: coba cocokkan dengan title atau keywords
             let matchedMenu = null;
-            // Hapus angka, ukuran, sugar, batch keywords dari text untuk mencari nama
             let cleanText = text;
-            // Hapus angka qty
             cleanText = cleanText.replace(/\b\d+\s*(?:x|porsi|cup|gelas)/gi, '');
-            // Hapus kata ukuran
             cleanText = cleanText.replace(/\b(large|medium|besar|sedang|L|M)\b/gi, '');
-            // Hapus sugar
             cleanText = cleanText.replace(/\b(\d+%|no sugar|tanpa gula|bebas gula|half sugar|separuh|less sugar|sedikit gula|full sugar|penuh)\b/gi, '');
-            // Hapus batch keywords
             for (const kw of batchKeywords) {
                 cleanText = cleanText.replace(new RegExp('\\b' + kw + '\\b', 'gi'), '');
             }
             cleanText = cleanText.trim();
 
-            // Coba cari berdasarkan kata kunci atau title
             if (cleanText.length > 0) {
                 const words = cleanText.split(/\s+/);
-                // Cari menu yang memiliki semua kata? Atau sebagian?
-                // Lebih baik cari yang mengandung substring terpanjang
                 let bestMatch = null;
                 let bestScore = 0;
                 for (const menu of menuData) {
                     const titleLower = menu.title.toLowerCase();
                     const keywords = (menu.keywords || []).map(k => k.toLowerCase());
-                    // Hitung skor: jumlah kata yang cocok dengan title atau keywords
                     let score = 0;
                     for (const w of words) {
                         if (titleLower.includes(w)) score += 2;
                         if (keywords.some(k => k.includes(w) || w.includes(k))) score += 1;
                     }
-                    // prioritas: jika kata persis sama dengan title
                     if (titleLower === cleanText) score += 10;
                     if (score > bestScore) {
                         bestScore = score;
@@ -2494,7 +2598,6 @@
                 if (bestScore >= 1) matchedMenu = bestMatch;
             }
 
-            // Jika tidak ketemu, coba dengan title yang mengandung seluruh cleanText (tanpa spasi)
             if (!matchedMenu && cleanText.length > 0) {
                 const query = cleanText.replace(/\s+/g, '');
                 for (const menu of menuData) {
@@ -2508,12 +2611,10 @@
 
             if (!matchedMenu) return null;
 
-            // Tentukan size: jika belum terdeteksi, gunakan size pertama yang tersedia
             const availSizes = matchedMenu.availableSizes || ['medium'];
             if (!size || !availSizes.includes(size)) {
                 size = availSizes[0];
             }
-            // Sugar default 100 jika belum
             if (sugar === null) sugar = 100;
 
             return {
@@ -2524,17 +2625,13 @@
             };
         }
 
-        // ===== FUNGSI TAMBAH BATCH DARI SUARA =====
         window.addBatchOrderFromVoice = function(order) {
-            // order: { menu, size, sugar, qty }
             if (!order.menu) return false;
-            // Cek apakah ukuran tersedia
             const avail = order.menu.availableSizes || ['medium'];
             if (!avail.includes(order.size)) {
                 speakConfirmation(`Maaf, ${order.menu.title} tidak tersedia ukuran ${order.size}`);
                 return false;
             }
-            // Tambahkan ke batchOrders
             batchOrders.push({
                 menuId: order.menu.id,
                 title: order.menu.title,
@@ -2544,14 +2641,12 @@
             });
             renderBatchOrders();
             updateBatchSummary();
-            // Buka overlay batch jika belum
             const overlay = document.getElementById('batchOverlay');
             if (!overlay.classList.contains('active')) {
                 overlay.classList.add('active');
                 populateBatchMenuSelect();
                 updateBatchSizeOptions();
             }
-            // Konfirmasi suara
             const sugarText = order.sugar === 100 ? '' : ` gula ${order.sugar} persen`;
             speakConfirmation(`Menambahkan ${order.qty} ${order.menu.title} ukuran ${order.size}${sugarText} ke batch`);
             document.getElementById('voiceStatus').innerText =
@@ -2559,7 +2654,6 @@
             return true;
         };
 
-        // ===== FUNGSI SPEAK KONFIRMASI =====
         function speakConfirmation(text) {
             if (isSilentMode) return;
             if (!('speechSynthesis' in window)) return;
@@ -2578,9 +2672,7 @@
             window.speechSynthesis.speak(utter);
         }
 
-        // ===== PROSES PERINTAH SUARA (DIPERLUAS) =====
         function processVoiceCommand(text) {
-            // Cek perintah batch terlebih dahulu
             const batchOrder = parseBatchCommand(text);
             if (batchOrder) {
                 const added = window.addBatchOrderFromVoice(batchOrder);
@@ -2590,7 +2682,6 @@
                 return;
             }
 
-            // Perintah lain
             if (text.startsWith('cari ')) {
                 const query = text.substring(5).trim();
                 if (query) {
@@ -2999,7 +3090,7 @@
 
         // ===== INIT =====
         loadFavorites();
-        console.log('✅ Barista Assistant - Batch dropdown terurut: Favorit di atas, lalu kategori!');
+        console.log('✅ Barista Assistant - Menu dikelompokkan per kategori!');
     </script>
 </body>
 </html>
