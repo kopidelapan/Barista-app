@@ -1130,7 +1130,7 @@
             word-break: break-word;
         }
 
-        /* --- PERBAIKAN UNTUK TABLET (Lebar 769px - 1199px) --- */
+        /* --- PERBAIKAN UNTUK TABLET POTRAIT (Lebar 769px - 1199px) --- */
         @media (min-width: 769px) and (max-width: 1199px) {
             .category-grid, .fav-grid {
                 grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -1162,7 +1162,76 @@
             }
         }
 
-        /* --- PERBAIKAN UNTUK SMARTPHONE (Maks 768px) --- */
+        /* --- PERBAIKAN UNTUK MODE LANDSCAPE (HP diputar, layar lebar tapi pendek) --- */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .header-row-top {
+                flex-wrap: nowrap; /* Header tidak boleh turun ke bawah */
+            }
+            .brand h1 {
+                font-size: 0.9rem; /* Mengecilkan judul agar muat */
+            }
+            .voice-row {
+                flex-wrap: nowrap;
+            }
+            .voice-btn-group {
+                flex-wrap: nowrap;
+            }
+            .voice-status {
+                min-width: 60px;
+            }
+            .category-grid, .fav-grid {
+                /* Grid menjadi 3 kolom lebih rapi */
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            .menu-card {
+                padding: 10px;
+            }
+            .card-title {
+                font-size: 0.85rem !important;
+            }
+            .ing-tag {
+                font-size: 0.6rem !important;
+                padding: 2px 4px;
+            }
+            .add-btn {
+                font-size: 0.7rem;
+                padding: 3px 8px;
+            }
+            .active-actions {
+                flex-wrap: nowrap;
+                gap: 4px;
+            }
+            .active-actions .btn {
+                font-size: 0.65rem;
+                padding: 4px 8px;
+            }
+            .control-panel {
+                flex-wrap: nowrap;
+                gap: 6px;
+            }
+            .control-group .control-label {
+                font-size: 0.55rem;
+            }
+            .control-group .size-selector, .control-group .sugar-selector {
+                padding: 2px;
+                gap: 2px;
+            }
+            .size-btn, .sugar-btn {
+                font-size: 0.6rem;
+                padding: 2px 8px;
+            }
+        }
+
+        /* --- PERBAIKAN UNTUK LAYAR SANGAT LEBAR (Tablet Landscape, Desktop) --- */
+        @media (min-width: 1200px) {
+            .category-grid, .fav-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+            }
+        }
+
+        /* --- PERBAIKAN UNTUK SMARTPHONE POTRAIT (Maks 768px) --- */
         @media (max-width: 768px) {
             .header-row-top {
                 flex-wrap: wrap;
