@@ -1130,6 +1130,39 @@
             word-break: break-word;
         }
 
+        /* --- PERBAIKAN UNTUK TABLET (Lebar 769px - 1199px) --- */
+        @media (min-width: 769px) and (max-width: 1199px) {
+            .category-grid, .fav-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 16px;
+            }
+            .menu-card {
+                padding: 16px;
+            }
+            .card-title {
+                font-size: 1.05rem !important;
+                font-weight: 700;
+            }
+            .card-category {
+                font-size: 0.85rem !important;
+            }
+            .ing-tag {
+                font-size: 0.75rem !important;
+                padding: 4px 8px;
+            }
+            .fav-btn {
+                font-size: 1.4rem !important;
+            }
+            .delete-card-btn {
+                font-size: 1.2rem !important;
+            }
+            .add-btn {
+                font-size: 0.9rem;
+                padding: 6px 16px;
+            }
+        }
+
+        /* --- PERBAIKAN UNTUK SMARTPHONE (Maks 768px) --- */
         @media (max-width: 768px) {
             .header-row-top {
                 flex-wrap: wrap;
@@ -1177,6 +1210,8 @@
                 width: 28px;
                 height: 28px;
             }
+
+            /* PERBAIKAN KARTU & TEKS DI HP */
             .category-grid {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
                 gap: 10px;
@@ -1186,10 +1221,10 @@
                 gap: 10px;
             }
             .menu-card {
-                padding: 10px;
+                padding: 12px;
             }
             .card-title {
-                font-size: 0.8rem;
+                font-size: 0.9rem !important;
             }
             .card-icon {
                 width: 28px;
@@ -1197,9 +1232,20 @@
                 font-size: 0.9rem;
             }
             .ing-tag {
-                font-size: 0.55rem;
-                padding: 2px 4px;
+                font-size: 0.65rem !important;
+                padding: 2px 6px;
             }
+            .fav-btn {
+                font-size: 1.2rem !important;
+            }
+            .delete-card-btn {
+                font-size: 1rem !important;
+            }
+            .add-btn {
+                font-size: 0.8rem;
+                padding: 4px 12px;
+            }
+
             .recipe-grid {
                 grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
                 gap: 8px;
@@ -1250,10 +1296,6 @@
             }
             .section-title {
                 font-size: 0.85rem;
-            }
-            .add-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
             }
             .focus-actions {
                 flex-wrap: wrap;
@@ -1611,6 +1653,66 @@
                 if (toggleBtn) toggleBtn.textContent = '🌙';
             }
         })();
+
+        // ===== LOGIN & PIN (DIPERBAIKI) =====
+        window.checkPin = function() {
+            const input = document.getElementById('pinInput').value;
+            // Menggunakan window.MASTER_PIN yang berasal dari modul
+            if (input === window.MASTER_PIN) {
+                sessionStorage.setItem('barista_auth', 'true');
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('pinInput').value = '';
+                document.getElementById('loginError').style.display = 'none';
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        };
+        window.logout = function() {
+            sessionStorage.removeItem('barista_auth');
+            document.getElementById('loginOverlay').style.display = 'flex';
+        };
+        if (sessionStorage.getItem('barista_auth') === 'true') {
+            document.getElementById('loginOverlay').style.display = 'none';
+        }
+
+        // ===== PIN MODAL (DIPERBAIKI) =====
+        window.requestEditAction = function() {
+            if (!currentActiveRecipe) return;
+            pendingActionType = 'edit';
+            pendingDeleteId = null;
+            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Edit Menu";
+            document.getElementById('actionPinInput').value = '';
+            document.getElementById('actionPinError').style.display = 'none';
+            document.getElementById('actionPinModal').classList.add('open');
+            document.getElementById('actionPinInput').focus();
+        };
+        window.requestDeleteAction = function(id) {
+            pendingActionType = 'delete';
+            pendingDeleteId = id;
+            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Hapus Menu";
+            document.getElementById('actionPinInput').value = '';
+            document.getElementById('actionPinError').style.display = 'none';
+            document.getElementById('actionPinModal').classList.add('open');
+            document.getElementById('actionPinInput').focus();
+        };
+        window.closeActionPinModal = function() {
+            document.getElementById('actionPinModal').classList.remove('open');
+            pendingActionType = null;
+            pendingDeleteId = null;
+        };
+        window.verifyActionPin = function() {
+            const inputPin = document.getElementById('actionPinInput').value;
+            // Menggunakan window.MASTER_PIN
+            if (inputPin === window.MASTER_PIN) {
+                const action = pendingActionType;
+                const delId = pendingDeleteId;
+                window.closeActionPinModal();
+                if (action === 'edit') window.executeEditRecipe();
+                else if (action === 'delete') window.executeDeleteMenu(delId);
+            } else {
+                document.getElementById('actionPinError').style.display = 'block';
+            }
+        };
     </script>
 
     <script type="module">
@@ -1631,7 +1733,9 @@
         const db = getDatabase(app);
         const recipesRef = ref(db, 'recipes');
 
-        const MASTER_PIN = "brekele";
+        // PERBAIKAN: Ekspor PIN ke window global agar bisa diakses skrip di atas
+        window.MASTER_PIN = "brekele";
+
         let pendingActionType = null;
         let pendingDeleteId = null;
 
@@ -1791,64 +1895,6 @@
         document.addEventListener('visibilitychange', async () => {
             if (wakeLock && document.visibilityState === 'visible' && isHandsFreeMode) await enableWakeLock();
         });
-
-        // ===== LOGIN =====
-        window.checkPin = function() {
-            const input = document.getElementById('pinInput').value;
-            if (input === MASTER_PIN) {
-                sessionStorage.setItem('barista_auth', 'true');
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('pinInput').value = '';
-                document.getElementById('loginError').style.display = 'none';
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
-        };
-        window.logout = function() {
-            sessionStorage.removeItem('barista_auth');
-            document.getElementById('loginOverlay').style.display = 'flex';
-        };
-        if (sessionStorage.getItem('barista_auth') === 'true') {
-            document.getElementById('loginOverlay').style.display = 'none';
-        }
-
-        // ===== PIN MODAL =====
-        window.requestEditAction = function() {
-            if (!currentActiveRecipe) return;
-            pendingActionType = 'edit';
-            pendingDeleteId = null;
-            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Edit Menu";
-            document.getElementById('actionPinInput').value = '';
-            document.getElementById('actionPinError').style.display = 'none';
-            document.getElementById('actionPinModal').classList.add('open');
-            document.getElementById('actionPinInput').focus();
-        };
-        window.requestDeleteAction = function(id) {
-            pendingActionType = 'delete';
-            pendingDeleteId = id;
-            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Hapus Menu";
-            document.getElementById('actionPinInput').value = '';
-            document.getElementById('actionPinError').style.display = 'none';
-            document.getElementById('actionPinModal').classList.add('open');
-            document.getElementById('actionPinInput').focus();
-        };
-        window.closeActionPinModal = function() {
-            document.getElementById('actionPinModal').classList.remove('open');
-            pendingActionType = null;
-            pendingDeleteId = null;
-        };
-        window.verifyActionPin = function() {
-            const inputPin = document.getElementById('actionPinInput').value;
-            if (inputPin === MASTER_PIN) {
-                const action = pendingActionType;
-                const delId = pendingDeleteId;
-                window.closeActionPinModal();
-                if (action === 'edit') window.executeEditRecipe();
-                else if (action === 'delete') window.executeDeleteMenu(delId);
-            } else {
-                document.getElementById('actionPinError').style.display = 'block';
-            }
-        };
 
         // ===== DEFAULT DATA =====
         const defaultMenuData = [{
