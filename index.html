@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Barista Assistant - Resep Kopi Suara</title>
     <style>
+        /* ===== SAMA SEPERTI SEBELUMNYA ===== */
         :root {
             --bg-dark: #121316;
             --card-bg: #1c1e24;
@@ -363,15 +364,9 @@
             border-color: var(--danger);
         }
         @keyframes pulse-green {
-            0% {
-                box-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
-            }
-            50% {
-                box-shadow: 0 0 18px rgba(16, 185, 129, 0.8);
-            }
-            100% {
-                box-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
-            }
+            0% { box-shadow: 0 0 5px rgba(16,185,129,0.4); }
+            50% { box-shadow: 0 0 18px rgba(16,185,129,0.8); }
+            100% { box-shadow: 0 0 5px rgba(16,185,129,0.4); }
         }
         .voice-status {
             font-size: 0.8rem;
@@ -445,7 +440,7 @@
             white-space: nowrap;
         }
         .add-btn:hover {
-            background: rgba(217, 160, 91, 0.1);
+            background: rgba(217,160,91,0.1);
         }
 
         /* KATEGORI */
@@ -500,7 +495,7 @@
         .menu-card:hover {
             border-color: var(--accent-gold);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .card-header {
             display: flex;
@@ -520,7 +515,7 @@
             width: 38px;
             height: 38px;
             border-radius: 8px;
-            background: rgba(217, 160, 91, 0.15);
+            background: rgba(217,160,91,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -563,7 +558,7 @@
         }
         .delete-card-btn:hover {
             color: var(--danger);
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239,68,68,0.1);
         }
         .fav-btn {
             background: transparent;
@@ -612,7 +607,7 @@
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(217, 160, 91, 0.15);
+            box-shadow: 0 10px 30px rgba(217,160,91,0.15);
             animation: fadeIn 0.3s ease;
             display: none;
             scroll-margin-top: 160px;
@@ -622,14 +617,8 @@
             display: block;
         }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .active-header {
             display: flex;
@@ -672,8 +661,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .size-selector,
-        .sugar-selector {
+        .size-selector, .sugar-selector {
             display: flex;
             background: var(--info-bg);
             border: 1px solid var(--card-border);
@@ -684,8 +672,7 @@
             transition: background 0.3s;
             flex-wrap: wrap;
         }
-        .size-btn,
-        .sugar-btn {
+        .size-btn, .sugar-btn {
             background: transparent;
             border: none;
             color: var(--text-muted);
@@ -696,11 +683,10 @@
             font-size: 0.8rem;
             transition: 0.2s;
         }
-        .size-btn.active,
-        .sugar-btn.active {
+        .size-btn.active, .sugar-btn.active {
             background: var(--accent-gold);
             color: #121316;
-            box-shadow: 0 2px 8px rgba(217, 160, 91, 0.3);
+            box-shadow: 0 2px 8px rgba(217,160,91,0.3);
         }
         .size-btn.disabled {
             opacity: 0.3;
@@ -742,7 +728,7 @@
         }
         .recipe-box.highlight {
             border-color: var(--accent-gold);
-            background: rgba(217, 160, 91, 0.05);
+            background: rgba(217,160,91,0.05);
         }
         .recipe-box .label {
             font-size: 0.7rem;
@@ -860,7 +846,7 @@
             border-radius: 12px;
             padding: 14px;
             text-align: center;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
             transition: background 0.3s;
         }
         .focus-card .focus-label {
@@ -960,7 +946,7 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
             transition: background 0.3s;
         }
         .batch-header {
@@ -1017,8 +1003,7 @@
             margin-top: 8px;
             font-size: 0.85rem;
         }
-        #batchTable th,
-        #batchTable td {
+        #batchTable th, #batchTable td {
             padding: 8px 10px;
             border-bottom: 1px solid var(--card-border);
             text-align: left;
@@ -1131,378 +1116,165 @@
             word-break: break-word;
         }
 
-        /* ===== LANDSCAPE FIX: max 3 columns ===== */
-        @media (orientation: landscape) and (max-height: 900px) {
-            .category-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
-            }
-            .fav-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
-            }
-            .menu-card {
-                padding: 12px;
-            }
-            .card-title {
-                font-size: 0.95rem;
-                white-space: normal;
+        /* ===== RECEIPT PRINT STYLES ===== */
+        #receiptModal .modal-card {
+            max-width: 400px;
+        }
+        #receiptContent {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+            padding: 8px;
+            background: #fff;
+            color: #000;
+            border-radius: 8px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        #receiptContent .receipt-logo {
+            max-width: 80px;
+            height: auto;
+            display: block;
+            margin: 0 auto 8px;
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #receiptPrintArea, #receiptPrintArea * { visibility: visible; }
+            #receiptPrintArea {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 58mm;
+                padding: 8px 4px;
+                background: #fff;
+                color: #000;
+                font-family: 'Courier New', monospace;
+                font-size: 11px;
+                line-height: 1.4;
+                white-space: pre-wrap;
                 word-break: break-word;
-                line-height: 1.3;
+                overflow: hidden;
             }
-            .card-icon {
-                width: 34px;
-                height: 34px;
-                font-size: 1.1rem;
-                flex-shrink: 0;
+            #receiptPrintArea .receipt-logo {
+                max-width: 60px;
+                height: auto;
+                display: block;
+                margin: 0 auto 6px;
             }
-            .ing-tag {
-                font-size: 0.65rem;
-                padding: 2px 6px;
-            }
-            .category-title {
-                font-size: 1.1rem;
-            }
-            .recipe-grid {
-                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-                gap: 10px;
-            }
-            .recipe-box {
-                padding: 10px;
-            }
-            .recipe-box .value {
-                font-size: 0.9rem;
-            }
-            .active-title-group h2 {
-                font-size: 1.4rem;
-            }
-            .active-display {
-                padding: 16px;
-            }
-            .focus-title-group h1 {
-                font-size: 1.7rem;
-            }
-            .focus-card .focus-value {
-                font-size: 1.1rem;
-            }
-            .focus-steps-list {
-                font-size: 1rem;
-                padding-left: 20px;
-            }
+            .no-print { display: none !important; }
+            .modal-overlay, .batch-overlay { background: transparent !important; }
         }
 
+        /* ===== RESPONSIVE ===== */
+        @media (orientation: landscape) and (max-height: 900px) {
+            .category-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+            .fav-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+            .menu-card { padding: 12px; }
+            .card-title { font-size: 0.95rem; white-space: normal; word-break: break-word; line-height: 1.3; }
+            .card-icon { width: 34px; height: 34px; font-size: 1.1rem; flex-shrink: 0; }
+            .ing-tag { font-size: 0.65rem; padding: 2px 6px; }
+            .category-title { font-size: 1.1rem; }
+            .recipe-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+            .recipe-box { padding: 10px; }
+            .recipe-box .value { font-size: 0.9rem; }
+            .active-title-group h2 { font-size: 1.4rem; }
+            .active-display { padding: 16px; }
+            .focus-title-group h1 { font-size: 1.7rem; }
+            .focus-card .focus-value { font-size: 1.1rem; }
+            .focus-steps-list { font-size: 1rem; padding-left: 20px; }
+        }
         @media (orientation: landscape) and (max-height: 600px) {
-            .category-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
-            .fav-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
-            .menu-card {
-                padding: 8px 10px;
-            }
-            .card-title {
-                font-size: 0.85rem;
-            }
-            .card-icon {
-                width: 28px;
-                height: 28px;
-                font-size: 0.95rem;
-            }
-            .card-category {
-                font-size: 0.6rem;
-            }
-            .ing-tag {
-                font-size: 0.55rem;
-                padding: 1px 4px;
-            }
-            .category-title {
-                font-size: 0.95rem;
-            }
-            .category-count {
-                font-size: 0.7rem;
-                padding: 2px 8px;
-            }
-            .active-display {
-                padding: 12px;
-            }
-            .active-title-group h2 {
-                font-size: 1.2rem;
-            }
-            .recipe-grid {
-                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-                gap: 8px;
-            }
-            .recipe-box {
-                padding: 6px;
-            }
-            .recipe-box .value {
-                font-size: 0.8rem;
-            }
-            .steps-list {
-                font-size: 0.8rem;
-                padding-left: 16px;
-            }
-            .control-panel {
-                gap: 8px;
-            }
-            .size-btn,
-            .sugar-btn {
-                padding: 2px 10px;
-                font-size: 0.7rem;
-            }
-            .brand h1 {
-                font-size: 1rem;
-            }
-            .voice-status {
-                font-size: 0.7rem;
-                padding: 2px 8px;
-                min-width: 80px;
-            }
-            .batch-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
-            .handsfree-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
-            .silent-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 0.85rem;
-            }
-            .search-input {
-                font-size: 0.85rem;
-                padding: 6px 12px 6px 34px;
-            }
-            .section-title {
-                font-size: 0.95rem;
-            }
-            .add-btn {
-                font-size: 0.75rem;
-                padding: 3px 10px;
-            }
-            .btn {
-                font-size: 0.75rem;
-                padding: 5px 10px;
-            }
-            .focus-title-group h1 {
-                font-size: 1.4rem;
-            }
-            .focus-card .focus-value {
-                font-size: 1rem;
-            }
-            .focus-steps-list {
-                font-size: 0.9rem;
-                padding-left: 18px;
-            }
+            .category-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .fav-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .menu-card { padding: 8px 10px; }
+            .card-title { font-size: 0.85rem; }
+            .card-icon { width: 28px; height: 28px; font-size: 0.95rem; }
+            .card-category { font-size: 0.6rem; }
+            .ing-tag { font-size: 0.55rem; padding: 1px 4px; }
+            .category-title { font-size: 0.95rem; }
+            .category-count { font-size: 0.7rem; padding: 2px 8px; }
+            .active-display { padding: 12px; }
+            .active-title-group h2 { font-size: 1.2rem; }
+            .recipe-grid { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+            .recipe-box { padding: 6px; }
+            .recipe-box .value { font-size: 0.8rem; }
+            .steps-list { font-size: 0.8rem; padding-left: 16px; }
+            .control-panel { gap: 8px; }
+            .size-btn, .sugar-btn { padding: 2px 10px; font-size: 0.7rem; }
+            .brand h1 { font-size: 1rem; }
+            .voice-status { font-size: 0.7rem; padding: 2px 8px; min-width: 80px; }
+            .batch-btn { font-size: 0.7rem; padding: 3px 10px; }
+            .handsfree-btn { font-size: 0.7rem; padding: 3px 10px; }
+            .silent-btn { width: 28px; height: 28px; font-size: 0.85rem; }
+            .search-input { font-size: 0.85rem; padding: 6px 12px 6px 34px; }
+            .section-title { font-size: 0.95rem; }
+            .add-btn { font-size: 0.75rem; padding: 3px 10px; }
+            .btn { font-size: 0.75rem; padding: 5px 10px; }
+            .focus-title-group h1 { font-size: 1.4rem; }
+            .focus-card .focus-value { font-size: 1rem; }
+            .focus-steps-list { font-size: 0.9rem; padding-left: 18px; }
         }
-
         @media (max-width: 768px) {
-            body {
-                font-size: 15px;
-            }
-            .header-row-top {
-                flex-wrap: wrap;
-                gap: 4px;
-            }
-            .voice-row {
-                flex-wrap: wrap;
-                gap: 4px;
-            }
-            .voice-btn-group {
-                flex-wrap: wrap;
-                gap: 4px;
-            }
-            .voice-status {
-                min-width: 70px;
-                font-size: 0.7rem;
-                padding: 2px 8px;
-            }
-            .batch-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
-            .handsfree-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
-            .silent-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 0.9rem;
-            }
-            .search-input {
-                font-size: 0.85rem;
-                padding: 6px 12px 6px 34px;
-            }
-            .search-icon {
-                width: 16px;
-                height: 16px;
-                left: 10px;
-            }
-            .brand h1 {
-                font-size: 1rem;
-            }
-            .brand-logo {
-                width: 30px;
-                height: 30px;
-            }
-            .category-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 10px;
-            }
-            .fav-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 10px;
-            }
-            .menu-card {
-                padding: 10px;
-            }
-            .card-title {
-                font-size: 0.9rem;
-            }
-            .card-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 1rem;
-            }
-            .ing-tag {
-                font-size: 0.6rem;
-                padding: 2px 6px;
-            }
-            .recipe-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 8px;
-            }
-            .recipe-box {
-                padding: 8px;
-            }
-            .recipe-box .value {
-                font-size: 0.85rem;
-            }
-            .active-title-group h2 {
-                font-size: 1.3rem;
-            }
-            .active-display {
-                padding: 14px;
-            }
-            .focus-title-group h1 {
-                font-size: 1.6rem;
-            }
-            .focus-card .focus-value {
-                font-size: 1rem;
-            }
-            .focus-steps-list {
-                font-size: 0.95rem;
-            }
-            .control-panel {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            .batch-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .batch-sugar {
-                justify-content: center;
-            }
-            .active-actions {
-                flex-wrap: wrap;
-                gap: 6px;
-            }
-            .btn {
-                font-size: 0.8rem;
-                padding: 6px 12px;
-            }
-            .modal-card {
-                padding: 16px;
-            }
-            .section-title {
-                font-size: 1rem;
-            }
-            .add-btn {
-                font-size: 0.8rem;
-                padding: 3px 10px;
-            }
-            .focus-actions {
-                flex-wrap: wrap;
-            }
-            #focusOverlay {
-                padding: 12px;
-            }
-            .batch-container {
-                padding: 14px;
-            }
+            body { font-size: 15px; }
+            .header-row-top { flex-wrap: wrap; gap: 4px; }
+            .voice-row { flex-wrap: wrap; gap: 4px; }
+            .voice-btn-group { flex-wrap: wrap; gap: 4px; }
+            .voice-status { min-width: 70px; font-size: 0.7rem; padding: 2px 8px; }
+            .batch-btn { font-size: 0.7rem; padding: 3px 10px; }
+            .handsfree-btn { font-size: 0.7rem; padding: 3px 10px; }
+            .silent-btn { width: 30px; height: 30px; font-size: 0.9rem; }
+            .search-input { font-size: 0.85rem; padding: 6px 12px 6px 34px; }
+            .search-icon { width: 16px; height: 16px; left: 10px; }
+            .brand h1 { font-size: 1rem; }
+            .brand-logo { width: 30px; height: 30px; }
+            .category-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+            .fav-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+            .menu-card { padding: 10px; }
+            .card-title { font-size: 0.9rem; }
+            .card-icon { width: 32px; height: 32px; font-size: 1rem; }
+            .ing-tag { font-size: 0.6rem; padding: 2px 6px; }
+            .recipe-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+            .recipe-box { padding: 8px; }
+            .recipe-box .value { font-size: 0.85rem; }
+            .active-title-group h2 { font-size: 1.3rem; }
+            .active-display { padding: 14px; }
+            .focus-title-group h1 { font-size: 1.6rem; }
+            .focus-card .focus-value { font-size: 1rem; }
+            .focus-steps-list { font-size: 0.95rem; }
+            .control-panel { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .batch-form { flex-direction: column; align-items: stretch; }
+            .batch-sugar { justify-content: center; }
+            .active-actions { flex-wrap: wrap; gap: 6px; }
+            .btn { font-size: 0.8rem; padding: 6px 12px; }
+            .modal-card { padding: 16px; }
+            .section-title { font-size: 1rem; }
+            .add-btn { font-size: 0.8rem; padding: 3px 10px; }
+            .focus-actions { flex-wrap: wrap; }
+            #focusOverlay { padding: 12px; }
+            .batch-container { padding: 14px; }
         }
         @media (max-width: 480px) {
-            body {
-                font-size: 14px;
-            }
-            .category-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .fav-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .menu-card {
-                padding: 8px;
-            }
-            .card-title {
-                font-size: 0.8rem;
-            }
-            .card-icon {
-                width: 26px;
-                height: 26px;
-                font-size: 0.85rem;
-            }
-            .ing-tag {
-                font-size: 0.5rem;
-                padding: 1px 4px;
-            }
-            .recipe-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 6px;
-            }
-            .recipe-box {
-                padding: 6px;
-            }
-            .recipe-box .value {
-                font-size: 0.75rem;
-            }
-            .active-title-group h2 {
-                font-size: 1.1rem;
-            }
-            .active-display {
-                padding: 10px;
-            }
-            .brand h1 {
-                font-size: 0.9rem;
-            }
-            .brand-logo {
-                width: 26px;
-                height: 26px;
-            }
-            .focus-title-group h1 {
-                font-size: 1.3rem;
-            }
-            .focus-card .focus-value {
-                font-size: 0.9rem;
-            }
-            .focus-steps-list {
-                font-size: 0.85rem;
-                padding-left: 16px;
-            }
-            .btn {
-                font-size: 0.75rem;
-                padding: 4px 10px;
-            }
+            body { font-size: 14px; }
+            .category-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .fav-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .menu-card { padding: 8px; }
+            .card-title { font-size: 0.8rem; }
+            .card-icon { width: 26px; height: 26px; font-size: 0.85rem; }
+            .ing-tag { font-size: 0.5rem; padding: 1px 4px; }
+            .recipe-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+            .recipe-box { padding: 6px; }
+            .recipe-box .value { font-size: 0.75rem; }
+            .active-title-group h2 { font-size: 1.1rem; }
+            .active-display { padding: 10px; }
+            .brand h1 { font-size: 0.9rem; }
+            .brand-logo { width: 26px; height: 26px; }
+            .focus-title-group h1 { font-size: 1.3rem; }
+            .focus-card .focus-value { font-size: 0.9rem; }
+            .focus-steps-list { font-size: 0.85rem; padding-left: 16px; }
+            .btn { font-size: 0.75rem; padding: 4px 10px; }
         }
     </style>
 </head>
@@ -1605,6 +1377,44 @@
             <div class="batch-actions">
                 <button class="btn btn-secondary" onclick="window.resetBatch()">🔄 Reset</button>
                 <button class="btn btn-primary" onclick="window.showBatchInstructions()">📋 Tampilkan Instruksi</button>
+                <button class="btn btn-primary" onclick="window.printReceipt()">🖨️ Cetak Struk 58mm</button>
+                <button class="btn btn-secondary" onclick="window.openTemplateEditor()">✏️ Edit Template Struk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PREVIEW STRUK -->
+    <div class="modal-overlay" id="receiptModal">
+        <div class="modal-card">
+            <h3 class="modal-title">🧾 Preview Struk</h3>
+            <div style="text-align:center; margin-bottom:10px;">
+                <button class="btn btn-primary" onclick="window.printReceiptPhysical()">🖨️ Cetak</button>
+                <button class="btn btn-secondary" onclick="window.closeReceiptModal()">Tutup</button>
+            </div>
+            <div id="receiptContent"></div>
+            <div id="receiptPrintArea" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT TEMPLATE STRUK -->
+    <div class="modal-overlay" id="templateModal">
+        <div class="modal-card">
+            <h3 class="modal-title">✏️ Edit Template Struk</h3>
+            <div class="form-group">
+                <label>Header (baris baru dengan \n)</label>
+                <textarea id="templateHeader" class="form-control" rows="4" placeholder="Kopi Delapan\nJl. Contoh No. 123\nTelp. 08123456789"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Footer (baris baru dengan \n)</label>
+                <textarea id="templateFooter" class="form-control" rows="3" placeholder="Terima kasih telah memesan!\nNikmati kopi Anda."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Catatan (opsional)</label>
+                <input type="text" id="templateNote" class="form-control" placeholder="Contoh: Tambah es batu" />
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+                <button class="btn btn-secondary" onclick="window.closeTemplateEditor()">Batal</button>
+                <button class="btn btn-primary" onclick="window.saveTemplate()">💾 Simpan Template</button>
             </div>
         </div>
     </div>
@@ -1775,6 +1585,7 @@
         </div>
     </div>
 
+    <!-- ===== SCRIPT LOGIN (INLINE, BUKAN MODULE) ===== -->
     <script>
         // Auto-hide header
         let lastScrollY = window.scrollY;
@@ -1809,11 +1620,110 @@
                 if (toggleBtn) toggleBtn.textContent = '🌙';
             }
         })();
+
+        // ===== LOGIN (DI LUAR MODULE AGAR TIDAK TERGANGGU) =====
+        const MASTER_PIN = "brekele";
+
+        window.checkPin = function() {
+            const input = document.getElementById('pinInput').value;
+            if (input === MASTER_PIN) {
+                sessionStorage.setItem('barista_auth', 'true');
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('pinInput').value = '';
+                document.getElementById('loginError').style.display = 'none';
+                // Trigger render ulang jika module sudah siap
+                if (window._onLoginSuccess) window._onLoginSuccess();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        };
+
+        window.logout = function() {
+            sessionStorage.removeItem('barista_auth');
+            document.getElementById('loginOverlay').style.display = 'flex';
+            // Hapus data sementara
+            if (window._onLogout) window._onLogout();
+        };
+
+        // Cek session saat halaman dimuat
+        (function() {
+            if (sessionStorage.getItem('barista_auth') === 'true') {
+                document.getElementById('loginOverlay').style.display = 'none';
+            } else {
+                document.getElementById('loginOverlay').style.display = 'flex';
+            }
+        })();
+
+        // ===== PIN MODAL (juga inline) =====
+        let pendingActionType = null;
+        let pendingDeleteId = null;
+
+        window.requestEditAction = function() {
+            if (!window.currentActiveRecipe) return;
+            pendingActionType = 'edit';
+            pendingDeleteId = null;
+            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Edit Menu";
+            document.getElementById('actionPinInput').value = '';
+            document.getElementById('actionPinError').style.display = 'none';
+            document.getElementById('actionPinModal').classList.add('open');
+            document.getElementById('actionPinInput').focus();
+        };
+
+        window.requestDeleteAction = function(id) {
+            pendingActionType = 'delete';
+            pendingDeleteId = id;
+            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Hapus Menu";
+            document.getElementById('actionPinInput').value = '';
+            document.getElementById('actionPinError').style.display = 'none';
+            document.getElementById('actionPinModal').classList.add('open');
+            document.getElementById('actionPinInput').focus();
+        };
+
+        window.closeActionPinModal = function() {
+            document.getElementById('actionPinModal').classList.remove('open');
+            pendingActionType = null;
+            pendingDeleteId = null;
+        };
+
+        window.verifyActionPin = function() {
+            const inputPin = document.getElementById('actionPinInput').value;
+            if (inputPin === MASTER_PIN) {
+                const action = pendingActionType;
+                const delId = pendingDeleteId;
+                window.closeActionPinModal();
+                if (action === 'edit' && window.executeEditRecipe) {
+                    window.executeEditRecipe();
+                } else if (action === 'delete' && window.executeDeleteMenu) {
+                    window.executeDeleteMenu(delId);
+                }
+            } else {
+                document.getElementById('actionPinError').style.display = 'block';
+            }
+        };
+
+        // Event untuk Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('focusOverlay').classList.contains('active'))
+                    window.closeFocusMode && window.closeFocusMode();
+                if (document.getElementById('actionPinModal').classList.contains('open'))
+                    window.closeActionPinModal();
+                if (document.getElementById('batchOverlay').classList.contains('active'))
+                    window.closeBatchOrder && window.closeBatchOrder();
+                if (document.getElementById('batchInstructionModal').classList.contains('open'))
+                    window.closeBatchInstruction && window.closeBatchInstruction();
+                if (document.getElementById('receiptModal').classList.contains('open'))
+                    window.closeReceiptModal && window.closeReceiptModal();
+                if (document.getElementById('templateModal').classList.contains('open'))
+                    window.closeTemplateEditor && window.closeTemplateEditor();
+            }
+        });
     </script>
 
+    <!-- ===== SCRIPT UTAMA (MODULE) ===== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, push, onValue, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAanEHUkmBWVcbDx5J3RkxNiB8eBA-gi-Q",
@@ -1828,16 +1738,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const recipesRef = ref(db, 'recipes');
-
-        const MASTER_PIN = "brekele";
-        let pendingActionType = null;
-        let pendingDeleteId = null;
+        const settingsRef = ref(db, 'settings');
 
         const CATEGORY_ORDER = [
             "Espresso Based", "Flavored Latte", "Black Coffee", "Non-Coffee", "Custom Menu"
         ];
 
-        // Ikon untuk setiap kategori
         const CATEGORY_ICONS = {
             "Espresso Based": "☕",
             "Flavored Latte": "🍯",
@@ -1858,7 +1764,13 @@
         let batchOrders = [];
         let batchSugarPercent = 100;
 
-        // ===== FAVORITES =====
+        // ===== TEMPLATE STRUK =====
+        let strukTemplate = {
+            header: "Kopi Delapan\nJl. Contoh No. 123\nTelp. 08123456789",
+            footer: "Terima kasih telah memesan!\nNikmati kopi Anda.",
+            catatan: ""
+        };
+
         let favorites = [];
 
         function loadFavorites() {
@@ -1873,6 +1785,7 @@
             localStorage.setItem('barista_favorites', JSON.stringify(favorites));
         }
 
+        // Ekspose ke window agar bisa dipanggil dari inline script
         window.toggleFavorite = function(id) {
             const idx = favorites.indexOf(id);
             if (idx > -1) favorites.splice(idx, 1);
@@ -1899,8 +1812,7 @@
                 card.className = 'menu-card';
                 card.onclick = () => showActiveRecipe(item, 'medium', 100);
                 const med = item.sizes?.medium || {};
-                const sizeLabel = item.availableSizes ? item.availableSizes.map(s => s === 'medium' ? 'M' : 'L')
-                .join('/') : 'M/L';
+                const sizeLabel = item.availableSizes ? item.availableSizes.map(s => s === 'medium' ? 'M' : 'L').join('/') : 'M/L';
                 card.innerHTML = `
                     <div class="card-header">
                         <div class="card-info">
@@ -1984,69 +1896,10 @@
             } catch (e) { console.warn(e); }
         }
 
-        function disableWakeLock() { if (wakeLock) { wakeLock.release();
-                wakeLock = null; } }
+        function disableWakeLock() { if (wakeLock) { wakeLock.release(); wakeLock = null; } }
         document.addEventListener('visibilitychange', async () => {
             if (wakeLock && document.visibilityState === 'visible' && isHandsFreeMode) await enableWakeLock();
         });
-
-        // ===== LOGIN =====
-        window.checkPin = function() {
-            const input = document.getElementById('pinInput').value;
-            if (input === MASTER_PIN) {
-                sessionStorage.setItem('barista_auth', 'true');
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('pinInput').value = '';
-                document.getElementById('loginError').style.display = 'none';
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
-        };
-        window.logout = function() {
-            sessionStorage.removeItem('barista_auth');
-            document.getElementById('loginOverlay').style.display = 'flex';
-        };
-        if (sessionStorage.getItem('barista_auth') === 'true') {
-            document.getElementById('loginOverlay').style.display = 'none';
-        }
-
-        // ===== PIN MODAL =====
-        window.requestEditAction = function() {
-            if (!currentActiveRecipe) return;
-            pendingActionType = 'edit';
-            pendingDeleteId = null;
-            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Edit Menu";
-            document.getElementById('actionPinInput').value = '';
-            document.getElementById('actionPinError').style.display = 'none';
-            document.getElementById('actionPinModal').classList.add('open');
-            document.getElementById('actionPinInput').focus();
-        };
-        window.requestDeleteAction = function(id) {
-            pendingActionType = 'delete';
-            pendingDeleteId = id;
-            document.getElementById('actionPinTitle').innerText = "🔒 Verifikasi Hapus Menu";
-            document.getElementById('actionPinInput').value = '';
-            document.getElementById('actionPinError').style.display = 'none';
-            document.getElementById('actionPinModal').classList.add('open');
-            document.getElementById('actionPinInput').focus();
-        };
-        window.closeActionPinModal = function() {
-            document.getElementById('actionPinModal').classList.remove('open');
-            pendingActionType = null;
-            pendingDeleteId = null;
-        };
-        window.verifyActionPin = function() {
-            const inputPin = document.getElementById('actionPinInput').value;
-            if (inputPin === MASTER_PIN) {
-                const action = pendingActionType;
-                const delId = pendingDeleteId;
-                window.closeActionPinModal();
-                if (action === 'edit') window.executeEditRecipe();
-                else if (action === 'delete') window.executeDeleteMenu(delId);
-            } else {
-                document.getElementById('actionPinError').style.display = 'block';
-            }
-        };
 
         // ===== DEFAULT DATA =====
         const defaultMenuData = [{
@@ -2062,9 +1915,7 @@
                     creamer: "Tanpa Krimer",
                     milk: "100 ml Fresh Milk",
                     ice: "Secukupnya",
-                    steps: ["Tuang 15 ml Gula Aren ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya",
-                        "Pour 1 shot Espresso"
-                    ]
+                    steps: ["Tuang 15 ml Gula Aren ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya", "Pour 1 shot Espresso"]
                 },
                 large: {
                     syrup: "25 ml Gula Aren",
@@ -2072,9 +1923,7 @@
                     creamer: "Tanpa Krimer",
                     milk: "150 ml Fresh Milk",
                     ice: "Penuh",
-                    steps: ["Tuang 25 ml Gula Aren ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh",
-                        "Pour 2 shot Espresso"
-                    ]
+                    steps: ["Tuang 25 ml Gula Aren ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh", "Pour 2 shot Espresso"]
                 }
             }
         }, {
@@ -2090,9 +1939,7 @@
                     creamer: "Tanpa Krimer",
                     milk: "100 ml Fresh Milk",
                     ice: "Secukupnya",
-                    steps: ["Pump 1x Hazelnut ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya",
-                        "Pour 1 shot Espresso"
-                    ]
+                    steps: ["Pump 1x Hazelnut ke cup", "Tuang 100 ml Fresh Milk", "Isi es secukupnya", "Pour 1 shot Espresso"]
                 },
                 large: {
                     syrup: "25 ml Sirup (2 Pump)",
@@ -2100,9 +1947,7 @@
                     creamer: "Tanpa Krimer",
                     milk: "150 ml Fresh Milk",
                     ice: "Penuh",
-                    steps: ["Pump 2x Hazelnut ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh",
-                        "Pour 2 shot Espresso"
-                    ]
+                    steps: ["Pump 2x Hazelnut ke cup", "Tuang 150 ml Fresh Milk", "Isi es penuh", "Pour 2 shot Espresso"]
                 }
             }
         }, {
@@ -2131,20 +1976,33 @@
             }
         }];
 
+        // ===== LOAD TEMPLATE DARI FIREBASE =====
+        async function loadStrukTemplate() {
+            try {
+                const snap = await get(ref(db, 'settings/strukTemplate'));
+                if (snap.exists()) {
+                    const data = snap.val();
+                    if (data.header) strukTemplate.header = data.header;
+                    if (data.footer) strukTemplate.footer = data.footer;
+                    if (data.catatan !== undefined) strukTemplate.catatan = data.catatan;
+                } else {
+                    await set(ref(db, 'settings/strukTemplate'), strukTemplate);
+                }
+            } catch (e) { console.warn("Template load error:", e); }
+        }
+
         // ===== FIREBASE =====
-        onValue(recipesRef, (snapshot) => {
+        onValue(recipesRef, async (snapshot) => {
+            await loadStrukTemplate();
+
             const data = snapshot.val();
             if (data) {
                 menuData = Object.keys(data).map(key => {
                     let item = { id: key, ...data[key] };
                     if (!item.sizes) {
                         item.sizes = {
-                            medium: { syrup: item.syrup || '-', espresso: item.espresso || '-',
-                                creamer: item.creamer || '-', milk: item.milk || '-', ice: item.ice || '-',
-                                steps: item.steps || [] },
-                            large: { syrup: item.syrup || '-', espresso: item.espresso || '-',
-                                creamer: item.creamer || '-', milk: item.milk || '-', ice: item.ice || '-',
-                                steps: item.steps || [] }
+                            medium: { syrup: item.syrup || '-', espresso: item.espresso || '-', creamer: item.creamer || '-', milk: item.milk || '-', ice: item.ice || '-', steps: item.steps || [] },
+                            large: { syrup: item.syrup || '-', espresso: item.espresso || '-', creamer: item.creamer || '-', milk: item.milk || '-', ice: item.ice || '-', steps: item.steps || [] }
                         };
                     }
                     if (!item.availableSizes || !Array.isArray(item.availableSizes) || item.availableSizes.length === 0) {
@@ -2169,9 +2027,7 @@
                 if (updatedActive) {
                     let size = currentSize;
                     const avail = updatedActive.availableSizes || ['medium', 'large'];
-                    if (!avail.includes(size)) {
-                        size = avail[0] || 'medium';
-                    }
+                    if (!avail.includes(size)) size = avail[0] || 'medium';
                     showActiveRecipe(updatedActive, size, currentSugarPercent);
                     if (document.getElementById('focusOverlay').classList.contains('active')) {
                         window.openFocusMode();
@@ -2211,7 +2067,6 @@
                 return;
             }
 
-            // Group by category
             const groups = {};
             sorted.forEach(item => {
                 const cat = item.category || 'Custom Menu';
@@ -2219,7 +2074,6 @@
                 groups[cat].push(item);
             });
 
-            // Order categories
             const orderedCategories = CATEGORY_ORDER.filter(c => groups[c]);
             const otherCategories = Object.keys(groups).filter(c => !CATEGORY_ORDER.includes(c)).sort();
             const allCategories = [...orderedCategories, ...otherCategories];
@@ -2253,7 +2107,6 @@
             });
         }
 
-        // ===== CREATE CARD ELEMENT =====
         function createCardElement(item) {
             const card = document.createElement('div');
             card.className = 'menu-card';
@@ -2288,9 +2141,7 @@
         window.switchSize = function(size) {
             if (!currentActiveRecipe) return;
             const available = currentActiveRecipe.availableSizes || ['medium', 'large'];
-            if (!available.includes(size)) {
-                size = available[0] || 'medium';
-            }
+            if (!available.includes(size)) size = available[0] || 'medium';
             currentSize = size;
             document.getElementById('btnSizeMedium').classList.toggle('active', size === 'medium');
             document.getElementById('btnSizeLarge').classList.toggle('active', size === 'large');
@@ -2321,14 +2172,11 @@
 
         // ===== ACTIVE RECIPE =====
         function showActiveRecipe(item, size = 'medium', sugarPercent = 100) {
-            if ('speechSynthesis' in window) { window.speechSynthesis.cancel();
-                updateSpeakButtons(false); }
+            if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); updateSpeakButtons(false); }
             currentActiveId = item.id;
             currentActiveRecipe = item;
             const available = item.availableSizes || ['medium', 'large'];
-            if (!available.includes(size)) {
-                size = available[0] || 'medium';
-            }
+            if (!available.includes(size)) size = available[0] || 'medium';
             currentSize = size;
             currentSugarPercent = sugarPercent;
 
@@ -2368,8 +2216,7 @@
         }
 
         window.closeActiveDisplay = function() {
-            if ('speechSynthesis' in window) { window.speechSynthesis.cancel();
-                updateSpeakButtons(false); }
+            if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); updateSpeakButtons(false); }
             document.getElementById('activeDisplay').classList.remove('visible');
             currentActiveId = null;
             currentActiveRecipe = null;
@@ -2384,9 +2231,7 @@
         window.changeFocusSize = function(size) {
             if (!currentActiveRecipe) return;
             const available = currentActiveRecipe.availableSizes || ['medium', 'large'];
-            if (!available.includes(size)) {
-                size = available[0] || 'medium';
-            }
+            if (!available.includes(size)) size = available[0] || 'medium';
             currentSize = size;
             document.getElementById('focusSizeMed').classList.toggle('active', size === 'medium');
             document.getElementById('focusSizeLarge').classList.toggle('active', size === 'large');
@@ -2403,8 +2248,7 @@
         function updateFocusView(item, size) {
             const data = item.sizes?.[size] || item.sizes?.medium || {};
             const adjustedSyrup = adjustSugarText(data.syrup, currentSugarPercent);
-            document.getElementById('focusTitle').innerText =
-                `${item.title} (${size.toUpperCase()}) ${currentSugarPercent !== 100 ? `- Sugar ${currentSugarPercent}%` : ''}`;
+            document.getElementById('focusTitle').innerText = `${item.title} (${size.toUpperCase()}) ${currentSugarPercent !== 100 ? `- Sugar ${currentSugarPercent}%` : ''}`;
             document.getElementById('focusRecipeGrid').innerHTML = `
                 <div class="focus-card"><div class="focus-label">Sirup / Pemanis</div><div class="focus-value">${adjustedSyrup}</div></div>
                 <div class="focus-card"><div class="focus-label">Base/Kopi (${size.toUpperCase()})</div><div class="focus-value">${data.espresso || '-'}</div></div>
@@ -2420,34 +2264,22 @@
             document.getElementById('focusOverlay').classList.remove('active');
         };
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                window.closeFocusMode();
-                window.closeActionPinModal();
-                window.closeBatchOrder();
-                window.closeBatchInstruction();
-            }
-        });
-
         // ===== DELETE & EDIT =====
         window.executeDeleteMenu = function(id) {
             const item = menuData.find(i => i.id === id);
             if (!item) return;
             if (confirm(`Hapus menu "${item.title}"?`)) {
                 const itemRef = ref(db, `recipes/${id}`);
-                remove(itemRef)
-                    .then(() => {
-                        if (currentActiveId === id) { window.closeActiveDisplay();
-                            window.closeFocusMode(); }
-                        const idx = favorites.indexOf(id);
-                        if (idx > -1) {
-                            favorites.splice(idx, 1);
-                            saveFavorites();
-                            renderFavorites();
-                            renderMenuCards();
-                        }
-                    })
-                    .catch((err) => alert("Gagal hapus: " + err.message));
+                remove(itemRef).then(() => {
+                    if (currentActiveId === id) { window.closeActiveDisplay(); window.closeFocusMode(); }
+                    const idx = favorites.indexOf(id);
+                    if (idx > -1) {
+                        favorites.splice(idx, 1);
+                        saveFavorites();
+                        renderFavorites();
+                        renderMenuCards();
+                    }
+                }).catch((err) => alert("Gagal hapus: " + err.message));
             }
         };
 
@@ -2458,8 +2290,7 @@
             document.getElementById('modalTitle').innerText = `Edit Resep: ${item.title}`;
             document.getElementById('newTitle').value = item.title || '';
             document.getElementById('newCategory').value = item.category || 'Espresso Based';
-            document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(
-                ', ') : (item.keywords || '');
+            document.getElementById('newKeywords').value = Array.isArray(item.keywords) ? item.keywords.join(', ') : (item.keywords || '');
 
             const avail = item.availableSizes || ['medium', 'large'];
             document.getElementById('newSizeMedium').checked = avail.includes('medium');
@@ -2471,16 +2302,14 @@
             document.getElementById('medCreamer').value = med.creamer || '';
             document.getElementById('medMilk').value = med.milk || '';
             document.getElementById('medIce').value = med.ice || '';
-            document.getElementById('medSteps').value = Array.isArray(med.steps) ? med.steps.join(', ') : (med
-                .steps || '');
+            document.getElementById('medSteps').value = Array.isArray(med.steps) ? med.steps.join(', ') : (med.steps || '');
             const large = item.sizes?.large || {};
             document.getElementById('largeSyrup').value = large.syrup || '';
             document.getElementById('largeEspresso').value = large.espresso || '';
             document.getElementById('largeCreamer').value = large.creamer || '';
             document.getElementById('largeMilk').value = large.milk || '';
             document.getElementById('largeIce').value = large.ice || '';
-            document.getElementById('largeSteps').value = Array.isArray(large.steps) ? large.steps.join(', ') :
-                (large.steps || '');
+            document.getElementById('largeSteps').value = Array.isArray(large.steps) ? large.steps.join(', ') : (large.steps || '');
             document.getElementById('recipeModal').classList.add('open');
         };
 
@@ -2495,9 +2324,7 @@
             const availableSizes = [];
             if (document.getElementById('newSizeMedium').checked) availableSizes.push('medium');
             if (document.getElementById('newSizeLarge').checked) availableSizes.push('large');
-            if (availableSizes.length === 0) {
-                return alert("Pilih setidaknya satu ukuran yang tersedia!");
-            }
+            if (availableSizes.length === 0) return alert("Pilih setidaknya satu ukuran yang tersedia!");
 
             const payload = {
                 title,
@@ -2526,12 +2353,10 @@
             };
             if (editingId) {
                 const targetRef = ref(db, `recipes/${editingId}`);
-                set(targetRef, payload).then(() => window.closeModal()).catch((err) => alert("Gagal update: " + err
-                    .message));
+                set(targetRef, payload).then(() => window.closeModal()).catch((err) => alert("Gagal update: " + err.message));
             } else {
                 const newRef = push(recipesRef);
-                set(newRef, payload).then(() => window.closeModal()).catch((err) => alert("Gagal simpan: " + err
-                .message));
+                set(newRef, payload).then(() => window.closeModal()).catch((err) => alert("Gagal simpan: " + err.message));
             }
         };
 
@@ -2569,8 +2394,7 @@
             window.speechSynthesis.cancel();
             const data = item.sizes?.[size] || item.sizes?.medium || {};
             const adjustedSyrup = adjustSugarText(data.syrup, sugarPercent);
-            const text =
-                `${item.title} ukuran ${size} ${sugarPercent !== 100 ? `dengan gula ${sugarPercent} persen` : ''}. Sirup: ${adjustedSyrup}. Base Kopi: ${data.espresso}. Krimer: ${data.creamer || 'tidak ada'}. Susu: ${data.milk}. Es: ${data.ice}.`;
+            const text = `${item.title} ukuran ${size} ${sugarPercent !== 100 ? `dengan gula ${sugarPercent} persen` : ''}. Sirup: ${adjustedSyrup}. Base Kopi: ${data.espresso}. Krimer: ${data.creamer || 'tidak ada'}. Susu: ${data.milk}. Es: ${data.ice}.`;
 
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'id-ID';
@@ -2579,19 +2403,15 @@
 
             const voices = window.speechSynthesis.getVoices();
             const preferredVoice = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google'));
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
-            } else {
+            if (preferredVoice) utterance.voice = preferredVoice;
+            else {
                 const fallbackVoice = voices.find(v => v.lang === 'id-ID');
                 if (fallbackVoice) utterance.voice = fallbackVoice;
             }
 
-            utterance.onstart = () => { isSpeakingTTS = true;
-                updateSpeakButtons(true); };
-            utterance.onend = () => { isSpeakingTTS = false;
-                updateSpeakButtons(false); if (isHandsFreeMode) restartRecognition(); };
-            utterance.onerror = () => { isSpeakingTTS = false;
-                updateSpeakButtons(false); if (isHandsFreeMode) restartRecognition(); };
+            utterance.onstart = () => { isSpeakingTTS = true; updateSpeakButtons(true); };
+            utterance.onend = () => { isSpeakingTTS = false; updateSpeakButtons(false); if (isHandsFreeMode) restartRecognition(); };
+            utterance.onerror = () => { isSpeakingTTS = false; updateSpeakButtons(false); if (isHandsFreeMode) restartRecognition(); };
             window.speechSynthesis.speak(utterance);
         };
 
@@ -2603,9 +2423,7 @@
                 btn.classList.add('muted');
                 btn.innerHTML = '🔇';
                 btn.title = "Mode Suara (OFF)";
-                if ('speechSynthesis' in window) { window.speechSynthesis.cancel();
-                    isSpeakingTTS = false;
-                    updateSpeakButtons(false); }
+                if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); isSpeakingTTS = false; updateSpeakButtons(false); }
             } else {
                 btn.classList.remove('muted');
                 btn.innerHTML = '🔊';
@@ -2613,7 +2431,7 @@
             }
         };
 
-        // ===== VOICE RECOGNITION (HANYA HANDS-FREE) =====
+        // ===== VOICE RECOGNITION =====
         let recognition = null;
         let isListening = false;
         let isHandsFreeMode = false;
@@ -2629,68 +2447,37 @@
                 recognition.maxAlternatives = 1;
 
                 const correctionMap = {
-                    'amerikano': 'americano',
-                    'amerika no': 'americano',
-                    'america no': 'americano',
-                    'america': 'americano',
-                    'american': 'americano',
-                    'kapucino': 'cappuccino',
-                    'capucino': 'cappuccino',
-                    'cappucino': 'cappuccino',
-                    'kapuchino': 'cappuccino',
-                    'espreso': 'espresso',
-                    'expresso': 'espresso',
-                    'esprezo': 'espresso',
-                    'espro': 'espresso',
-                    'late': 'latte',
-                    'latti': 'latte',
-                    'lat': 'latte',
-                    'moka': 'mocha',
-                    'moca': 'mocha',
-                    'makiyato': 'macchiato',
-                    'makiatto': 'macchiato',
-                    'karamel': 'caramel',
-                    'karemil': 'caramel',
-                    'vanila': 'vanilla',
-                    'vanela': 'vanilla',
-                    'hazelnat': 'hazelnut',
-                    'hezelnut': 'hazelnut',
-                    'macha': 'matcha',
-                    'maccha': 'matcha',
-                    'almend': 'almond',
-                    'amandel': 'almond',
-                    'buterskot': 'butterscotch',
-                    'butirskot': 'butterscotch',
-                    'stroberi': 'strawberry',
-                    'strawberi': 'strawberry',
+                    'amerikano': 'americano', 'amerika no': 'americano', 'america no': 'americano',
+                    'america': 'americano', 'american': 'americano',
+                    'kapucino': 'cappuccino', 'capucino': 'cappuccino', 'cappucino': 'cappuccino', 'kapuchino': 'cappuccino',
+                    'espreso': 'espresso', 'expresso': 'espresso', 'esprezo': 'espresso', 'espro': 'espresso',
+                    'late': 'latte', 'latti': 'latte', 'lat': 'latte',
+                    'moka': 'mocha', 'moca': 'mocha',
+                    'makiyato': 'macchiato', 'makiatto': 'macchiato',
+                    'karamel': 'caramel', 'karemil': 'caramel',
+                    'vanila': 'vanilla', 'vanela': 'vanilla',
+                    'hazelnat': 'hazelnut', 'hezelnut': 'hazelnut',
+                    'macha': 'matcha', 'maccha': 'matcha',
+                    'almend': 'almond', 'amandel': 'almond',
+                    'buterskot': 'butterscotch', 'butirskot': 'butterscotch',
+                    'stroberi': 'strawberry', 'strawberi': 'strawberry',
                     'blueberi': 'blueberry',
-                    'pistacio': 'pistachio',
-                    'pistasyo': 'pistachio',
+                    'pistacio': 'pistachio', 'pistasyo': 'pistachio',
                     'afogato': 'affogato',
                     'frape': 'frappe',
                     'tofi': 'toffee',
-                    'gingerbred': 'gingerbread',
-                    'jinjerbred': 'gingerbread',
-                    'coco': 'coconut',
-                    'kelapa': 'coconut',
+                    'gingerbred': 'gingerbread', 'jinjerbred': 'gingerbread',
+                    'coco': 'coconut', 'kelapa': 'coconut',
                     'orio': 'oreo',
-                    'red velvit': 'red velvet',
-                    'redvelvet': 'red velvet',
-                    'flat wait': 'flat white',
-                    'flatwite': 'flat white',
-                    'kol brew': 'cold brew',
-                    'coldbre': 'cold brew',
-                    'pisang': 'banana',
-                    'manggo': 'mango',
-                    'coklat': 'chocolate',
-                    'cokelat': 'chocolate',
+                    'red velvit': 'red velvet', 'redvelvet': 'red velvet',
+                    'flat wait': 'flat white', 'flatwite': 'flat white',
+                    'kol brew': 'cold brew', 'coldbre': 'cold brew',
+                    'pisang': 'banana', 'manggo': 'mango',
+                    'coklat': 'chocolate', 'cokelat': 'chocolate',
                     'tiramisu': 'tiramisu',
-                    'pandan': 'pandan',
-                    'taro': 'taro',
-                    'oren': 'orange',
-                    'oranye': 'orange',
-                    'aren': 'aren',
-                    'gula aren': 'aren'
+                    'pandan': 'pandan', 'taro': 'taro',
+                    'oren': 'orange', 'oranye': 'orange',
+                    'aren': 'aren', 'gula aren': 'aren'
                 };
 
                 recognition.onstart = () => {
@@ -2701,9 +2488,7 @@
                     if (!e.results || !e.results[0] || !e.results[0][0]) return;
                     let raw = e.results[0][0].transcript.toLowerCase().trim();
                     for (const [wrong, correct] of Object.entries(correctionMap)) {
-                        if (raw.includes(wrong)) {
-                            raw = raw.replace(new RegExp(wrong, 'g'), correct);
-                        }
+                        if (raw.includes(wrong)) raw = raw.replace(new RegExp(wrong, 'g'), correct);
                     }
                     processVoiceCommand(raw);
                 };
@@ -2735,8 +2520,7 @@
         function restartRecognition() {
             if (!isHandsFreeMode || isSpeakingTTS) return;
             setTimeout(() => {
-                try { const sr = getSpeechRecognition(); if (sr && !isListening) sr.start(); } catch (e) { console
-                        .warn(e); }
+                try { const sr = getSpeechRecognition(); if (sr && !isListening) sr.start(); } catch (e) { console.warn(e); }
             }, 300);
         }
 
@@ -2810,9 +2594,7 @@
             if (!matchedMenu) return null;
 
             const availSizes = matchedMenu.availableSizes || ['medium'];
-            if (!size || !availSizes.includes(size)) {
-                size = availSizes[0];
-            }
+            if (!size || !availSizes.includes(size)) size = availSizes[0];
             if (sugar === null) sugar = 100;
 
             return {
@@ -2847,8 +2629,7 @@
             }
             const sugarText = order.sugar === 100 ? '' : ` gula ${order.sugar} persen`;
             speakConfirmation(`Menambahkan ${order.qty} ${order.menu.title} ukuran ${order.size}${sugarText} ke batch`);
-            document.getElementById('voiceStatus').innerText =
-                `✅ ${order.qty} ${order.menu.title} (${order.size}) sugar ${order.sugar}% ditambahkan`;
+            document.getElementById('voiceStatus').innerText = `✅ ${order.qty} ${order.menu.title} (${order.size}) sugar ${order.sugar}% ditambahkan`;
             return true;
         };
 
@@ -2941,12 +2722,10 @@
                 sugar = parseInt(percentMatch[1]);
                 sugarDetected = true;
             } else {
-                if (text.includes('separuh') || text.includes('half sugar')) { sugar = 50;
-                    sugarDetected = true; } else if (text.includes('less sugar')) { sugar = 75;
-                    sugarDetected = true; } else if (text.includes('sedikit gula')) { sugar = 25;
-                    sugarDetected = true; } else if (text.includes('tanpa gula') || text.includes('no sugar') || text
-                    .includes('bebas gula')) { sugar = 0;
-                    sugarDetected = true; }
+                if (text.includes('separuh') || text.includes('half sugar')) { sugar = 50; sugarDetected = true; }
+                else if (text.includes('less sugar')) { sugar = 75; sugarDetected = true; }
+                else if (text.includes('sedikit gula')) { sugar = 25; sugarDetected = true; }
+                else if (text.includes('tanpa gula') || text.includes('no sugar') || text.includes('bebas gula')) { sugar = 0; sugarDetected = true; }
             }
 
             const match = menuData.find(i =>
@@ -2958,8 +2737,7 @@
                 const finalSugar = sugarDetected ? sugar : currentSugarPercent;
                 showActiveRecipe(match, 'medium', finalSugar);
                 window.speakRecipe(match, 'medium', finalSugar);
-                document.getElementById('voiceStatus').innerText =
-                    `✅ ${match.title} ${sugarDetected ? `(Sugar ${finalSugar}%)` : ''}`;
+                document.getElementById('voiceStatus').innerText = `✅ ${match.title} ${sugarDetected ? `(Sugar ${finalSugar}%)` : ''}`;
             } else if (!sugarDetected) {
                 document.getElementById('voiceStatus').innerText = `❌ Tidak ditemukan: "${text}"`;
             } else {
@@ -2967,8 +2745,7 @@
                     window.switchSugar(sugar);
                     document.getElementById('voiceStatus').innerText = `🍬 Sugar ${sugar}% diterapkan`;
                 } else {
-                    document.getElementById('voiceStatus').innerText =
-                    `❌ Tidak ada menu aktif, sebutkan nama menu dengan sugar`;
+                    document.getElementById('voiceStatus').innerText = `❌ Tidak ada menu aktif, sebutkan nama menu dengan sugar`;
                 }
             }
         }
@@ -2982,8 +2759,7 @@
             if (isHandsFreeMode) {
                 enableWakeLock();
                 document.getElementById('voiceStatus').innerText = '🎙️ Hands-Free: ON (langsung perintah)';
-                try { if (isListening) sr.stop();
-                    setTimeout(() => sr.start(), 200); } catch (e) { console.warn(e); }
+                try { if (isListening) sr.stop(); setTimeout(() => sr.start(), 200); } catch (e) { console.warn(e); }
             } else {
                 disableWakeLock();
                 try { sr.stop(); } catch (e) {}
@@ -3139,8 +2915,7 @@
             const syrupBreakdown = {};
             const baseBreakdown = {};
             const milkBreakdown = {};
-            let totalCreamer = 0,
-                totalIce = 0;
+            let totalCreamer = 0, totalIce = 0;
             batchOrders.forEach(order => {
                 const menu = menuData.find(m => m.id === order.menuId);
                 if (!menu) return;
@@ -3233,8 +3008,7 @@
                 const order = grouped[key];
                 const menu = menuData.find(m => m.id === order.menuId);
                 if (!menu) {
-                    html +=
-                        `<p style="color: var(--danger);">⚠️ Menu ID "${order.menuId}" tidak ditemukan.</p>`;
+                    html += `<p style="color: var(--danger);">⚠️ Menu ID "${order.menuId}" tidak ditemukan.</p>`;
                     continue;
                 }
                 const sizeData = menu.sizes?.[order.size] || menu.sizes?.medium || {};
@@ -3260,6 +3034,108 @@
 
         window.closeBatchInstruction = function() {
             document.getElementById('batchInstructionModal').classList.remove('open');
+        };
+
+        // ===== CETAK STRUK 58MM =====
+        function generateReceiptText() {
+            if (batchOrders.length === 0) return 'Tidak ada pesanan.';
+
+            const headerLines = strukTemplate.header.split('\n').filter(l => l.trim());
+            const footerLines = strukTemplate.footer.split('\n').filter(l => l.trim());
+            const note = strukTemplate.catatan ? `\nCatatan: ${strukTemplate.catatan}` : '';
+
+            let lines = [];
+            const lineWidth = 32;
+
+            function center(text) {
+                const pad = Math.max(0, Math.floor((lineWidth - text.length) / 2));
+                return ' '.repeat(pad) + text;
+            }
+
+            function divider(char = '═') {
+                return char.repeat(lineWidth);
+            }
+
+            headerLines.forEach(h => lines.push(center(h)));
+            lines.push(divider('═'));
+
+            lines.push('#  Menu               Size  Sugar Qty');
+            batchOrders.forEach((o, idx) => {
+                const num = (idx + 1).toString().padStart(2);
+                const title = o.title.length > 14 ? o.title.slice(0, 14) : o.title.padEnd(14);
+                const size = o.size === 'medium' ? 'M' : 'L';
+                const sugar = `${o.sugar}%`.padEnd(5);
+                const qty = o.quantity.toString().padStart(3);
+                lines.push(`${num}  ${title}  ${size}   ${sugar} ${qty}`);
+            });
+            lines.push(divider('═'));
+
+            const totalQty = batchOrders.reduce((sum, o) => sum + o.quantity, 0);
+            lines.push(center(`Total Item: ${totalQty}`));
+            lines.push(divider('═'));
+
+            footerLines.forEach(f => lines.push(center(f)));
+            if (note) lines.push(note);
+
+            return lines.join('\n');
+        }
+
+        window.printReceipt = function() {
+            if (batchOrders.length === 0) {
+                alert('Tidak ada pesanan untuk dicetak.');
+                return;
+            }
+            const text = generateReceiptText();
+            const contentDiv = document.getElementById('receiptContent');
+            const printArea = document.getElementById('receiptPrintArea');
+
+            const logoHtml = `<img src="logo.png" alt="Logo" class="receipt-logo" onerror="this.style.display='none'" />`;
+            const formatted = text.split('\n').map(line => line || ' ').join('\n');
+            contentDiv.innerHTML = `
+                <div style="text-align:center; margin-bottom:6px;">${logoHtml}</div>
+                <pre style="font-family:'Courier New',monospace;font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-word;margin:0;">${formatted}</pre>
+            `;
+            printArea.innerHTML = `
+                <div style="text-align:center; margin-bottom:6px;">${logoHtml}</div>
+                <pre style="font-family:'Courier New',monospace;font-size:11px;line-height:1.4;white-space:pre-wrap;word-break:break-word;margin:0;">${formatted}</pre>
+            `;
+            document.getElementById('receiptModal').classList.add('open');
+        };
+
+        window.printReceiptPhysical = function() {
+            window.print();
+        };
+
+        window.closeReceiptModal = function() {
+            document.getElementById('receiptModal').classList.remove('open');
+        };
+
+        // ===== TEMPLATE EDITOR =====
+        window.openTemplateEditor = function() {
+            document.getElementById('templateHeader').value = strukTemplate.header;
+            document.getElementById('templateFooter').value = strukTemplate.footer;
+            document.getElementById('templateNote').value = strukTemplate.catatan || '';
+            document.getElementById('templateModal').classList.add('open');
+        };
+
+        window.closeTemplateEditor = function() {
+            document.getElementById('templateModal').classList.remove('open');
+        };
+
+        window.saveTemplate = function() {
+            const header = document.getElementById('templateHeader').value.trim();
+            const footer = document.getElementById('templateFooter').value.trim();
+            const catatan = document.getElementById('templateNote').value.trim();
+            const data = { header, footer, catatan };
+            set(ref(db, 'settings/strukTemplate'), data)
+                .then(() => {
+                    strukTemplate.header = header;
+                    strukTemplate.footer = footer;
+                    strukTemplate.catatan = catatan;
+                    alert('✅ Template struk berhasil disimpan!');
+                    window.closeTemplateEditor();
+                })
+                .catch(err => alert('Gagal simpan template: ' + err.message));
         };
 
         // ===== OPEN ADD MODAL =====
@@ -3288,7 +3164,7 @@
 
         // ===== INIT =====
         loadFavorites();
-        console.log('✅ Barista Assistant - Menu dikelompokkan per kategori!');
+        console.log('✅ Barista Assistant siap!');
     </script>
 </body>
 </html>
