@@ -1632,17 +1632,23 @@
                 color: #000 !important;
                 display: block !important;
                 box-sizing: border-box !important;
+                height: auto !important;
             }
 
+            /* Sembunyikan SEMUA elemen di body */
             body * {
                 visibility: hidden !important;
+                display: none !important;
             }
 
+            /* Tampilkan hanya #printReceipt dan anak-anaknya */
             #printReceipt,
             #printReceipt * {
                 visibility: visible !important;
+                display: revert !important;
             }
 
+            /* Tapi untuk elemen tertentu kita set ulang display-nya */
             #printReceipt {
                 display: block !important;
                 position: relative !important;
@@ -1657,6 +1663,9 @@
                 line-height: 1.25 !important;
                 box-sizing: border-box !important;
                 border: none !important;
+                page-break-after: avoid !important;
+                page-break-before: avoid !important;
+                page-break-inside: avoid !important;
             }
 
             #printReceipt .pr-logo {
@@ -1684,11 +1693,17 @@
             }
 
             #printReceipt table {
+                display: table !important;
                 width: 100% !important;
                 border-collapse: collapse !important;
             }
 
+            #printReceipt tr {
+                display: table-row !important;
+            }
+
             #printReceipt td {
+                display: table-cell !important;
                 padding: 1mm 0 !important;
                 vertical-align: top !important;
             }
