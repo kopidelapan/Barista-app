@@ -1615,60 +1615,104 @@
             .receipt-add-row .btn { grid-column:1/-1; }
         }
 
-        /* Printer-friendly 58mm receipt */
+        /* ===== Printer-friendly 58mm receipt - DIPERBAIKI ===== */
         @media print {
-            @page { size: 58mm auto; margin: 0; }
+            @page {
+                size: 58mm auto;
+                margin: 0;
+            }
+
             html, body {
-                width:58mm !important;
-                margin:0 !important;
-                padding:0 !important;
-                background:#fff !important;
-                color:#000 !important;
+                width: 58mm !important;
+                min-width: 58mm !important;
+                max-width: 58mm !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+                background: #fff !important;
+                color: #000 !important;
+                display: block !important;
+                box-sizing: border-box !important;
             }
-            body * { visibility:hidden !important; }
-            #printReceipt, #printReceipt * { visibility:visible !important; }
+
+            body * {
+                visibility: hidden !important;
+            }
+
+            #printReceipt,
+            #printReceipt * {
+                visibility: visible !important;
+            }
+
             #printReceipt {
-                display:block !important;
-                position:absolute !important;
-                left:0 !important;
-                top:0 !important;
-                width:58mm !important;
-                padding:3mm 2.5mm !important;
-                margin:0 !important;
-                background:#fff !important;
-                color:#000 !important;
-                font-family:Arial, sans-serif !important;
-                font-size:11px !important;
-                line-height:1.25 !important;
+                display: block !important;
+                position: relative !important;
+                width: 58mm !important;
+                max-width: 58mm !important;
+                margin: 0 auto !important;
+                padding: 3mm 2.5mm !important;
+                background: #fff !important;
+                color: #000 !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 11px !important;
+                line-height: 1.25 !important;
+                box-sizing: border-box !important;
+                border: none !important;
             }
+
             #printReceipt .pr-logo {
-                display:block !important;
-                max-width:25mm !important;
-                max-height:15mm !important;
-                width:auto !important;
-                height:auto !important;
-                margin:0 auto 2mm !important;
-                object-fit:contain !important;
+                display: block !important;
+                max-width: 25mm !important;
+                max-height: 15mm !important;
+                width: auto !important;
+                height: auto !important;
+                margin: 0 auto 2mm !important;
+                object-fit: contain !important;
             }
-            #printReceipt .pr-center { text-align:center !important; }
-            #printReceipt .pr-title { font-weight:800 !important; font-size:14px !important; }
+
+            #printReceipt .pr-center {
+                text-align: center !important;
+            }
+
+            #printReceipt .pr-title {
+                font-weight: 800 !important;
+                font-size: 14px !important;
+            }
+
             #printReceipt .pr-line {
-                border-top:1px dashed #000 !important;
-                margin:2mm 0 !important;
+                border-top: 1px dashed #000 !important;
+                margin: 2mm 0 !important;
             }
+
             #printReceipt table {
-                width:100% !important;
-                border-collapse:collapse !important;
+                width: 100% !important;
+                border-collapse: collapse !important;
             }
-            #printReceipt td { padding:1mm 0 !important; vertical-align:top !important; }
-            #printReceipt .pr-name { width:58%; word-break:break-word !important; }
-            #printReceipt .pr-num { text-align:right !important; white-space:nowrap !important; }
+
+            #printReceipt td {
+                padding: 1mm 0 !important;
+                vertical-align: top !important;
+            }
+
+            #printReceipt .pr-name {
+                width: 58%;
+                word-break: break-word !important;
+            }
+
+            #printReceipt .pr-num {
+                text-align: right !important;
+                white-space: nowrap !important;
+            }
+
             #printReceipt .pr-total td {
-                font-weight:800 !important;
-                font-size:13px !important;
-                padding-top:2mm !important;
+                font-weight: 800 !important;
+                font-size: 13px !important;
+                padding-top: 2mm !important;
             }
-            #printReceipt .pr-note { margin-top:2mm !important; word-break:break-word !important; }
+
+            #printReceipt .pr-note {
+                margin-top: 2mm !important;
+                word-break: break-word !important;
+            }
         }
         #printReceipt { display:none; }
 
