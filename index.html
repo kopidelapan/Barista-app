@@ -1504,6 +1504,174 @@
                 padding: 4px 10px;
             }
         }
+    
+        /* ===== STRUK 58MM ===== */
+        .receipt-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--batch-overlay-bg);
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .receipt-overlay.active { display: flex; }
+        .receipt-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 760px;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,.7);
+        }
+        .receipt-header {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+            border-bottom:1px solid var(--card-border);
+            padding-bottom:10px;
+            margin-bottom:14px;
+        }
+        .receipt-header h2 { color:var(--accent-gold); font-size:1.3rem; margin:0; }
+        .receipt-add-row {
+            display:grid;
+            grid-template-columns: minmax(0,1fr) 90px 120px auto;
+            gap:8px;
+            align-items:center;
+            background:var(--info-bg);
+            padding:12px;
+            border-radius:10px;
+            margin-bottom:12px;
+        }
+        .receipt-items { overflow-x:auto; }
+        #receiptTable {
+            width:100%;
+            border-collapse:collapse;
+            font-size:.84rem;
+        }
+        #receiptTable th,#receiptTable td {
+            padding:8px 7px;
+            border-bottom:1px solid var(--card-border);
+            text-align:left;
+            vertical-align:middle;
+        }
+        #receiptTable th { color:var(--text-muted); font-size:.72rem; }
+        .receipt-qty {
+            width:62px;
+            padding:6px;
+            background:var(--search-bg);
+            color:var(--text-main);
+            border:1px solid var(--card-border);
+            border-radius:6px;
+        }
+        .receipt-price {
+            width:110px;
+            padding:6px;
+            background:var(--search-bg);
+            color:var(--text-main);
+            border:1px solid var(--card-border);
+            border-radius:6px;
+        }
+        .receipt-summary {
+            margin-top:14px;
+            padding:12px;
+            background:var(--info-bg);
+            border:1px solid var(--accent-gold);
+            border-radius:10px;
+        }
+        .receipt-summary-row {
+            display:flex;
+            justify-content:space-between;
+            gap:10px;
+            padding:3px 0;
+        }
+        .receipt-total {
+            font-size:1.1rem;
+            font-weight:800;
+            color:var(--accent-gold);
+            border-top:1px dashed var(--card-border);
+            margin-top:6px;
+            padding-top:8px;
+        }
+        .receipt-actions { display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; margin-top:14px; }
+        .receipt-note {
+            width:100%;
+            min-height:55px;
+            resize:vertical;
+            padding:9px;
+            background:var(--search-bg);
+            color:var(--text-main);
+            border:1px solid var(--card-border);
+            border-radius:8px;
+            font:inherit;
+        }
+        @media (max-width:700px) {
+            .receipt-add-row { grid-template-columns:1fr 80px 110px; }
+            .receipt-add-row .btn { grid-column:1/-1; }
+        }
+
+        /* Printer-friendly 58mm receipt */
+        @media print {
+            @page { size: 58mm auto; margin: 0; }
+            html, body {
+                width:58mm !important;
+                margin:0 !important;
+                padding:0 !important;
+                background:#fff !important;
+                color:#000 !important;
+            }
+            body * { visibility:hidden !important; }
+            #printReceipt, #printReceipt * { visibility:visible !important; }
+            #printReceipt {
+                display:block !important;
+                position:absolute !important;
+                left:0 !important;
+                top:0 !important;
+                width:58mm !important;
+                padding:3mm 2.5mm !important;
+                margin:0 !important;
+                background:#fff !important;
+                color:#000 !important;
+                font-family:Arial, sans-serif !important;
+                font-size:11px !important;
+                line-height:1.25 !important;
+            }
+            #printReceipt .pr-logo {
+                display:block !important;
+                max-width:25mm !important;
+                max-height:15mm !important;
+                width:auto !important;
+                height:auto !important;
+                margin:0 auto 2mm !important;
+                object-fit:contain !important;
+            }
+            #printReceipt .pr-center { text-align:center !important; }
+            #printReceipt .pr-title { font-weight:800 !important; font-size:14px !important; }
+            #printReceipt .pr-line {
+                border-top:1px dashed #000 !important;
+                margin:2mm 0 !important;
+            }
+            #printReceipt table {
+                width:100% !important;
+                border-collapse:collapse !important;
+            }
+            #printReceipt td { padding:1mm 0 !important; vertical-align:top !important; }
+            #printReceipt .pr-name { width:58%; word-break:break-word !important; }
+            #printReceipt .pr-num { text-align:right !important; white-space:nowrap !important; }
+            #printReceipt .pr-total td {
+                font-weight:800 !important;
+                font-size:13px !important;
+                padding-top:2mm !important;
+            }
+            #printReceipt .pr-note { margin-top:2mm !important; word-break:break-word !important; }
+        }
+        #printReceipt { display:none; }
+
     </style>
 </head>
 <body>
@@ -1636,6 +1804,7 @@
             <div class="voice-row">
                 <div class="voice-btn-group">
                     <button class="batch-btn" onclick="window.openBatchOrder()">📦 Batch</button>
+                    <button class="batch-btn" onclick="window.openReceipt()">🧾 Buat Struk</button>
                     <button id="handsFreeBtn" class="handsfree-btn" onclick="window.toggleHandsFreeMode()">
                         <span>🎙️ Hands-Free: OFF</span>
                     </button>
@@ -1773,6 +1942,70 @@
                 <button class="btn btn-primary" onclick="window.saveMenu()">Simpan Menu</button>
             </div>
         </div>
+    </div>
+
+
+    <!-- MODAL BUAT STRUK -->
+    <div id="receiptOverlay" class="receipt-overlay">
+        <div class="receipt-container">
+            <div class="receipt-header">
+                <h2>🧾 Buat Struk</h2>
+                <button class="close-batch-btn" onclick="window.closeReceipt()">✕</button>
+            </div>
+
+            <div class="receipt-add-row">
+                <select id="receiptMenuSelect" class="form-control"></select>
+                <input id="receiptQty" type="number" class="form-control" min="1" value="1" placeholder="Qty">
+                <input id="receiptPrice" type="number" class="form-control" min="0" step="500" placeholder="Harga manual">
+                <button class="btn btn-primary" onclick="window.addReceiptItem()">+ Tambah</button>
+            </div>
+            <div style="font-size:.75rem;color:var(--text-muted);margin:-4px 0 12px;">
+                Pilih beberapa produk satu per satu. Harga pada struk selalu bisa diubah manual.
+            </div>
+
+            <div class="receipt-items">
+                <table id="receiptTable">
+                    <thead>
+                        <tr><th>Produk</th><th>Qty</th><th>Harga</th><th>Subtotal</th><th>Aksi</th></tr>
+                    </thead>
+                    <tbody id="receiptTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="receipt-summary">
+                <div class="receipt-summary-row"><span>Jumlah item</span><strong id="receiptItemCount">0</strong></div>
+                <div class="receipt-summary-row receipt-total"><span>TOTAL</span><strong id="receiptGrandTotal">Rp0</strong></div>
+            </div>
+
+            <div style="margin-top:12px;">
+                <label class="control-label" style="display:block;margin-bottom:5px;">Catatan struk (opsional)</label>
+                <textarea id="receiptNote" class="receipt-note" placeholder="Terima kasih / catatan lainnya..."></textarea>
+            </div>
+
+            <div class="receipt-actions">
+                <button class="btn btn-secondary" onclick="window.resetReceipt()">🔄 Reset</button>
+                <button class="btn btn-primary" onclick="window.printReceipt()">🖨️ Cetak Struk 58mm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEMPLATE CETAK -->
+    <div id="printReceipt">
+        <div class="pr-center">
+            <img src="logo.png" class="pr-logo" alt="Kopi Delapan">
+            <div class="pr-title">KOPI DELAPAN</div>
+            <div id="prDate"></div>
+        </div>
+        <div class="pr-line"></div>
+        <table><tbody id="prItems"></tbody></table>
+        <div class="pr-line"></div>
+        <table>
+            <tbody>
+                <tr class="pr-total"><td>TOTAL</td><td class="pr-num" id="prTotal">Rp0</td></tr>
+            </tbody>
+        </table>
+        <div class="pr-note pr-center" id="prNote"></div>
+        <div class="pr-center" style="margin-top:3mm;">Terima kasih 🙏</div>
     </div>
 
     <script>
@@ -3261,6 +3494,182 @@
         window.closeBatchInstruction = function() {
             document.getElementById('batchInstructionModal').classList.remove('open');
         };
+
+
+        // ===== STRUK 58MM =====
+        let receiptItems = [];
+
+        function formatRupiah(value) {
+            return 'Rp' + Math.round(Number(value) || 0).toLocaleString('id-ID');
+        }
+
+        function getMenuDefaultPrice(menu, size) {
+            // Mendukung data harga jika nanti ditambahkan ke Firebase:
+            // price: 18000 atau prices: { medium: 18000, large: 22000 }
+            const prices = menu?.prices || {};
+            if (prices[size] != null) return Number(prices[size]) || 0;
+            if (menu?.price != null) return Number(menu.price) || 0;
+            return 0;
+        }
+
+        function populateReceiptMenuSelect() {
+            const select = document.getElementById('receiptMenuSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            const sortedItems = [...menuData].sort((a,b) => {
+                const af = favorites.includes(a.id), bf = favorites.includes(b.id);
+                if (af && !bf) return -1;
+                if (!af && bf) return 1;
+                return a.title.localeCompare(b.title);
+            });
+            sortedItems.forEach(menu => {
+                const sizes = Array.isArray(menu.availableSizes) && menu.availableSizes.length
+                    ? menu.availableSizes : ['medium'];
+                sizes.forEach(size => {
+                    const opt = document.createElement('option');
+                    opt.value = `${menu.id}|${size}`;
+                    opt.textContent = `${menu.title} (${size === 'medium' ? 'M' : 'L'})`;
+                    opt.dataset.price = getMenuDefaultPrice(menu, size);
+                    select.appendChild(opt);
+                });
+            });
+            updateReceiptPriceFromMenu();
+        }
+
+        function updateReceiptPriceFromMenu() {
+            const select = document.getElementById('receiptMenuSelect');
+            const price = document.getElementById('receiptPrice');
+            const opt = select?.options[select.selectedIndex];
+            if (!price || !opt) return;
+            const defaultPrice = Number(opt.dataset.price || 0);
+            price.value = defaultPrice > 0 ? defaultPrice : '';
+        }
+
+        window.openReceipt = function() {
+            document.getElementById('receiptOverlay').classList.add('active');
+            populateReceiptMenuSelect();
+            renderReceiptItems();
+            document.getElementById('receiptQty').value = 1;
+            document.getElementById('receiptNote').value = '';
+        };
+
+        window.closeReceipt = function() {
+            document.getElementById('receiptOverlay').classList.remove('active');
+        };
+
+        window.addReceiptItem = function() {
+            const select = document.getElementById('receiptMenuSelect');
+            const opt = select.options[select.selectedIndex];
+            if (!opt) return;
+
+            const [menuId, size] = opt.value.split('|');
+            const menu = menuData.find(m => m.id === menuId);
+            if (!menu) return;
+
+            const qty = Math.max(1, parseInt(document.getElementById('receiptQty').value) || 1);
+            const price = Math.max(0, Number(document.getElementById('receiptPrice').value) || 0);
+
+            // Produk yang sama + ukuran yang sama digabung.
+            const existing = receiptItems.find(i => i.menuId === menuId && i.size === size);
+            if (existing) {
+                existing.qty += qty;
+                existing.price = price;
+            } else {
+                receiptItems.push({
+                    menuId,
+                    title: menu.title,
+                    size,
+                    qty,
+                    price
+                });
+            }
+            renderReceiptItems();
+            document.getElementById('receiptQty').value = 1;
+        };
+
+        window.removeReceiptItem = function(index) {
+            receiptItems.splice(index, 1);
+            renderReceiptItems();
+        };
+
+        window.resetReceipt = function() {
+            receiptItems = [];
+            renderReceiptItems();
+            document.getElementById('receiptNote').value = '';
+        };
+
+        window.updateReceiptQty = function(index, value) {
+            const qty = Math.max(1, parseInt(value) || 1);
+            receiptItems[index].qty = qty;
+            renderReceiptItems();
+        };
+
+        window.updateReceiptPrice = function(index, value) {
+            receiptItems[index].price = Math.max(0, Number(value) || 0);
+            renderReceiptItems();
+        };
+
+        function renderReceiptItems() {
+            const tbody = document.getElementById('receiptTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            receiptItems.forEach((item, index) => {
+                const subtotal = item.qty * item.price;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${item.title}</strong><br><span style="font-size:.7rem;color:var(--text-muted);">${item.size === 'medium' ? 'Medium (M)' : 'Large (L)'}</span></td>
+                    <td><input class="receipt-qty" type="number" min="1" value="${item.qty}" onchange="window.updateReceiptQty(${index}, this.value)"></td>
+                    <td><input class="receipt-price" type="number" min="0" step="500" value="${item.price}" onchange="window.updateReceiptPrice(${index}, this.value)"></td>
+                    <td><strong>${formatRupiah(subtotal)}</strong></td>
+                    <td><button class="btn btn-danger" style="padding:3px 8px;font-size:.72rem;" onclick="window.removeReceiptItem(${index})">Hapus</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const total = receiptItems.reduce((sum, i) => sum + (i.qty * i.price), 0);
+            const count = receiptItems.reduce((sum, i) => sum + i.qty, 0);
+            document.getElementById('receiptItemCount').textContent = count;
+            document.getElementById('receiptGrandTotal').textContent = formatRupiah(total);
+        }
+
+        window.printReceipt = function() {
+            if (receiptItems.length === 0) {
+                alert('Tambahkan minimal 1 produk ke struk.');
+                return;
+            }
+
+            const total = receiptItems.reduce((sum, i) => sum + i.qty * i.price, 0);
+            const date = new Date().toLocaleString('id-ID', {
+                day:'2-digit', month:'2-digit', year:'numeric',
+                hour:'2-digit', minute:'2-digit'
+            });
+
+            document.getElementById('prDate').textContent = date;
+            const prItems = document.getElementById('prItems');
+            prItems.innerHTML = '';
+
+            receiptItems.forEach(item => {
+                const tr = document.createElement('tr');
+                const label = `${item.title} ${item.size === 'medium' ? '(M)' : '(L)'}`;
+                tr.innerHTML = `
+                    <td class="pr-name">${label}<br><span>${item.qty} x ${formatRupiah(item.price)}</span></td>
+                    <td class="pr-num">${formatRupiah(item.qty * item.price)}</td>
+                `;
+                prItems.appendChild(tr);
+            });
+
+            document.getElementById('prTotal').textContent = formatRupiah(total);
+            const note = (document.getElementById('receiptNote').value || '').trim();
+            document.getElementById('prNote').textContent = note;
+
+            window.print();
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const select = document.getElementById('receiptMenuSelect');
+            if (select) select.addEventListener('change', updateReceiptPriceFromMenu);
+        });
 
         // ===== OPEN ADD MODAL =====
         window.openAddModal = function() {
