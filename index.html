@@ -23,6 +23,7 @@
             --batch-overlay-bg: rgba(0, 0, 0, 0.85);
             --focus-bg: #0d0e11;
             --category-border: #2e323d;
+            --price-input-bg: #0d0e11;
         }
         body.light-mode {
             --bg-dark: #f0f2f5;
@@ -37,6 +38,7 @@
             --batch-overlay-bg: rgba(0, 0, 0, 0.6);
             --focus-bg: #f0f2f5;
             --category-border: #d0d7de;
+            --price-input-bg: #ffffff;
         }
         * {
             box-sizing: border-box;
@@ -261,8 +263,24 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .price-list-btn {
+            background: transparent;
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+        .price-list-btn:hover {
+            background: rgba(217, 160, 91, 0.15);
         }
         .theme-btn {
             background: transparent;
@@ -653,6 +671,16 @@
             margin-top: 2px;
             word-break: break-word;
         }
+        .active-price-tag {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: #121316;
+            font-weight: 700;
+            padding: 2px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
         .control-panel {
             display: flex;
             gap: 16px;
@@ -936,6 +964,13 @@
         .btn-danger:hover {
             background: var(--danger-hover);
         }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
 
         .batch-overlay {
             position: fixed;
@@ -1131,380 +1166,85 @@
             word-break: break-word;
         }
 
-        /* ===== LANDSCAPE FIX: max 3 columns ===== */
-        @media (orientation: landscape) and (max-height: 900px) {
-            .category-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
-            }
-            .fav-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
-            }
-            .menu-card {
-                padding: 12px;
-            }
-            .card-title {
-                font-size: 0.95rem;
-                white-space: normal;
-                word-break: break-word;
-                line-height: 1.3;
-            }
-            .card-icon {
-                width: 34px;
-                height: 34px;
-                font-size: 1.1rem;
-                flex-shrink: 0;
-            }
-            .ing-tag {
-                font-size: 0.65rem;
-                padding: 2px 6px;
-            }
-            .category-title {
-                font-size: 1.1rem;
-            }
-            .recipe-grid {
-                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-                gap: 10px;
-            }
-            .recipe-box {
-                padding: 10px;
-            }
-            .recipe-box .value {
-                font-size: 0.9rem;
-            }
-            .active-title-group h2 {
-                font-size: 1.4rem;
-            }
-            .active-display {
-                padding: 16px;
-            }
-            .focus-title-group h1 {
-                font-size: 1.7rem;
-            }
-            .focus-card .focus-value {
-                font-size: 1.1rem;
-            }
-            .focus-steps-list {
-                font-size: 1rem;
-                padding-left: 20px;
-            }
+        /* ===== MODAL DAFTAR HARGA ===== */
+        .price-list-modal {
+            max-width: 780px;
+            width: 100%;
+        }
+        .price-list-table-wrap {
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .price-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .price-list-table th,
+        .price-list-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--card-border);
+            text-align: left;
+            vertical-align: middle;
+        }
+        .price-list-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            z-index: 2;
+        }
+        .price-list-table .menu-name {
+            font-weight: 600;
+            color: var(--text-main);
+            min-width: 140px;
+        }
+        .price-list-table .price-input {
+            width: 100px;
+            padding: 6px 8px;
+            background: var(--price-input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .price-list-table .price-input:focus {
+            border-color: var(--accent-gold);
+        }
+        .price-list-table .price-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+            font-size: 0.8rem;
+        }
+        .price-list-table .size-badge-sm {
+            font-size: 0.65rem;
+            background: var(--info-bg);
+            color: var(--text-muted);
+            padding: 1px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            display: inline-block;
+        }
+        .price-list-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .price-list-status {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: center;
         }
 
-        @media (orientation: landscape) and (max-height: 600px) {
-            .category-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
-            .fav-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
-            .menu-card {
-                padding: 8px 10px;
-            }
-            .card-title {
-                font-size: 0.85rem;
-            }
-            .card-icon {
-                width: 28px;
-                height: 28px;
-                font-size: 0.95rem;
-            }
-            .card-category {
-                font-size: 0.6rem;
-            }
-            .ing-tag {
-                font-size: 0.55rem;
-                padding: 1px 4px;
-            }
-            .category-title {
-                font-size: 0.95rem;
-            }
-            .category-count {
-                font-size: 0.7rem;
-                padding: 2px 8px;
-            }
-            .active-display {
-                padding: 12px;
-            }
-            .active-title-group h2 {
-                font-size: 1.2rem;
-            }
-            .recipe-grid {
-                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-                gap: 8px;
-            }
-            .recipe-box {
-                padding: 6px;
-            }
-            .recipe-box .value {
-                font-size: 0.8rem;
-            }
-            .steps-list {
-                font-size: 0.8rem;
-                padding-left: 16px;
-            }
-            .control-panel {
-                gap: 8px;
-            }
-            .size-btn,
-            .sugar-btn {
-                padding: 2px 10px;
-                font-size: 0.7rem;
-            }
-            .brand h1 {
-                font-size: 1rem;
-            }
-            .voice-status {
-                font-size: 0.7rem;
-                padding: 2px 8px;
-                min-width: 80px;
-            }
-            .batch-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
-            .handsfree-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
-            .silent-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 0.85rem;
-            }
-            .search-input {
-                font-size: 0.85rem;
-                padding: 6px 12px 6px 34px;
-            }
-            .section-title {
-                font-size: 0.95rem;
-            }
-            .add-btn {
-                font-size: 0.75rem;
-                padding: 3px 10px;
-            }
-            .btn {
-                font-size: 0.75rem;
-                padding: 5px 10px;
-            }
-            .focus-title-group h1 {
-                font-size: 1.4rem;
-            }
-            .focus-card .focus-value {
-                font-size: 1rem;
-            }
-            .focus-steps-list {
-                font-size: 0.9rem;
-                padding-left: 18px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                font-size: 15px;
-            }
-            .header-row-top {
-                flex-wrap: wrap;
-                gap: 4px;
-            }
-            .voice-row {
-                flex-wrap: wrap;
-                gap: 4px;
-            }
-            .voice-btn-group {
-                flex-wrap: wrap;
-                gap: 4px;
-            }
-            .voice-status {
-                min-width: 70px;
-                font-size: 0.7rem;
-                padding: 2px 8px;
-            }
-            .batch-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
-            .handsfree-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
-            .silent-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 0.9rem;
-            }
-            .search-input {
-                font-size: 0.85rem;
-                padding: 6px 12px 6px 34px;
-            }
-            .search-icon {
-                width: 16px;
-                height: 16px;
-                left: 10px;
-            }
-            .brand h1 {
-                font-size: 1rem;
-            }
-            .brand-logo {
-                width: 30px;
-                height: 30px;
-            }
-            .category-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 10px;
-            }
-            .fav-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 10px;
-            }
-            .menu-card {
-                padding: 10px;
-            }
-            .card-title {
-                font-size: 0.9rem;
-            }
-            .card-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 1rem;
-            }
-            .ing-tag {
-                font-size: 0.6rem;
-                padding: 2px 6px;
-            }
-            .recipe-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 8px;
-            }
-            .recipe-box {
-                padding: 8px;
-            }
-            .recipe-box .value {
-                font-size: 0.85rem;
-            }
-            .active-title-group h2 {
-                font-size: 1.3rem;
-            }
-            .active-display {
-                padding: 14px;
-            }
-            .focus-title-group h1 {
-                font-size: 1.6rem;
-            }
-            .focus-card .focus-value {
-                font-size: 1rem;
-            }
-            .focus-steps-list {
-                font-size: 0.95rem;
-            }
-            .control-panel {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            .batch-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .batch-sugar {
-                justify-content: center;
-            }
-            .active-actions {
-                flex-wrap: wrap;
-                gap: 6px;
-            }
-            .btn {
-                font-size: 0.8rem;
-                padding: 6px 12px;
-            }
-            .modal-card {
-                padding: 16px;
-            }
-            .section-title {
-                font-size: 1rem;
-            }
-            .add-btn {
-                font-size: 0.8rem;
-                padding: 3px 10px;
-            }
-            .focus-actions {
-                flex-wrap: wrap;
-            }
-            #focusOverlay {
-                padding: 12px;
-            }
-            .batch-container {
-                padding: 14px;
-            }
-        }
-        @media (max-width: 480px) {
-            body {
-                font-size: 14px;
-            }
-            .category-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .fav-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .menu-card {
-                padding: 8px;
-            }
-            .card-title {
-                font-size: 0.8rem;
-            }
-            .card-icon {
-                width: 26px;
-                height: 26px;
-                font-size: 0.85rem;
-            }
-            .ing-tag {
-                font-size: 0.5rem;
-                padding: 1px 4px;
-            }
-            .recipe-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 6px;
-            }
-            .recipe-box {
-                padding: 6px;
-            }
-            .recipe-box .value {
-                font-size: 0.75rem;
-            }
-            .active-title-group h2 {
-                font-size: 1.1rem;
-            }
-            .active-display {
-                padding: 10px;
-            }
-            .brand h1 {
-                font-size: 0.9rem;
-            }
-            .brand-logo {
-                width: 26px;
-                height: 26px;
-            }
-            .focus-title-group h1 {
-                font-size: 1.3rem;
-            }
-            .focus-card .focus-value {
-                font-size: 0.9rem;
-            }
-            .focus-steps-list {
-                font-size: 0.85rem;
-                padding-left: 16px;
-            }
-            .btn {
-                font-size: 0.75rem;
-                padding: 4px 10px;
-            }
-        }
-    
         /* ===== STRUK 58MM ===== */
         .receipt-overlay {
             position: fixed;
@@ -1516,7 +1256,9 @@
             justify-content: center;
             padding: 16px;
         }
-        .receipt-overlay.active { display: flex; }
+        .receipt-overlay.active {
+            display: flex;
+        }
         .receipt-container {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -1526,103 +1268,132 @@
             max-height: 92vh;
             overflow-y: auto;
             padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,.7);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .7);
         }
         .receipt-header {
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:10px;
-            border-bottom:1px solid var(--card-border);
-            padding-bottom:10px;
-            margin-bottom:14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
         }
-        .receipt-header h2 { color:var(--accent-gold); font-size:1.3rem; margin:0; }
+        .receipt-header h2 {
+            color: var(--accent-gold);
+            font-size: 1.3rem;
+            margin: 0;
+        }
         .receipt-add-row {
-            display:grid;
-            grid-template-columns: minmax(0,1fr) 90px 120px auto;
-            gap:8px;
-            align-items:center;
-            background:var(--info-bg);
-            padding:12px;
-            border-radius:10px;
-            margin-bottom:12px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 90px 120px auto;
+            gap: 8px;
+            align-items: center;
+            background: var(--info-bg);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
         }
-        .receipt-items { overflow-x:auto; }
+        .receipt-items {
+            overflow-x: auto;
+        }
         #receiptTable {
-            width:100%;
-            border-collapse:collapse;
-            font-size:.84rem;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .84rem;
         }
-        #receiptTable th,#receiptTable td {
-            padding:8px 7px;
-            border-bottom:1px solid var(--card-border);
-            text-align:left;
-            vertical-align:middle;
+        #receiptTable th,
+        #receiptTable td {
+            padding: 8px 7px;
+            border-bottom: 1px solid var(--card-border);
+            text-align: left;
+            vertical-align: middle;
         }
-        #receiptTable th { color:var(--text-muted); font-size:.72rem; }
+        #receiptTable th {
+            color: var(--text-muted);
+            font-size: .72rem;
+        }
         .receipt-qty {
-            width:62px;
-            padding:6px;
-            background:var(--search-bg);
-            color:var(--text-main);
-            border:1px solid var(--card-border);
-            border-radius:6px;
+            width: 62px;
+            padding: 6px;
+            background: var(--search-bg);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
         }
         .receipt-price {
-            width:110px;
-            padding:6px;
-            background:var(--search-bg);
-            color:var(--text-main);
-            border:1px solid var(--card-border);
-            border-radius:6px;
+            width: 110px;
+            padding: 6px;
+            background: var(--search-bg);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
         }
         .receipt-summary {
-            margin-top:14px;
-            padding:12px;
-            background:var(--info-bg);
-            border:1px solid var(--accent-gold);
-            border-radius:10px;
+            margin-top: 14px;
+            padding: 12px;
+            background: var(--info-bg);
+            border: 1px solid var(--accent-gold);
+            border-radius: 10px;
         }
         .receipt-summary-row {
-            display:flex;
-            justify-content:space-between;
-            gap:10px;
-            padding:3px 0;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 3px 0;
         }
         .receipt-total {
-            font-size:1.1rem;
-            font-weight:800;
-            color:var(--accent-gold);
-            border-top:1px dashed var(--card-border);
-            margin-top:6px;
-            padding-top:8px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            border-top: 1px dashed var(--card-border);
+            margin-top: 6px;
+            padding-top: 8px;
         }
-        .receipt-actions { display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; margin-top:14px; }
+        .receipt-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
         .receipt-note {
-            width:100%;
-            min-height:55px;
-            resize:vertical;
-            padding:9px;
-            background:var(--search-bg);
-            color:var(--text-main);
-            border:1px solid var(--card-border);
-            border-radius:8px;
-            font:inherit;
+            width: 100%;
+            min-height: 55px;
+            resize: vertical;
+            padding: 9px;
+            background: var(--search-bg);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font: inherit;
         }
         @media (max-width:700px) {
-            .receipt-add-row { grid-template-columns:1fr 80px 110px; }
-            .receipt-add-row .btn { grid-column:1/-1; }
+            .receipt-add-row {
+                grid-template-columns: 1fr 80px 110px;
+            }
+            .receipt-add-row .btn {
+                grid-column: 1/-1;
+            }
+            .price-list-table .price-input {
+                width: 70px;
+                font-size: 0.8rem;
+                padding: 4px 6px;
+            }
+            .price-list-modal {
+                max-width: 100%;
+                margin: 10px;
+            }
         }
 
-        /* ===== Printer-friendly 58mm receipt - DIPERBAIKI ===== */
+        /* ===== Printer-friendly 58mm receipt ===== */
         @media print {
             @page {
                 size: 58mm auto;
                 margin: 0;
             }
-
-            html, body {
+            html,
+            body {
                 width: 58mm !important;
                 min-width: 58mm !important;
                 max-width: 58mm !important;
@@ -1634,21 +1405,15 @@
                 box-sizing: border-box !important;
                 height: auto !important;
             }
-
-            /* Sembunyikan SEMUA elemen di body */
             body * {
                 visibility: hidden !important;
                 display: none !important;
             }
-
-            /* Tampilkan hanya #printReceipt dan anak-anaknya */
             #printReceipt,
             #printReceipt * {
                 visibility: visible !important;
                 display: revert !important;
             }
-
-            /* Tapi untuk elemen tertentu kita set ulang display-nya */
             #printReceipt {
                 display: block !important;
                 position: relative !important;
@@ -1667,7 +1432,6 @@
                 page-break-before: avoid !important;
                 page-break-inside: avoid !important;
             }
-
             #printReceipt .pr-logo {
                 display: block !important;
                 max-width: 25mm !important;
@@ -1677,60 +1441,51 @@
                 margin: 0 auto 2mm !important;
                 object-fit: contain !important;
             }
-
             #printReceipt .pr-center {
                 text-align: center !important;
             }
-
             #printReceipt .pr-title {
                 font-weight: 800 !important;
                 font-size: 14px !important;
             }
-
             #printReceipt .pr-line {
                 border-top: 1px dashed #000 !important;
                 margin: 2mm 0 !important;
             }
-
             #printReceipt table {
                 display: table !important;
                 width: 100% !important;
                 border-collapse: collapse !important;
             }
-
             #printReceipt tr {
                 display: table-row !important;
             }
-
             #printReceipt td {
                 display: table-cell !important;
                 padding: 1mm 0 !important;
                 vertical-align: top !important;
             }
-
             #printReceipt .pr-name {
                 width: 58%;
                 word-break: break-word !important;
             }
-
             #printReceipt .pr-num {
                 text-align: right !important;
                 white-space: nowrap !important;
             }
-
             #printReceipt .pr-total td {
                 font-weight: 800 !important;
                 font-size: 13px !important;
                 padding-top: 2mm !important;
             }
-
             #printReceipt .pr-note {
                 margin-top: 2mm !important;
                 word-break: break-word !important;
             }
         }
-        #printReceipt { display:none; }
-
+        #printReceipt {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -1847,6 +1602,38 @@
         </div>
     </div>
 
+    <!-- ===== MODAL DAFTAR HARGA ===== -->
+    <div class="modal-overlay" id="priceListModal">
+        <div class="modal-card price-list-modal">
+            <h3 class="modal-title" style="display:flex; align-items:center; gap:8px;">
+                <span>💰</span> Daftar Harga Menu
+                <span style="font-size:0.7rem; color:var(--text-muted); font-weight:400; margin-left:auto;">
+                    <span id="priceListCount">0</span> menu
+                </span>
+            </h3>
+            <div class="price-list-table-wrap">
+                <table class="price-list-table">
+                    <thead>
+                        <tr>
+                            <th style="min-width:140px;">Nama Menu</th>
+                            <th style="text-align:center;">Ukuran</th>
+                            <th style="text-align:center;">Harga (Rp)</th>
+                            <th style="text-align:center;">Ukuran</th>
+                            <th style="text-align:center;">Harga (Rp)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="priceListBody"></tbody>
+                </table>
+            </div>
+            <div id="priceListStatus" class="price-list-status">✏️ Edit harga, lalu klik Simpan Semua</div>
+            <div class="price-list-actions">
+                <button class="btn btn-secondary" onclick="window.closePriceList()">Tutup</button>
+                <button class="btn btn-secondary" onclick="window.resetAllPrices()">↺ Reset ke Nol</button>
+                <button class="btn btn-primary" onclick="window.saveAllPrices()">💾 Simpan Semua</button>
+            </div>
+        </div>
+    </div>
+
     <!-- HEADER -->
     <header id="appHeader">
         <div class="header-container">
@@ -1856,6 +1643,7 @@
                     <h1>Barista Voice Recipe</h1>
                 </div>
                 <div class="header-actions">
+                    <button class="price-list-btn" onclick="window.openPriceList()">💰 Harga</button>
                     <button id="themeToggle" class="theme-btn" onclick="window.toggleTheme()" title="Ganti Tema">🌙</button>
                     <button class="logout-btn" onclick="window.logout()">🔒 Lock</button>
                 </div>
@@ -1897,6 +1685,7 @@
                 <div class="active-title-group">
                     <h2 id="activeTitle">Kopi Susu Aren</h2>
                     <p id="activeKeywords">Kata kunci suara: "aren", "kopi susu aren"</p>
+                    <div id="activePriceDisplay" class="active-price-tag">💰 Rp0</div>
                 </div>
                 <div class="active-actions">
                     <button class="btn btn-primary" onclick="window.openFocusMode()">📺 Mode Fokus</button>
@@ -2013,13 +1802,13 @@
             </div>
 
             <div class="receipt-add-row">
-                <select id="receiptMenuSelect" class="form-control"></select>
+                <select id="receiptMenuSelect" class="form-control" onchange="window.updateReceiptPriceFromMenu()"></select>
                 <input id="receiptQty" type="number" class="form-control" min="1" value="1" placeholder="Qty">
                 <input id="receiptPrice" type="number" class="form-control" min="0" step="500" placeholder="Harga manual">
                 <button class="btn btn-primary" onclick="window.addReceiptItem()">+ Tambah</button>
             </div>
             <div style="font-size:.75rem;color:var(--text-muted);margin:-4px 0 12px;">
-                Pilih beberapa produk satu per satu. Harga pada struk selalu bisa diubah manual.
+                Pilih produk, harga otomatis dari daftar harga — bisa diubah manual.
             </div>
 
             <div class="receipt-items">
@@ -2105,7 +1894,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAanEHUkmBWVcbDx5J3RkxNiB8eBA-gi-Q",
@@ -2129,7 +1918,6 @@
             "Espresso Based", "Flavored Latte", "Black Coffee", "Non-Coffee", "Custom Menu"
         ];
 
-        // Ikon untuk setiap kategori
         const CATEGORY_ICONS = {
             "Espresso Based": "☕",
             "Flavored Latte": "🍯",
@@ -2193,6 +1981,7 @@
                 const med = item.sizes?.medium || {};
                 const sizeLabel = item.availableSizes ? item.availableSizes.map(s => s === 'medium' ? 'M' : 'L')
                 .join('/') : 'M/L';
+                const price = getPriceForMenu(item, 'medium');
                 card.innerHTML = `
                     <div class="card-header">
                         <div class="card-info">
@@ -2207,6 +1996,7 @@
                     <div class="quick-ingredients">
                         <span class="ing-tag">M: ${med.syrup || '-'}</span>
                         <span class="ing-tag">${med.espresso || '-'}</span>
+                        ${price ? `<span class="ing-tag" style="background:var(--accent-gold);color:#121316;font-weight:700;">${formatRupiah(price)}</span>` : ''}
                     </div>
                 `;
                 grid.appendChild(card);
@@ -2218,6 +2008,22 @@
         }
 
         // ===== UTILITY =====
+        function formatRupiah(value) {
+            const num = Number(value) || 0;
+            return 'Rp' + num.toLocaleString('id-ID');
+        }
+
+        function getPriceForMenu(menu, size) {
+            if (!menu) return 0;
+            const prices = menu.prices || {};
+            if (prices[size] != null) return Number(prices[size]) || 0;
+            if (menu.price != null) return Number(menu.price) || 0;
+            return 0;
+        }
+
+        window.getPriceForMenu = getPriceForMenu;
+        window.formatRupiah = formatRupiah;
+
         function adjustSugarText(syrupText, percent) {
             if (!syrupText || syrupText === '-' || syrupText.toLowerCase().includes('tanpa')) return syrupText || '-';
             if (percent === 100) return syrupText;
@@ -2347,6 +2153,7 @@
             category: "Espresso Based",
             keywords: ["aren", "kopi susu aren", "kopsu", "gula aren"],
             availableSizes: ['medium', 'large'],
+            prices: { medium: 18000, large: 22000 },
             sizes: {
                 medium: {
                     syrup: "15 ml Gula Aren",
@@ -2375,6 +2182,7 @@
             category: "Flavored Latte",
             keywords: ["hazelnut", "kopi hazelnut", "hazelnut latte"],
             availableSizes: ['medium', 'large'],
+            prices: { medium: 19000, large: 23000 },
             sizes: {
                 medium: {
                     syrup: "15 ml Sirup (1 Pump)",
@@ -2403,6 +2211,7 @@
             category: "Black Coffee",
             keywords: ["americano", "kopi hitam", "ice americano"],
             availableSizes: ['medium', 'large'],
+            prices: { medium: 15000, large: 19000 },
             sizes: {
                 medium: {
                     syrup: "Tanpa Pemanis",
@@ -2446,6 +2255,7 @@
                             item.availableSizes = ['medium'];
                         }
                     }
+                    if (!item.prices) item.prices = {};
                     return item;
                 });
             } else {
@@ -2477,6 +2287,10 @@
                 populateBatchMenuSelect();
                 updateBatchSizeOptions();
             }
+            // Refresh price list if open
+            if (document.getElementById('priceListModal').classList.contains('open')) {
+                renderPriceList();
+            }
         }, (err) => console.error("Firebase error:", err));
 
         // ===== SORTING =====
@@ -2503,7 +2317,6 @@
                 return;
             }
 
-            // Group by category
             const groups = {};
             sorted.forEach(item => {
                 const cat = item.category || 'Custom Menu';
@@ -2511,7 +2324,6 @@
                 groups[cat].push(item);
             });
 
-            // Order categories
             const orderedCategories = CATEGORY_ORDER.filter(c => groups[c]);
             const otherCategories = Object.keys(groups).filter(c => !CATEGORY_ORDER.includes(c)).sort();
             const allCategories = [...orderedCategories, ...otherCategories];
@@ -2554,6 +2366,7 @@
             const sizes = item.availableSizes || ['medium', 'large'];
             const sizeLabel = sizes.map(s => s === 'medium' ? 'M' : 'L').join('/');
             const isFav = favorites.includes(item.id);
+            const price = getPriceForMenu(item, 'medium');
             card.innerHTML = `
                 <div class="card-header">
                     <div class="card-info">
@@ -2571,6 +2384,7 @@
                 <div class="quick-ingredients">
                     <span class="ing-tag">M: ${med.syrup || '-'}</span>
                     <span class="ing-tag">${med.espresso || '-'}</span>
+                    ${price ? `<span class="ing-tag" style="background:var(--accent-gold);color:#121316;font-weight:700;">${formatRupiah(price)}</span>` : ''}
                 </div>
             `;
             return card;
@@ -2644,7 +2458,10 @@
             const data = item.sizes?.[size] || item.sizes?.medium || {};
             const adjustedSyrup = adjustSugarText(data.syrup, currentSugarPercent);
             const isCustom = currentSugarPercent !== 100;
+            const price = getPriceForMenu(item, size);
+
             document.getElementById('sizeLabelIndicator').innerText = size === 'medium' ? 'Medium (M)' : 'Large (L)';
+            document.getElementById('activePriceDisplay').innerHTML = `💰 ${formatRupiah(price)}`;
             document.getElementById('recipeGrid').innerHTML = `
                 <div class="recipe-box ${isCustom ? 'highlight' : ''}">
                     <div class="label">Sirup / Pemanis ${isCustom ? `(${currentSugarPercent}%)` : ''}</div>
@@ -2654,6 +2471,10 @@
                 <div class="recipe-box"><div class="label">Krimer (${size.toUpperCase()})</div><div class="value">${data.creamer || '-'}</div></div>
                 <div class="recipe-box"><div class="label">Susu/Liquid (${size.toUpperCase()})</div><div class="value">${data.milk || '-'}</div></div>
                 <div class="recipe-box"><div class="label">Es/Toping (${size.toUpperCase()})</div><div class="value">${data.ice || '-'}</div></div>
+                <div class="recipe-box" style="border-color:var(--accent-gold);background:rgba(217,160,91,0.08);">
+                    <div class="label">💰 Harga Jual</div>
+                    <div class="value" style="color:var(--accent-gold);font-size:1.1rem;">${formatRupiah(price)}</div>
+                </div>
             `;
             const steps = Array.isArray(data.steps) ? data.steps : [data.steps || ''];
             document.getElementById('stepsList').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
@@ -2695,14 +2516,19 @@
         function updateFocusView(item, size) {
             const data = item.sizes?.[size] || item.sizes?.medium || {};
             const adjustedSyrup = adjustSugarText(data.syrup, currentSugarPercent);
-            document.getElementById('focusTitle').innerText =
-                `${item.title} (${size.toUpperCase()}) ${currentSugarPercent !== 100 ? `- Sugar ${currentSugarPercent}%` : ''}`;
+            const price = getPriceForMenu(item, size);
+            document.getElementById('focusTitle').innerHTML =
+                `${item.title} (${size.toUpperCase()}) ${currentSugarPercent !== 100 ? `- Sugar ${currentSugarPercent}%` : ''} &nbsp; <span style="font-size:1rem;color:var(--accent-gold);">${formatRupiah(price)}</span>`;
             document.getElementById('focusRecipeGrid').innerHTML = `
                 <div class="focus-card"><div class="focus-label">Sirup / Pemanis</div><div class="focus-value">${adjustedSyrup}</div></div>
                 <div class="focus-card"><div class="focus-label">Base/Kopi (${size.toUpperCase()})</div><div class="focus-value">${data.espresso || '-'}</div></div>
                 <div class="focus-card"><div class="focus-label">Krimer (${size.toUpperCase()})</div><div class="focus-value">${data.creamer || '-'}</div></div>
                 <div class="focus-card"><div class="focus-label">Susu (${size.toUpperCase()})</div><div class="focus-value">${data.milk || '-'}</div></div>
                 <div class="focus-card"><div class="focus-label">Es (${size.toUpperCase()})</div><div class="focus-value">${data.ice || '-'}</div></div>
+                <div class="focus-card" style="border-color:var(--accent-gold);background:rgba(217,160,91,0.1);">
+                    <div class="focus-label">💰 Harga</div>
+                    <div class="focus-value" style="color:var(--accent-gold);">${formatRupiah(price)}</div>
+                </div>
             `;
             const steps = Array.isArray(data.steps) ? data.steps : [data.steps || ''];
             document.getElementById('focusStepsList').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
@@ -2718,6 +2544,7 @@
                 window.closeActionPinModal();
                 window.closeBatchOrder();
                 window.closeBatchInstruction();
+                window.closePriceList();
             }
         });
 
@@ -2797,6 +2624,7 @@
                 category: document.getElementById('newCategory').value,
                 keywords: document.getElementById('newKeywords').value.split(',').map(k => k.trim()).filter(k => k),
                 availableSizes: availableSizes,
+                prices: currentActiveRecipe?.prices || { medium: 0, large: 0 },
                 sizes: {
                     medium: {
                         syrup: document.getElementById('medSyrup').value.trim() || '-',
@@ -2861,8 +2689,9 @@
             window.speechSynthesis.cancel();
             const data = item.sizes?.[size] || item.sizes?.medium || {};
             const adjustedSyrup = adjustSugarText(data.syrup, sugarPercent);
+            const price = getPriceForMenu(item, size);
             const text =
-                `${item.title} ukuran ${size} ${sugarPercent !== 100 ? `dengan gula ${sugarPercent} persen` : ''}. Sirup: ${adjustedSyrup}. Base Kopi: ${data.espresso}. Krimer: ${data.creamer || 'tidak ada'}. Susu: ${data.milk}. Es: ${data.ice}.`;
+                `${item.title} ukuran ${size} ${sugarPercent !== 100 ? `dengan gula ${sugarPercent} persen` : ''}. Sirup: ${adjustedSyrup}. Base Kopi: ${data.espresso}. Krimer: ${data.creamer || 'tidak ada'}. Susu: ${data.milk}. Es: ${data.ice}. Harga: ${formatRupiah(price)}.`;
 
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'id-ID';
@@ -3554,20 +3383,184 @@
             document.getElementById('batchInstructionModal').classList.remove('open');
         };
 
+        // ===== DAFTAR HARGA =====
+        let priceListDirty = false;
+
+        window.openPriceList = function() {
+            document.getElementById('priceListModal').classList.add('open');
+            renderPriceList();
+            priceListDirty = false;
+            document.getElementById('priceListStatus').textContent = '✏️ Edit harga, lalu klik Simpan Semua';
+            document.getElementById('priceListStatus').style.color = 'var(--text-muted)';
+        };
+
+        window.closePriceList = function() {
+            if (priceListDirty) {
+                if (!confirm('Ada perubahan yang belum disimpan. Yakin keluar?')) return;
+            }
+            document.getElementById('priceListModal').classList.remove('open');
+        };
+
+        function renderPriceList() {
+            const tbody = document.getElementById('priceListBody');
+            const countEl = document.getElementById('priceListCount');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            const sorted = sortMenuItems(menuData);
+            countEl.textContent = sorted.length;
+
+            if (sorted.length === 0) {
+                tbody.innerHTML =
+                    '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada menu.</td></tr>';
+                return;
+            }
+
+            sorted.forEach(item => {
+                const hasM = item.availableSizes?.includes('medium') ?? true;
+                const hasL = item.availableSizes?.includes('large') ?? false;
+                const priceM = item.prices?.medium ?? 0;
+                const priceL = item.prices?.large ?? 0;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="menu-name">${item.icon || '☕'} ${item.title}</td>
+                    <td style="text-align:center;"><span class="size-badge-sm">M</span></td>
+                    <td style="text-align:center;">
+                        <input type="number" class="price-input" id="price_${item.id}_medium"
+                               value="${priceM}" min="0" step="500"
+                               placeholder="0"
+                               onchange="window.markPriceDirty()"
+                               ${!hasM ? 'disabled style="opacity:0.4;"' : ''}>
+                    </td>
+                    <td style="text-align:center;"><span class="size-badge-sm">L</span></td>
+                    <td style="text-align:center;">
+                        <input type="number" class="price-input" id="price_${item.id}_large"
+                               value="${priceL}" min="0" step="500"
+                               placeholder="0"
+                               onchange="window.markPriceDirty()"
+                               ${!hasL ? 'disabled style="opacity:0.4;"' : ''}>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            priceListDirty = false;
+        }
+
+        window.markPriceDirty = function() {
+            priceListDirty = true;
+            const status = document.getElementById('priceListStatus');
+            status.textContent = '⚠️ Ada perubahan, jangan lupa Simpan Semua!';
+            status.style.color = 'var(--accent-gold)';
+        };
+
+        window.saveAllPrices = function() {
+            const updates = {};
+            let hasChanges = false;
+
+            menuData.forEach(item => {
+                const mInput = document.getElementById(`price_${item.id}_medium`);
+                const lInput = document.getElementById(`price_${item.id}_large`);
+                if (!mInput && !lInput) return;
+
+                const prices = {};
+                if (mInput && !mInput.disabled) {
+                    const val = parseFloat(mInput.value);
+                    if (!isNaN(val) && val >= 0) {
+                        prices.medium = val;
+                        if (item.prices?.medium !== val) hasChanges = true;
+                    }
+                }
+                if (lInput && !lInput.disabled) {
+                    const val = parseFloat(lInput.value);
+                    if (!isNaN(val) && val >= 0) {
+                        prices.large = val;
+                        if (item.prices?.large !== val) hasChanges = true;
+                    }
+                }
+
+                if (Object.keys(prices).length > 0) {
+                    const currentPrices = item.prices || {};
+                    let changed = false;
+                    for (const key of ['medium', 'large']) {
+                        if (prices[key] !== undefined && currentPrices[key] !== prices[key]) changed = true;
+                    }
+                    if (changed) {
+                        updates[`recipes/${item.id}/prices`] = prices;
+                    }
+                }
+            });
+
+            if (Object.keys(updates).length === 0) {
+                document.getElementById('priceListStatus').textContent = '✅ Tidak ada perubahan harga.';
+                document.getElementById('priceListStatus').style.color = 'var(--success)';
+                priceListDirty = false;
+                return;
+            }
+
+            const status = document.getElementById('priceListStatus');
+            status.textContent = '⏳ Menyimpan...';
+            status.style.color = 'var(--text-muted)';
+
+            update(ref(db), updates)
+                .then(() => {
+                    status.textContent = '✅ Semua harga berhasil disimpan!';
+                    status.style.color = 'var(--success)';
+                    priceListDirty = false;
+                    // Update local data
+                    menuData.forEach(item => {
+                        const mInput = document.getElementById(`price_${item.id}_medium`);
+                        const lInput = document.getElementById(`price_${item.id}_large`);
+                        if (!item.prices) item.prices = {};
+                        if (mInput && !mInput.disabled) {
+                            const val = parseFloat(mInput.value);
+                            if (!isNaN(val) && val >= 0) item.prices.medium = val;
+                        }
+                        if (lInput && !lInput.disabled) {
+                            const val = parseFloat(lInput.value);
+                            if (!isNaN(val) && val >= 0) item.prices.large = val;
+                        }
+                    });
+                    // Refresh active view
+                    if (currentActiveRecipe) {
+                        updateActiveRecipeView(currentActiveRecipe, currentSize);
+                    }
+                    renderMenuCards();
+                    renderFavorites();
+                    // Refresh receipt select
+                    populateReceiptMenuSelect();
+                    // Refresh batch select
+                    if (document.getElementById('batchOverlay').classList.contains('active')) {
+                        populateBatchMenuSelect();
+                    }
+                })
+                .catch((err) => {
+                    status.textContent = '❌ Gagal menyimpan: ' + err.message;
+                    status.style.color = 'var(--danger)';
+                });
+        };
+
+        window.resetAllPrices = function() {
+            if (!confirm('Reset semua harga ke 0 untuk semua menu?')) return;
+            menuData.forEach(item => {
+                const mInput = document.getElementById(`price_${item.id}_medium`);
+                const lInput = document.getElementById(`price_${item.id}_large`);
+                if (mInput && !mInput.disabled) mInput.value = '0';
+                if (lInput && !lInput.disabled) lInput.value = '0';
+            });
+            priceListDirty = true;
+            const status = document.getElementById('priceListStatus');
+            status.textContent = '⚠️ Harga direset ke 0, klik Simpan Semua untuk mengupdate.';
+            status.style.color = 'var(--accent-gold)';
+        };
 
         // ===== STRUK 58MM =====
         let receiptItems = [];
 
-        function formatRupiah(value) {
-            return 'Rp' + Math.round(Number(value) || 0).toLocaleString('id-ID');
-        }
-
         function getMenuDefaultPrice(menu, size) {
-            // Mendukung data harga jika nanti ditambahkan ke Firebase:
-            // price: 18000 atau prices: { medium: 18000, large: 22000 }
-            const prices = menu?.prices || {};
+            if (!menu) return 0;
+            const prices = menu.prices || {};
             if (prices[size] != null) return Number(prices[size]) || 0;
-            if (menu?.price != null) return Number(menu.price) || 0;
+            if (menu.price != null) return Number(menu.price) || 0;
             return 0;
         }
 
@@ -3575,15 +3568,16 @@
             const select = document.getElementById('receiptMenuSelect');
             if (!select) return;
             select.innerHTML = '';
-            const sortedItems = [...menuData].sort((a,b) => {
-                const af = favorites.includes(a.id), bf = favorites.includes(b.id);
+            const sortedItems = [...menuData].sort((a, b) => {
+                const af = favorites.includes(a.id),
+                    bf = favorites.includes(b.id);
                 if (af && !bf) return -1;
                 if (!af && bf) return 1;
                 return a.title.localeCompare(b.title);
             });
             sortedItems.forEach(menu => {
-                const sizes = Array.isArray(menu.availableSizes) && menu.availableSizes.length
-                    ? menu.availableSizes : ['medium'];
+                const sizes = Array.isArray(menu.availableSizes) && menu.availableSizes.length ?
+                    menu.availableSizes : ['medium'];
                 sizes.forEach(size => {
                     const opt = document.createElement('option');
                     opt.value = `${menu.id}|${size}`;
@@ -3595,14 +3589,14 @@
             updateReceiptPriceFromMenu();
         }
 
-        function updateReceiptPriceFromMenu() {
+        window.updateReceiptPriceFromMenu = function() {
             const select = document.getElementById('receiptMenuSelect');
             const price = document.getElementById('receiptPrice');
             const opt = select?.options[select.selectedIndex];
             if (!price || !opt) return;
             const defaultPrice = Number(opt.dataset.price || 0);
             price.value = defaultPrice > 0 ? defaultPrice : '';
-        }
+        };
 
         window.openReceipt = function() {
             document.getElementById('receiptOverlay').classList.add('active');
@@ -3628,7 +3622,6 @@
             const qty = Math.max(1, parseInt(document.getElementById('receiptQty').value) || 1);
             const price = Math.max(0, Number(document.getElementById('receiptPrice').value) || 0);
 
-            // Produk yang sama + ukuran yang sama digabung.
             const existing = receiptItems.find(i => i.menuId === menuId && i.size === size);
             if (existing) {
                 existing.qty += qty;
@@ -3700,8 +3693,11 @@
 
             const total = receiptItems.reduce((sum, i) => sum + i.qty * i.price, 0);
             const date = new Date().toLocaleString('id-ID', {
-                day:'2-digit', month:'2-digit', year:'numeric',
-                hour:'2-digit', minute:'2-digit'
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             });
 
             document.getElementById('prDate').textContent = date;
@@ -3756,7 +3752,12 @@
 
         // ===== INIT =====
         loadFavorites();
-        console.log('✅ Barista Assistant - Menu dikelompokkan per kategori!');
+
+        // Expose price functions to global
+        window.getMenuDefaultPrice = getMenuDefaultPrice;
+        window.formatRupiah = formatRupiah;
+
+        console.log('✅ Barista Assistant - Daftar Harga terintegrasi!');
     </script>
 </body>
 </html>
