@@ -68,7 +68,6 @@ header.hide-header{transform:translateY(-100%)}
 .category-title{font-size:1.2rem;font-weight:700;color:var(--accent-gold);letter-spacing:.3px;display:flex;align-items:center;gap:8px}
 .category-title .cat-icon{font-size:1.1rem}
 .category-count{font-size:.8rem;color:var(--text-muted);background:var(--info-bg);padding:2px 12px;border-radius:12px;border:1px solid var(--card-border)}
-/* LIST VIEW */
 .category-grid{display:flex;flex-direction:column;gap:8px}
 .menu-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:12px 16px;cursor:pointer;transition:.2s;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;overflow:hidden}
 .menu-card:hover{border-color:var(--accent-gold);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
@@ -198,13 +197,43 @@ header.hide-header{transform:translateY(-100%)}
 .receipt-qty{width:62px;padding:6px;background:var(--search-bg);color:var(--text-main);border:1px solid var(--card-border);border-radius:6px}
 .receipt-price{width:110px;padding:6px;background:var(--search-bg);color:var(--text-main);border:1px solid var(--card-border);border-radius:6px}
 .receipt-summary{margin-top:14px;padding:12px;background:var(--info-bg);border:1px solid var(--accent-gold);border-radius:10px}
-.receipt-summary-row{display:flex;justify-content:space-between;gap:10px;padding:3px 0}
+.receipt-summary-row{display:flex;justify-content:space-between;gap:10px;padding:3px 0;align-items:center}
 .receipt-total{font-size:1.1rem;font-weight:800;color:var(--accent-gold);border-top:1px dashed var(--card-border);margin-top:6px;padding-top:8px}
 .receipt-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:14px}
 .receipt-note{width:100%;min-height:55px;resize:vertical;padding:9px;background:var(--search-bg);color:var(--text-main);border:1px solid var(--card-border);border-radius:8px;font:inherit}
 @media (max-width:700px){.receipt-add-row{grid-template-columns:1fr 80px 110px}.receipt-add-row .btn{grid-column:1/-1}.price-list-table .price-input{width:70px;font-size:.8rem;padding:4px 6px}.price-list-modal{max-width:100%;margin:10px}}
-@media print{@page{size:58mm auto;margin:0}html,body{width:58mm!important;min-width:58mm!important;max-width:58mm!important;margin:0 auto!important;padding:0!important;background:#fff!important;color:#000!important;display:block!important;box-sizing:border-box!important;height:auto!important}body *{visibility:hidden!important;display:none!important}#printReceipt,#printReceipt *{visibility:visible!important;display:revert!important}#printReceipt{display:block!important;position:relative!important;width:58mm!important;max-width:58mm!important;margin:0 auto!important;padding:3mm 2.5mm!important;background:#fff!important;color:#000!important;font-family:Arial,sans-serif!important;font-size:11px!important;line-height:1.25!important;box-sizing:border-box!important;border:none!important}#printReceipt .pr-logo{display:block!important;max-width:25mm!important;max-height:15mm!important;width:auto!important;height:auto!important;margin:0 auto 2mm!important;object-fit:contain!important}#printReceipt .pr-center{text-align:center!important}#printReceipt .pr-title{font-weight:800!important;font-size:14px!important}#printReceipt .pr-line{border-top:1px dashed #000!important;margin:2mm 0!important}#printReceipt table{display:table!important;width:100%!important;border-collapse:collapse!important}#printReceipt tr{display:table-row!important}#printReceipt td{display:table-cell!important;padding:1mm 0!important;vertical-align:top!important}#printReceipt .pr-name{width:58%;word-break:break-word!important}#printReceipt .pr-num{text-align:right!important;white-space:nowrap!important}#printReceipt .pr-total td{font-weight:800!important;font-size:13px!important;padding-top:2mm!important}#printReceipt .pr-note{margin-top:2mm!important;word-break:break-word!important}}
-#printReceipt{display:none}
+@media print {
+  @page { size: 58mm auto; margin: 0; }
+  html, body {width:58mm!important;min-width:58mm!important;max-width:58mm!important;margin:0 auto!important;padding:0!important;background:#fff!important;color:#000!important;display:block!important;box-sizing:border-box!important;height:auto!important}
+  body * {visibility:hidden!important;display:none!important}
+  #printReceipt, #printReceipt * {visibility:visible!important;display:revert!important}
+  #printReceipt{display:block!important;position:relative!important;width:58mm!important;max-width:58mm!important;margin:0 auto!important;padding:3mm 2.5mm!important;background:#fff!important;color:#000!important;font-family:'Courier New','Consolas','DejaVu Sans Mono',monospace!important;font-size:10.5px!important;line-height:1.35!important;box-sizing:border-box!important;border:none!important;page-break-after:avoid!important;page-break-before:avoid!important;page-break-inside:avoid!important}
+  #printReceipt .pr-center{text-align:center!important}
+  #printReceipt .pr-logo{display:block!important;max-width:22mm!important;max-height:18mm!important;width:auto!important;height:auto!important;margin:0 auto 1.5mm!important;object-fit:contain!important;filter:grayscale(100%)!important}
+  #printReceipt .pr-store-name{font-weight:900!important;font-size:15px!important;letter-spacing:1.5px!important;line-height:1.2!important}
+  #printReceipt .pr-store-tagline{font-size:9.5px!important;font-style:italic!important;letter-spacing:.5px!important;margin-top:.5mm!important}
+  #printReceipt .pr-store-info{font-size:9.5px!important;line-height:1.3!important}
+  #printReceipt .pr-divider{border-top:1px dashed #000!important;margin:2mm 0!important}
+  #printReceipt .pr-divider-double{border-top:3px double #000!important;margin:2mm 0!important}
+  #printReceipt .pr-meta-row{display:flex!important;justify-content:space-between!important;font-size:10px!important;line-height:1.4!important;margin:.5mm 0!important}
+  #printReceipt .pr-meta-row span:last-child{font-weight:600!important;text-align:right!important}
+  #printReceipt .pr-items{display:table!important;width:100%!important;border-collapse:collapse!important;font-size:10.5px!important}
+  #printReceipt .pr-items tr{display:table-row!important}
+  #printReceipt .pr-items td{display:table-cell!important;padding:1mm 0!important;vertical-align:top!important}
+  #printReceipt .pr-items .pr-name{width:58%!important;font-weight:600!important;word-break:break-word!important;line-height:1.3!important}
+  #printReceipt .pr-items .pr-name small{display:block!important;font-weight:400!important;font-size:9px!important;margin-top:.3mm!important;color:#333!important}
+  #printReceipt .pr-items .pr-num{text-align:right!important;white-space:nowrap!important;font-weight:600!important}
+  #printReceipt .pr-summary{font-size:10.5px!important}
+  #printReceipt .pr-summary-row{display:flex!important;justify-content:space-between!important;padding:.5mm 0!important;line-height:1.4!important}
+  #printReceipt .pr-summary-row span:last-child{font-weight:600!important}
+  #printReceipt .pr-total-row{display:flex!important;justify-content:space-between!important;border-top:1px dashed #000!important;border-bottom:1px dashed #000!important;margin:1mm 0!important;padding:1.2mm 0!important;font-weight:900!important;font-size:12.5px!important;letter-spacing:.5px!important}
+  #printReceipt .pr-note{font-size:9.5px!important;font-style:italic!important;text-align:center!important;word-break:break-word!important;line-height:1.35!important}
+  #printReceipt .pr-thanks{font-weight:900!important;font-size:12px!important;letter-spacing:.5px!important;margin-bottom:1mm!important}
+  #printReceipt .pr-footer-msg{font-size:9px!important;line-height:1.3!important}
+  #printReceipt .pr-ig{margin-top:1.5mm!important;font-weight:700!important;letter-spacing:.5px!important}
+  #printReceipt .pr-hide{display:none!important}
+}
+#printReceipt { display: none; }
 </style>
 </head>
 <body>
@@ -494,6 +523,22 @@ header.hide-header{transform:translateY(-100%)}
       <input id="receiptPrice" type="number" class="form-control" min="0" step="500" placeholder="Harga manual">
       <button class="btn btn-primary" onclick="window.addReceiptItem()">+ Tambah</button>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px;">
+      <div>
+        <label class="control-label" style="display:block;margin-bottom:4px;font-size:.7rem;">Nama Kasir</label>
+        <input id="receiptCashier" class="form-control" placeholder="Nama barista" value="Barista">
+      </div>
+      <div>
+        <label class="control-label" style="display:block;margin-bottom:4px;font-size:.7rem;">Metode Bayar</label>
+        <select id="receiptPayment" class="form-control" onchange="window.updateReceiptChange()">
+          <option value="Tunai">Tunai</option>
+          <option value="QRIS">QRIS</option>
+          <option value="Transfer">Transfer Bank</option>
+          <option value="Debit">Kartu Debit</option>
+          <option value="E-Wallet">E-Wallet</option>
+        </select>
+      </div>
+    </div>
     <div style="font-size:.75rem;color:var(--text-muted);margin:-4px 0 12px;">Pilih produk, harga otomatis dari daftar harga — bisa diubah manual.</div>
     <div class="receipt-items">
       <table id="receiptTable">
@@ -504,6 +549,13 @@ header.hide-header{transform:translateY(-100%)}
     <div class="receipt-summary">
       <div class="receipt-summary-row"><span>Jumlah item</span><strong id="receiptItemCount">0</strong></div>
       <div class="receipt-summary-row receipt-total"><span>TOTAL</span><strong id="receiptGrandTotal">Rp0</strong></div>
+      <div class="receipt-summary-row" id="receiptCashRow">
+        <span>Uang Tunai</span>
+        <input id="receiptCash" type="number" min="0" step="1000" placeholder="0" oninput="window.updateReceiptChange()" style="width:140px;text-align:right;padding:5px 8px;background:var(--search-bg);color:var(--text-main);border:1px solid var(--card-border);border-radius:6px;font-size:.9rem;">
+      </div>
+      <div class="receipt-summary-row" id="receiptChangeRow">
+        <span>Kembalian</span><strong id="receiptChange">Rp0</strong>
+      </div>
     </div>
     <div style="margin-top:12px;">
       <label class="control-label" style="display:block;margin-bottom:5px;">Catatan struk (opsional)</label>
@@ -518,16 +570,37 @@ header.hide-header{transform:translateY(-100%)}
 
 <div id="printReceipt">
   <div class="pr-center">
-    <img src="logo.png" class="pr-logo" alt="Kopi Delapan">
-    <div class="pr-title">KOPI DELAPAN</div>
-    <div id="prDate"></div>
+    <img src="logo.png" class="pr-logo" alt="Logo">
+    <div class="pr-store-name">KOPI DELAPAN</div>
+    <div class="pr-store-tagline">Coffee Takeaway</div>
+    <div class="pr-store-info">Jl. Dharma Bakti No. 87, Pekanbaru</div>
+    <div class="pr-store-info">Tersedia juga @Gofood @Shopeefood @Grabfood</div>
   </div>
-  <div class="pr-line"></div>
-  <table><tbody id="prItems"></tbody></table>
-  <div class="pr-line"></div>
-  <table><tbody><tr class="pr-total"><td>TOTAL</td><td class="pr-num" id="prTotal">Rp0</td></tr></tbody></table>
+  <div class="pr-divider-double"></div>
+  <div class="pr-meta">
+    <div class="pr-meta-row"><span>No. Struk</span><span id="prReceiptNo">-</span></div>
+    <div class="pr-meta-row"><span>Tanggal</span><span id="prDate">-</span></div>
+    <div class="pr-meta-row"><span>Kasir</span><span id="prCashier">-</span></div>
+  </div>
+  <div class="pr-divider"></div>
+  <table class="pr-items"><tbody id="prItems"></tbody></table>
+  <div class="pr-divider"></div>
+  <div class="pr-summary">
+    <div class="pr-summary-row"><span>Jumlah Item</span><span id="prItemCount">0</span></div>
+    <div class="pr-total-row"><span>TOTAL</span><span id="prTotal">Rp0</span></div>
+    <div class="pr-summary-row"><span id="prPayLabel">Tunai</span><span id="prPayAmount">Rp0</span></div>
+    <div class="pr-summary-row" id="prChangeRow"><span>Kembali</span><span id="prChange">Rp0</span></div>
+  </div>
+  <div class="pr-divider"></div>
   <div class="pr-note pr-center" id="prNote"></div>
-  <div class="pr-center" style="margin-top:3mm;">Terima kasih 🙏</div>
+  <div class="pr-divider"></div>
+  <div class="pr-center">
+    <div class="pr-thanks">✦ TERIMA KASIH ✦</div>
+    <div class="pr-footer-msg">Selamat menikmati hidangan Anda</div>
+    <div class="pr-footer-msg">Barang yang sudah dibeli</div>
+    <div class="pr-footer-msg">tidak dapat dikembalikan</div>
+    <div class="pr-footer-msg pr-ig">IG @kopidelapan.pku</div>
+  </div>
 </div>
 
 <script>
@@ -538,7 +611,6 @@ window.addEventListener('scroll',()=>{const y=window.scrollY;if(y>60&&y>lastScro
 window.toggleTheme=function(){const b=document.body;b.classList.toggle('light-mode');const l=b.classList.contains('light-mode');localStorage.setItem('barista_theme',l?'light':'dark');const t=document.getElementById('themeToggle');if(t)t.textContent=l?'☀️':'🌙';};
 (function(){const s=localStorage.getItem('barista_theme');const t=document.getElementById('themeToggle');if(s==='light'){document.body.classList.add('light-mode');if(t)t.textContent='☀️';}else{if(t)t.textContent='🌙';}})();
 
-// LOGIN FALLBACK (agar login selalu berfungsi walau module lambat/gagal)
 window.checkPin=function(){const v=document.getElementById('pinInput').value;if(v==='brekele'){sessionStorage.setItem('barista_auth','true');document.getElementById('loginOverlay').style.display='none';document.getElementById('pinInput').value='';document.getElementById('loginError').style.display='none';}else{document.getElementById('loginError').style.display='block';}};
 window.logout=function(){sessionStorage.removeItem('barista_auth');document.getElementById('loginOverlay').style.display='flex';};
 if(sessionStorage.getItem('barista_auth')==='true'){document.getElementById('loginOverlay').style.display='none';}
@@ -578,7 +650,6 @@ async function enableWakeLock(){try{if('wakeLock' in navigator)wakeLock=await na
 function disableWakeLock(){if(wakeLock){wakeLock.release();wakeLock=null;}}
 document.addEventListener('visibilitychange',async()=>{if(wakeLock&&document.visibilityState==='visible'&&isHandsFreeMode)await enableWakeLock();});
 
-// PIN MODAL
 window.requestEditAction=function(){if(!currentActiveRecipe)return;pendingActionType='edit';pendingDeleteId=null;document.getElementById('actionPinTitle').innerText="🔒 Verifikasi Edit Menu";document.getElementById('actionPinInput').value='';document.getElementById('actionPinError').style.display='none';document.getElementById('actionPinModal').classList.add('open');document.getElementById('actionPinInput').focus();};
 window.requestDeleteAction=function(id){pendingActionType='delete';pendingDeleteId=id;document.getElementById('actionPinTitle').innerText="🔒 Verifikasi Hapus Menu";document.getElementById('actionPinInput').value='';document.getElementById('actionPinError').style.display='none';document.getElementById('actionPinModal').classList.add('open');document.getElementById('actionPinInput').focus();};
 window.closeActionPinModal=function(){document.getElementById('actionPinModal').classList.remove('open');pendingActionType=null;pendingDeleteId=null;};
@@ -586,7 +657,29 @@ window.verifyActionPin=function(){const p=document.getElementById('actionPinInpu
 
 const defaultMenuData=[{title:"Kopi Susu Aren",icon:"☕",category:"Espresso Based",keywords:["aren","kopi susu aren","kopsu","gula aren"],availableSizes:['medium','large'],prices:{medium:18000,large:22000},sizes:{medium:{syrup:"15 ml Gula Aren",espresso:"30 ml Espresso",creamer:"Tanpa Krimer",milk:"100 ml Fresh Milk",ice:"Secukupnya",steps:["Tuang 15 ml Gula Aren ke cup","Tuang 100 ml Fresh Milk","Isi es secukupnya","Pour 1 shot Espresso"]},large:{syrup:"25 ml Gula Aren",espresso:"60 ml Espresso",creamer:"Tanpa Krimer",milk:"150 ml Fresh Milk",ice:"Penuh",steps:["Tuang 25 ml Gula Aren ke cup","Tuang 150 ml Fresh Milk","Isi es penuh","Pour 2 shot Espresso"]}}},{title:"Hazelnut Latte",icon:"🥜",category:"Flavored Latte",keywords:["hazelnut","kopi hazelnut","hazelnut latte"],availableSizes:['medium','large'],prices:{medium:19000,large:23000},sizes:{medium:{syrup:"15 ml Sirup (1 Pump)",espresso:"30 ml Espresso",creamer:"Tanpa Krimer",milk:"100 ml Fresh Milk",ice:"Secukupnya",steps:["Pump 1x Hazelnut ke cup","Tuang 100 ml Fresh Milk","Isi es secukupnya","Pour 1 shot Espresso"]},large:{syrup:"25 ml Sirup (2 Pump)",espresso:"60 ml Espresso",creamer:"Tanpa Krimer",milk:"150 ml Fresh Milk",ice:"Penuh",steps:["Pump 2x Hazelnut ke cup","Tuang 150 ml Fresh Milk","Isi es penuh","Pour 2 shot Espresso"]}}},{title:"Iced Americano",icon:"🧊",category:"Black Coffee",keywords:["americano","kopi hitam","ice americano"],availableSizes:['medium','large'],prices:{medium:15000,large:19000},sizes:{medium:{syrup:"Tanpa Pemanis",espresso:"30 ml Espresso",creamer:"Tanpa Krimer",milk:"100 ml Air Mineral",ice:"Secukupnya",steps:["Isi cup dengan 100 ml Air","Isi es secukupnya","Pour 1 shot Espresso di atasnya"]},large:{syrup:"Tanpa Pemanis",espresso:"60 ml Espresso",creamer:"Tanpa Krimer",milk:"150 ml Air Mineral",ice:"Penuh",steps:["Isi cup dengan 150 ml Air","Isi es penuh","Pour 2 shot Espresso di atasnya"]}}}];
 
-onValue(recipesRef,(snapshot)=>{const data=snapshot.val();if(data){menuData=Object.keys(data).map(key=>{let item={id:key,...data[key]};if(!item.sizes){item.sizes={medium:{syrup:item.syrup||'-',espresso:item.espresso||'-',creamer:item.creamer||'-',milk:item.milk||'-',ice:item.ice||'-',steps:item.steps||[]},large:{syrup:item.syrup||'-',espresso:item.espresso||'-',creamer:item.creamer||'-',milk:item.milk||'-',ice:item.ice||'-',steps:item.steps||[]}};}if(!item.availableSizes||!Array.isArray(item.availableSizes)||item.availableSizes.length===0){item.availableSizes=(item.sizes&&item.sizes.large&&item.sizes.large.syrup!=='-')?['medium','large']:['medium'];}if(!item.prices)item.prices={};return item;});}else{defaultMenuData.forEach(item=>{const nr=push(recipesRef);set(nr,item);});}renderMenuCards();renderFavorites();if(currentActiveId){const ua=menuData.find(i=>i.id===currentActiveId);if(ua){let s=currentSize;const av=ua.availableSizes||['medium','large'];if(!av.includes(s))s=av[0]||'medium';showActiveRecipe(ua,s,currentSugarPercent);if(document.getElementById('focusOverlay').classList.contains('active'))window.openFocusMode();}else{window.closeActiveDisplay();window.closeFocusMode();}}if(document.getElementById('batchOverlay').classList.contains('active')){populateBatchMenuSelect();updateBatchSizeOptions();}if(document.getElementById('priceListModal').classList.contains('open'))renderPriceList();},(err)=>console.error("Firebase error:",err));
+onValue(recipesRef,(snapshot)=>{
+  const data=snapshot.val();
+  if(data){
+    menuData=Object.keys(data).map(key=>{
+      let item={id:key,...data[key]};
+      if(!item.sizes){item.sizes={medium:{syrup:item.syrup||'-',espresso:item.espresso||'-',creamer:item.creamer||'-',milk:item.milk||'-',ice:item.ice||'-',steps:item.steps||[]},large:{syrup:item.syrup||'-',espresso:item.espresso||'-',creamer:item.creamer||'-',milk:item.milk||'-',ice:item.ice||'-',steps:item.steps||[]}};}
+      if(!item.availableSizes||!Array.isArray(item.availableSizes)||item.availableSizes.length===0){item.availableSizes=(item.sizes&&item.sizes.large&&item.sizes.large.syrup!=='-')?['medium','large']:['medium'];}
+      if(!item.prices)item.prices={};
+      return item;
+    });
+    try{localStorage.setItem('barista_menu_cache',JSON.stringify(menuData));}catch(e){}
+  } else {
+    defaultMenuData.forEach(item=>{const nr=push(recipesRef);set(nr,item);});
+  }
+  renderMenuCards();renderFavorites();
+  if(currentActiveId){
+    const ua=menuData.find(i=>i.id===currentActiveId);
+    if(ua){let s=currentSize;const av=ua.availableSizes||['medium','large'];if(!av.includes(s))s=av[0]||'medium';showActiveRecipe(ua,s,currentSugarPercent);if(document.getElementById('focusOverlay').classList.contains('active'))window.openFocusMode();}
+    else{window.closeActiveDisplay();window.closeFocusMode();}
+  }
+  if(document.getElementById('batchOverlay').classList.contains('active')){populateBatchMenuSelect();updateBatchSizeOptions();}
+  if(document.getElementById('priceListModal').classList.contains('open'))renderPriceList();
+},(err)=>console.error("Firebase error:",err));
 
 function sortMenuItems(items){return [...items].sort((a,b)=>{let ia=CATEGORY_ORDER.indexOf(a.category||'Custom Menu');let ib=CATEGORY_ORDER.indexOf(b.category||'Custom Menu');if(ia===-1)ia=999;if(ib===-1)ib=999;if(ia!==ib)return ia-ib;return a.title.localeCompare(b.title);});}
 
@@ -690,27 +783,56 @@ function populateReceiptMenuSelect(){const s=document.getElementById('receiptMen
 
 window.updateReceiptPriceFromMenu=function(){const s=document.getElementById('receiptMenuSelect');const p=document.getElementById('receiptPrice');const o=s?.options[s.selectedIndex];if(!p||!o)return;const d=Number(o.dataset.price||0);p.value=d>0?d:'';};
 
-window.openReceipt=function(){document.getElementById('receiptOverlay').classList.add('active');populateReceiptMenuSelect();renderReceiptItems();document.getElementById('receiptQty').value=1;document.getElementById('receiptNote').value='';};
+window.openReceipt=function(){document.getElementById('receiptOverlay').classList.add('active');populateReceiptMenuSelect();renderReceiptItems();document.getElementById('receiptQty').value=1;document.getElementById('receiptNote').value='';const cashEl=document.getElementById('receiptCash');if(cashEl)cashEl.value='';window.updateReceiptChange();};
 window.closeReceipt=function(){document.getElementById('receiptOverlay').classList.remove('active');};
 
 window.addReceiptItem=function(){const s=document.getElementById('receiptMenuSelect');const o=s.options[s.selectedIndex];if(!o)return;const[mid,size]=o.value.split('|');const m=menuData.find(x=>x.id===mid);if(!m)return;const qty=Math.max(1,parseInt(document.getElementById('receiptQty').value)||1);const price=Math.max(0,Number(document.getElementById('receiptPrice').value)||0);const ex=receiptItems.find(i=>i.menuId===mid&&i.size===size);if(ex){ex.qty+=qty;ex.price=price;}else{receiptItems.push({menuId:mid,title:m.title,size,qty,price});}renderReceiptItems();document.getElementById('receiptQty').value=1;};
 
 window.removeReceiptItem=function(i){receiptItems.splice(i,1);renderReceiptItems();};
-window.resetReceipt=function(){receiptItems=[];renderReceiptItems();document.getElementById('receiptNote').value='';};
+window.resetReceipt=function(){receiptItems=[];renderReceiptItems();document.getElementById('receiptNote').value='';const ce=document.getElementById('receiptCashier');if(ce)ce.value='Barista';const pe=document.getElementById('receiptPayment');if(pe)pe.value='Tunai';const cashEl=document.getElementById('receiptCash');if(cashEl)cashEl.value='';window.updateReceiptChange();};
 window.updateReceiptQty=function(i,v){receiptItems[i].qty=Math.max(1,parseInt(v)||1);renderReceiptItems();};
 window.updateReceiptPrice=function(i,v){receiptItems[i].price=Math.max(0,Number(v)||0);renderReceiptItems();};
 
-function renderReceiptItems(){const tb=document.getElementById('receiptTableBody');if(!tb)return;tb.innerHTML='';receiptItems.forEach((item,idx)=>{const sub=item.qty*item.price;const tr=document.createElement('tr');tr.innerHTML=`<td><strong>${item.title}</strong><br><span style="font-size:.7rem;color:var(--text-muted);">${item.size==='medium'?'Medium (M)':'Large (L)'}</span></td><td><input class="receipt-qty" type="number" min="1" value="${item.qty}" onchange="window.updateReceiptQty(${idx}, this.value)"></td><td><input class="receipt-price" type="number" min="0" step="500" value="${item.price}" onchange="window.updateReceiptPrice(${idx}, this.value)"></td><td><strong>${formatRupiah(sub)}</strong></td><td><button class="btn btn-danger" style="padding:3px 8px;font-size:.72rem;" onclick="window.removeReceiptItem(${idx})">Hapus</button></td>`;tb.appendChild(tr);});const tot=receiptItems.reduce((s,i)=>s+(i.qty*i.price),0);const cnt=receiptItems.reduce((s,i)=>s+i.qty,0);document.getElementById('receiptItemCount').textContent=cnt;document.getElementById('receiptGrandTotal').textContent=formatRupiah(tot);}
+function renderReceiptItems(){const tb=document.getElementById('receiptTableBody');if(!tb)return;tb.innerHTML='';receiptItems.forEach((item,idx)=>{const sub=item.qty*item.price;const tr=document.createElement('tr');tr.innerHTML=`<td><strong>${item.title}</strong><br><span style="font-size:.7rem;color:var(--text-muted);">${item.size==='medium'?'Medium (M)':'Large (L)'}</span></td><td><input class="receipt-qty" type="number" min="1" value="${item.qty}" onchange="window.updateReceiptQty(${idx}, this.value)"></td><td><input class="receipt-price" type="number" min="0" step="500" value="${item.price}" onchange="window.updateReceiptPrice(${idx}, this.value)"></td><td><strong>${formatRupiah(sub)}</strong></td><td><button class="btn btn-danger" style="padding:3px 8px;font-size:.72rem;" onclick="window.removeReceiptItem(${idx})">Hapus</button></td>`;tb.appendChild(tr);});const tot=receiptItems.reduce((s,i)=>s+(i.qty*i.price),0);const cnt=receiptItems.reduce((s,i)=>s+i.qty,0);document.getElementById('receiptItemCount').textContent=cnt;document.getElementById('receiptGrandTotal').textContent=formatRupiah(tot);window.updateReceiptChange();}
 
-window.printReceipt=function(){if(receiptItems.length===0){alert('Tambahkan minimal 1 produk ke struk.');return;}const tot=receiptItems.reduce((s,i)=>s+i.qty*i.price,0);const date=new Date().toLocaleString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});document.getElementById('prDate').textContent=date;const pi=document.getElementById('prItems');pi.innerHTML='';receiptItems.forEach(item=>{const tr=document.createElement('tr');const l=`${item.title} ${item.size==='medium'?'(M)':'(L)'}`;tr.innerHTML=`<td class="pr-name">${l}<br><span>${item.qty} x ${formatRupiah(item.price)}</span></td><td class="pr-num">${formatRupiah(item.qty*item.price)}</td>`;pi.appendChild(tr);});document.getElementById('prTotal').textContent=formatRupiah(tot);const note=(document.getElementById('receiptNote').value||'').trim();document.getElementById('prNote').textContent=note;window.print();};
+window.updateReceiptChange=function(){const total=receiptItems.reduce((s,i)=>s+i.qty*i.price,0);const pm=document.getElementById('receiptPayment')?.value||'Tunai';const isCash=pm==='Tunai';const cr=document.getElementById('receiptCashRow');const chr=document.getElementById('receiptChangeRow');const ci=parseFloat(document.getElementById('receiptCash')?.value)||0;if(!cr||!chr)return;if(isCash){cr.style.display='';chr.style.display='';const change=Math.max(0,ci-total);document.getElementById('receiptChange').textContent=formatRupiah(change);}else{cr.style.display='none';chr.style.display='none';}};
+
+window.printReceipt=function(){if(receiptItems.length===0){alert('Tambahkan minimal 1 produk ke struk.');return;}const total=receiptItems.reduce((s,i)=>s+i.qty*i.price,0);const itemCount=receiptItems.reduce((s,i)=>s+i.qty,0);const now=new Date();const pad=n=>String(n).padStart(2,'0');const receiptNo='KD-'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'-'+pad(now.getHours())+pad(now.getMinutes())+pad(now.getSeconds());const dateStr=now.toLocaleString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});const cashier=(document.getElementById('receiptCashier')?.value||'Barista').trim()||'Barista';const paymentMethod=document.getElementById('receiptPayment')?.value||'Tunai';const cashInput=parseFloat(document.getElementById('receiptCash')?.value)||0;const isCash=paymentMethod==='Tunai';const cashPaid=isCash&&cashInput>0?cashInput:total;const change=isCash&&cashInput>0?Math.max(0,cashInput-total):0;
+document.getElementById('prReceiptNo').textContent=receiptNo;
+document.getElementById('prDate').textContent=dateStr;
+document.getElementById('prCashier').textContent=cashier;
+const prItems=document.getElementById('prItems');
+prItems.innerHTML='';
+receiptItems.forEach(item=>{
+  const tr=document.createElement('tr');
+  const label=item.title+' '+(item.size==='medium'?'(M)':'(L)');
+  tr.innerHTML='<td class="pr-name">'+label+'<small>'+item.qty+' x '+formatRupiah(item.price)+'</small></td><td class="pr-num">'+formatRupiah(item.qty*item.price)+'</td>';
+  prItems.appendChild(tr);
+});
+document.getElementById('prItemCount').textContent=itemCount;
+document.getElementById('prTotal').textContent=formatRupiah(total);
+document.getElementById('prPayLabel').textContent=paymentMethod;
+document.getElementById('prPayAmount').textContent=formatRupiah(cashPaid);
+const changeRow=document.getElementById('prChangeRow');
+if(isCash&&cashInput>0){document.getElementById('prChange').textContent=formatRupiah(change);changeRow.classList.remove('pr-hide');}else{changeRow.classList.add('pr-hide');}
+const note=(document.getElementById('receiptNote').value||'').trim();
+const prNote=document.getElementById('prNote');
+prNote.textContent=note;
+prNote.classList.toggle('pr-hide',!note);
+window.print();};
 
 document.addEventListener('DOMContentLoaded',()=>{const s=document.getElementById('receiptMenuSelect');if(s)s.addEventListener('change',updateReceiptPriceFromMenu);});
 
 window.openAddModal=function(){editingId=null;document.getElementById('modalTitle').innerText="Tambah Menu Baru";document.getElementById('newTitle').value='';document.getElementById('newCategory').value='Espresso Based';document.getElementById('newKeywords').value='';document.getElementById('newSizeMedium').checked=true;document.getElementById('newSizeLarge').checked=true;document.getElementById('medSyrup').value='';document.getElementById('medEspresso').value='';document.getElementById('medCreamer').value='';document.getElementById('medMilk').value='';document.getElementById('medIce').value='';document.getElementById('medSteps').value='';document.getElementById('largeSyrup').value='';document.getElementById('largeEspresso').value='';document.getElementById('largeCreamer').value='';document.getElementById('largeMilk').value='';document.getElementById('largeIce').value='';document.getElementById('largeSteps').value='';document.getElementById('recipeModal').classList.add('open');};
 
 loadFavorites();
+
+// ===== FALLBACK: tampilkan menu instan dari cache/default =====
+try{const c=localStorage.getItem('barista_menu_cache');if(c){const it=JSON.parse(c);if(Array.isArray(it)&&it.length>0){menuData=it;renderMenuCards();renderFavorites();}}}catch(e){}
+if(menuData.length===0){menuData=defaultMenuData.map((it,i)=>({...it,id:'local_'+i}));renderMenuCards();renderFavorites();}
+
 window.getMenuDefaultPrice=getMenuDefaultPrice;
-console.log('✅ Barista Assistant siap - fitur lengkap!');
+console.log('✅ Barista Assistant siap - fitur lengkap + struk profesional + fallback menu!');
 </script>
 </body>
 </html>
